@@ -1,4 +1,4 @@
-/* Copyright 2008, Lukas Mai.
+/* Copyright 2010, Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -94,17 +94,17 @@ unibi_term *unibi_dummy(void) {
 	if (!(t = malloc(sizeof *t))) {
 		return NULL;
 	}
-	if (!(t->aliases = malloc(2 * sizeof *t->aliases))) {
+	if (!(t->alloc = malloc(2 * sizeof *t->aliases))) {
 		free(t);
 		return NULL;
 	}
+	t->aliases = (const char **)t->alloc;
 	t->name = "unibilium dummy terminal";
 	t->aliases[0] = "null";
 	t->aliases[1] = NULL;
 	memset(t->bools, '\0', sizeof t->bools);
 	fill_1(t->nums, COUNTOF(t->nums));
 	fill_null(t->strs, COUNTOF(t->strs));
-	t->alloc = NULL;
 
 #if 0
 	t->ext_bsize = 0;
@@ -119,6 +119,16 @@ unibi_term *unibi_dummy(void) {
 	return t;
 }
 
+static size_t mcount(const char *p, size_t n, char c) {
+	size_t r = 0;
+	while (n--) {
+		if (*p++ == c) {
+			++r;
+		}
+	}
+	return r;
+}
+
 #define FAIL_IF_(c, e, f) do { if (c) { f; errno = (e); return NULL; } } while (0)
 #define FAIL_IF(c, e) FAIL_IF_(c, e, (void)0)
 #define DEL_FAIL_IF(c, e, x) FAIL_IF_(c, e, unibi_destroy(x))
@@ -127,6 +137,8 @@ unibi_term *unibi_dummy(void) {
 unibi_term *unibi_init(const char *p, size_t n) {
 	unibi_term *t = NULL;
 	unsigned short magic, namlen, boollen, numlen, strslen, tablsz;
+	char *strp, *namp;
+	size_t namco;
 	size_t i;
 
 	FAIL_IF(n < 12, EFAULT);
@@ -144,50 +156,38 @@ unibi_term *unibi_init(const char *p, size_t n) {
 
 	FAIL_IF(n < namlen, EFAULT);
 
+	namco = mcount(p, namlen, '|') + 1;
+
 	if (!(t = malloc(sizeof *t))) {
 		return NULL;
 	}
-	if (!(t->alloc = malloc(tablsz + namlen + 1))) {
+	if (!(t->alloc = malloc(namco * sizeof *t->aliases + tablsz + namlen + 1))) {
 		free(t);
 		return NULL;
 	}
-	memcpy(t->alloc + tablsz, p, namlen);
-	t->alloc[tablsz + namlen] = '\0';
+	t->aliases = (const char **)t->alloc;
+	strp = t->alloc + namco * sizeof *t->aliases;
+	namp = strp + tablsz;
+	memcpy(namp, p, namlen);
+	namp[namlen] = '\0';
 	p += namlen;
 	n -= namlen;
 
 	{
-		char *const q = t->alloc + tablsz;
-		char *s;
-		size_t k, z;
+		size_t k = 0;
+		char *a, *z;
+		a = namp;
 
-		for (k = 0, s = q; *s; ++s) {
-			if (*s == '|') {
-				++k;
-			}
+		while ((z = strchr(a, '|'))) {
+			*z = '\0';
+			t->aliases[k++] = a;
+			a = z + 1;
 		}
+		assert(k < namco);
+		t->aliases[k] = NULL;
 
-		z = k;
-		if (!(t->aliases = malloc((z + 1) * sizeof *t->aliases))) {
-			free(t->alloc);
-			free(t);
-			return NULL;
-		}
-
-		for (; s > q; --s) {
-			if (*s == '|') {
-				*s = '\0';
-				t->aliases[k--] = s + 1;
-			}
-		}
-		assert(k == 0);
-		assert(s == q);
-		t->aliases[0] = q;
-		t->name = t->aliases[z];
-		t->aliases[z] = NULL;
+		t->name = a;
 	}
-
-	t->alloc = NULL;
 
 #if 0
 	t->ext_bsize = 0;
@@ -224,14 +224,14 @@ unibi_term *unibi_init(const char *p, size_t n) {
 
 	DEL_FAIL_IF(n < strslen * 2u, EFAULT, t);
 	for (i = 0; i < strslen && i < COUNTOF(t->strs); ++i) {
-		t->strs[i] = off_of(t->alloc, tablsz, get_short(p + i * 2));
+		t->strs[i] = off_of(strp, tablsz, get_short(p + i * 2));
 	}
 	fill_null(t->strs + i, COUNTOF(t->strs) - i);
 	p += strslen * 2;
 	n -= strslen * 2;
 
 	DEL_FAIL_IF(n < tablsz, EFAULT, t);
-	memcpy(t->alloc, p, tablsz);
+	memcpy(strp, p, tablsz);
 	p += tablsz;
 	n -= tablsz;
 
@@ -265,8 +265,7 @@ void unibi_destroy(unibi_term *t) {
 	free(t->ext_alloc);
 	t->ext_alloc = (char *)":-S";
 #endif
-	free(t->aliases);
-	t->aliases = &t->name;
+	t->aliases = NULL;
 	free(t->alloc);
 	t->alloc = (char *)":-O";
 	free(t);
