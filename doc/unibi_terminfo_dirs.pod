@@ -1,0 +1,23 @@
+=pod
+
+=head1 NAME
+
+unibi_terminfo_dirs - fallback terminfo search path
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ extern const char *const unibi_terminfo_dirs;
+
+=head1 DESCRIPTION
+
+A colon-separated list of directories that is used by C<unibi_from_term> if
+C<TERMINFO_DIRS> is not set.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_from_term(3)>
+
+=cut

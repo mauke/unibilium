@@ -1,0 +1,28 @@
+=pod
+
+=head1 NAME
+
+unibi_from_env - read the terminfo entry specified by TERM
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ unibi_term *unibi_from_env(void);
+
+=head1 DESCRIPTION
+
+This function calls C<unibi_from_term> with the value of the environment
+variable C<TERM>.
+
+=head1 RETURN VALUE
+
+See L<unibi_from_term(3)>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_from_term(3)>,
+L<unibi_destroy(3)>
+
+=cut

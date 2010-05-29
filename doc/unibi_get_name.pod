@@ -1,0 +1,34 @@
+=pod
+
+=head1 NAME
+
+unibi_get_name, unibi_set_name - access the name of a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ const char *unibi_get_name(const unibi_term *ut);
+ void unibi_set_name(unibi_term *ut, const char *s);
+
+=head1 DESCRIPTION
+
+C<unibi_get_name> gets the name from I<ut>; C<unibi_set_name> sets the name to
+I<s>.
+
+Note that C<unibi_set_name> simply stores the pointer it is given; it will not
+free I<s> or make a copy of the string.
+
+=head1 RETURN VALUE
+
+C<unibi_get_name> returns a pointer to the name of the terminal; this either
+comes from a terminfo entry (the part after the last '|' in the name section)
+or was set by C<unibi_set_name>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_get_aliases(3)>,
+L<unibi_set_aliases>
+
+=cut

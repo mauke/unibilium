@@ -1,0 +1,1075 @@
+=pod
+
+=head1 NAME
+
+unibilium.h - terminfo parser and utility functions
+
+=head1 SYNOPSIS
+
+  #include "unibilium.h"
+
+=head1 DESCRIPTION
+
+This library provides functions and types to access terminal descriptions in
+the terminfo database. It can parse compiled terminfo entries from memory or
+files, access and modify their capabilities, and generate new terminfo entries.
+
+=head2 Types
+
+The following types are provided:
+
+=over
+
+=item unibi_term
+
+The main type. It represents a terminfo entry. Most functions take a pointer to
+this structure.
+
+=item enum unibi_boolean
+
+An enumeration of boolean capabilities. It has the following elements:
+
+=over 1
+
+=item C<unibi_auto_left_margin>
+
+=item C<unibi_auto_right_margin>
+
+=item C<unibi_no_esc_ctlc>
+
+=item C<unibi_ceol_standout_glitch>
+
+=item C<unibi_eat_newline_glitch>
+
+=item C<unibi_erase_overstrike>
+
+=item C<unibi_generic_type>
+
+=item C<unibi_hard_copy>
+
+=item C<unibi_has_meta_key>
+
+=item C<unibi_has_status_line>
+
+=item C<unibi_insert_null_glitch>
+
+=item C<unibi_memory_above>
+
+=item C<unibi_memory_below>
+
+=item C<unibi_move_insert_mode>
+
+=item C<unibi_move_standout_mode>
+
+=item C<unibi_over_strike>
+
+=item C<unibi_status_line_esc_ok>
+
+=item C<unibi_dest_tabs_magic_smso>
+
+=item C<unibi_tilde_glitch>
+
+=item C<unibi_transparent_underline>
+
+=item C<unibi_xon_xoff>
+
+=item C<unibi_needs_xon_xoff>
+
+=item C<unibi_prtr_silent>
+
+=item C<unibi_hard_cursor>
+
+=item C<unibi_non_rev_rmcup>
+
+=item C<unibi_no_pad_char>
+
+=item C<unibi_non_dest_scroll_region>
+
+=item C<unibi_can_change>
+
+=item C<unibi_back_color_erase>
+
+=item C<unibi_hue_lightness_saturation>
+
+=item C<unibi_col_addr_glitch>
+
+=item C<unibi_cr_cancels_micro_mode>
+
+=item C<unibi_has_print_wheel>
+
+=item C<unibi_row_addr_glitch>
+
+=item C<unibi_semi_auto_right_margin>
+
+=item C<unibi_cpi_changes_res>
+
+=item C<unibi_lpi_changes_res>
+
+=item C<unibi_backspaces_with_bs>
+
+=item C<unibi_crt_no_scrolling>
+
+=item C<unibi_no_correctly_working_cr>
+
+=item C<unibi_gnu_has_meta_key>
+
+=item C<unibi_linefeed_is_newline>
+
+=item C<unibi_has_hardware_tabs>
+
+=item C<unibi_return_does_clr_eol>
+
+=back
+
+=item enum unibi_numeric
+
+An enumeration of numeric capabilities. It has the following elements:
+
+=over 1
+
+=item C<unibi_columns>
+
+=item C<unibi_init_tabs>
+
+=item C<unibi_lines>
+
+=item C<unibi_lines_of_memory>
+
+=item C<unibi_magic_cookie_glitch>
+
+=item C<unibi_padding_baud_rate>
+
+=item C<unibi_virtual_terminal>
+
+=item C<unibi_width_status_line>
+
+=item C<unibi_num_labels>
+
+=item C<unibi_label_height>
+
+=item C<unibi_label_width>
+
+=item C<unibi_max_attributes>
+
+=item C<unibi_maximum_windows>
+
+=item C<unibi_max_colors>
+
+=item C<unibi_max_pairs>
+
+=item C<unibi_no_color_video>
+
+=item C<unibi_buffer_capacity>
+
+=item C<unibi_dot_vert_spacing>
+
+=item C<unibi_dot_horz_spacing>
+
+=item C<unibi_max_micro_address>
+
+=item C<unibi_max_micro_jump>
+
+=item C<unibi_micro_col_size>
+
+=item C<unibi_micro_line_size>
+
+=item C<unibi_number_of_pins>
+
+=item C<unibi_output_res_char>
+
+=item C<unibi_output_res_line>
+
+=item C<unibi_output_res_horz_inch>
+
+=item C<unibi_output_res_vert_inch>
+
+=item C<unibi_print_rate>
+
+=item C<unibi_wide_char_size>
+
+=item C<unibi_buttons>
+
+=item C<unibi_bit_image_entwining>
+
+=item C<unibi_bit_image_type>
+
+=item C<unibi_magic_cookie_glitch_ul>
+
+=item C<unibi_carriage_return_delay>
+
+=item C<unibi_new_line_delay>
+
+=item C<unibi_backspace_delay>
+
+=item C<unibi_horizontal_tab_delay>
+
+=item C<unibi_number_of_function_keys>
+
+=back
+	
+=item enum unibi_string
+
+An enumeration of string capabilities. It has the following elements:
+
+=over 1
+
+=item C<unibi_back_tab>
+
+=item C<unibi_bell>
+
+=item C<unibi_carriage_return>
+
+=item C<unibi_change_scroll_region>
+
+=item C<unibi_clear_all_tabs>
+
+=item C<unibi_clear_screen>
+
+=item C<unibi_clr_eol>
+
+=item C<unibi_clr_eos>
+
+=item C<unibi_column_address>
+
+=item C<unibi_command_character>
+
+=item C<unibi_cursor_address>
+
+=item C<unibi_cursor_down>
+
+=item C<unibi_cursor_home>
+
+=item C<unibi_cursor_invisible>
+
+=item C<unibi_cursor_left>
+
+=item C<unibi_cursor_mem_address>
+
+=item C<unibi_cursor_normal>
+
+=item C<unibi_cursor_right>
+
+=item C<unibi_cursor_to_ll>
+
+=item C<unibi_cursor_up>
+
+=item C<unibi_cursor_visible>
+
+=item C<unibi_delete_character>
+
+=item C<unibi_delete_line>
+
+=item C<unibi_dis_status_line>
+
+=item C<unibi_down_half_line>
+
+=item C<unibi_enter_alt_charset_mode>
+
+=item C<unibi_enter_blink_mode>
+
+=item C<unibi_enter_bold_mode>
+
+=item C<unibi_enter_ca_mode>
+
+=item C<unibi_enter_delete_mode>
+
+=item C<unibi_enter_dim_mode>
+
+=item C<unibi_enter_insert_mode>
+
+=item C<unibi_enter_secure_mode>
+
+=item C<unibi_enter_protected_mode>
+
+=item C<unibi_enter_reverse_mode>
+
+=item C<unibi_enter_standout_mode>
+
+=item C<unibi_enter_underline_mode>
+
+=item C<unibi_erase_chars>
+
+=item C<unibi_exit_alt_charset_mode>
+
+=item C<unibi_exit_attribute_mode>
+
+=item C<unibi_exit_ca_mode>
+
+=item C<unibi_exit_delete_mode>
+
+=item C<unibi_exit_insert_mode>
+
+=item C<unibi_exit_standout_mode>
+
+=item C<unibi_exit_underline_mode>
+
+=item C<unibi_flash_screen>
+
+=item C<unibi_form_feed>
+
+=item C<unibi_from_status_line>
+
+=item C<unibi_init_1string>
+
+=item C<unibi_init_2string>
+
+=item C<unibi_init_3string>
+
+=item C<unibi_init_file>
+
+=item C<unibi_insert_character>
+
+=item C<unibi_insert_line>
+
+=item C<unibi_insert_padding>
+
+=item C<unibi_key_backspace>
+
+=item C<unibi_key_catab>
+
+=item C<unibi_key_clear>
+
+=item C<unibi_key_ctab>
+
+=item C<unibi_key_dc>
+
+=item C<unibi_key_dl>
+
+=item C<unibi_key_down>
+
+=item C<unibi_key_eic>
+
+=item C<unibi_key_eol>
+
+=item C<unibi_key_eos>
+
+=item C<unibi_key_f0>
+
+=item C<unibi_key_f1>
+
+=item C<unibi_key_f10>
+
+=item C<unibi_key_f2>
+
+=item C<unibi_key_f3>
+
+=item C<unibi_key_f4>
+
+=item C<unibi_key_f5>
+
+=item C<unibi_key_f6>
+
+=item C<unibi_key_f7>
+
+=item C<unibi_key_f8>
+
+=item C<unibi_key_f9>
+
+=item C<unibi_key_home>
+
+=item C<unibi_key_ic>
+
+=item C<unibi_key_il>
+
+=item C<unibi_key_left>
+
+=item C<unibi_key_ll>
+
+=item C<unibi_key_npage>
+
+=item C<unibi_key_ppage>
+
+=item C<unibi_key_right>
+
+=item C<unibi_key_sf>
+
+=item C<unibi_key_sr>
+
+=item C<unibi_key_stab>
+
+=item C<unibi_key_up>
+
+=item C<unibi_keypad_local>
+
+=item C<unibi_keypad_xmit>
+
+=item C<unibi_lab_f0>
+
+=item C<unibi_lab_f1>
+
+=item C<unibi_lab_f10>
+
+=item C<unibi_lab_f2>
+
+=item C<unibi_lab_f3>
+
+=item C<unibi_lab_f4>
+
+=item C<unibi_lab_f5>
+
+=item C<unibi_lab_f6>
+
+=item C<unibi_lab_f7>
+
+=item C<unibi_lab_f8>
+
+=item C<unibi_lab_f9>
+
+=item C<unibi_meta_off>
+
+=item C<unibi_meta_on>
+
+=item C<unibi_newline>
+
+=item C<unibi_pad_char>
+
+=item C<unibi_parm_dch>
+
+=item C<unibi_parm_delete_line>
+
+=item C<unibi_parm_down_cursor>
+
+=item C<unibi_parm_ich>
+
+=item C<unibi_parm_index>
+
+=item C<unibi_parm_insert_line>
+
+=item C<unibi_parm_left_cursor>
+
+=item C<unibi_parm_right_cursor>
+
+=item C<unibi_parm_rindex>
+
+=item C<unibi_parm_up_cursor>
+
+=item C<unibi_pkey_key>
+
+=item C<unibi_pkey_local>
+
+=item C<unibi_pkey_xmit>
+
+=item C<unibi_print_screen>
+
+=item C<unibi_prtr_off>
+
+=item C<unibi_prtr_on>
+
+=item C<unibi_repeat_char>
+
+=item C<unibi_reset_1string>
+
+=item C<unibi_reset_2string>
+
+=item C<unibi_reset_3string>
+
+=item C<unibi_reset_file>
+
+=item C<unibi_restore_cursor>
+
+=item C<unibi_row_address>
+
+=item C<unibi_save_cursor>
+
+=item C<unibi_scroll_forward>
+
+=item C<unibi_scroll_reverse>
+
+=item C<unibi_set_attributes>
+
+=item C<unibi_set_tab>
+
+=item C<unibi_set_window>
+
+=item C<unibi_tab>
+
+=item C<unibi_to_status_line>
+
+=item C<unibi_underline_char>
+
+=item C<unibi_up_half_line>
+
+=item C<unibi_init_prog>
+
+=item C<unibi_key_a1>
+
+=item C<unibi_key_a3>
+
+=item C<unibi_key_b2>
+
+=item C<unibi_key_c1>
+
+=item C<unibi_key_c3>
+
+=item C<unibi_prtr_non>
+
+=item C<unibi_char_padding>
+
+=item C<unibi_acs_chars>
+
+=item C<unibi_plab_norm>
+
+=item C<unibi_key_btab>
+
+=item C<unibi_enter_xon_mode>
+
+=item C<unibi_exit_xon_mode>
+
+=item C<unibi_enter_am_mode>
+
+=item C<unibi_exit_am_mode>
+
+=item C<unibi_xon_character>
+
+=item C<unibi_xoff_character>
+
+=item C<unibi_ena_acs>
+
+=item C<unibi_label_on>
+
+=item C<unibi_label_off>
+
+=item C<unibi_key_beg>
+
+=item C<unibi_key_cancel>
+
+=item C<unibi_key_close>
+
+=item C<unibi_key_command>
+
+=item C<unibi_key_copy>
+
+=item C<unibi_key_create>
+
+=item C<unibi_key_end>
+
+=item C<unibi_key_enter>
+
+=item C<unibi_key_exit>
+
+=item C<unibi_key_find>
+
+=item C<unibi_key_help>
+
+=item C<unibi_key_mark>
+
+=item C<unibi_key_message>
+
+=item C<unibi_key_move>
+
+=item C<unibi_key_next>
+
+=item C<unibi_key_open>
+
+=item C<unibi_key_options>
+
+=item C<unibi_key_previous>
+
+=item C<unibi_key_print>
+
+=item C<unibi_key_redo>
+
+=item C<unibi_key_reference>
+
+=item C<unibi_key_refresh>
+
+=item C<unibi_key_replace>
+
+=item C<unibi_key_restart>
+
+=item C<unibi_key_resume>
+
+=item C<unibi_key_save>
+
+=item C<unibi_key_suspend>
+
+=item C<unibi_key_undo>
+
+=item C<unibi_key_sbeg>
+
+=item C<unibi_key_scancel>
+
+=item C<unibi_key_scommand>
+
+=item C<unibi_key_scopy>
+
+=item C<unibi_key_screate>
+
+=item C<unibi_key_sdc>
+
+=item C<unibi_key_sdl>
+
+=item C<unibi_key_select>
+
+=item C<unibi_key_send>
+
+=item C<unibi_key_seol>
+
+=item C<unibi_key_sexit>
+
+=item C<unibi_key_sfind>
+
+=item C<unibi_key_shelp>
+
+=item C<unibi_key_shome>
+
+=item C<unibi_key_sic>
+
+=item C<unibi_key_sleft>
+
+=item C<unibi_key_smessage>
+
+=item C<unibi_key_smove>
+
+=item C<unibi_key_snext>
+
+=item C<unibi_key_soptions>
+
+=item C<unibi_key_sprevious>
+
+=item C<unibi_key_sprint>
+
+=item C<unibi_key_sredo>
+
+=item C<unibi_key_sreplace>
+
+=item C<unibi_key_sright>
+
+=item C<unibi_key_srsume>
+
+=item C<unibi_key_ssave>
+
+=item C<unibi_key_ssuspend>
+
+=item C<unibi_key_sundo>
+
+=item C<unibi_req_for_input>
+
+=item C<unibi_key_f11>
+
+=item C<unibi_key_f12>
+
+=item C<unibi_key_f13>
+
+=item C<unibi_key_f14>
+
+=item C<unibi_key_f15>
+
+=item C<unibi_key_f16>
+
+=item C<unibi_key_f17>
+
+=item C<unibi_key_f18>
+
+=item C<unibi_key_f19>
+
+=item C<unibi_key_f20>
+
+=item C<unibi_key_f21>
+
+=item C<unibi_key_f22>
+
+=item C<unibi_key_f23>
+
+=item C<unibi_key_f24>
+
+=item C<unibi_key_f25>
+
+=item C<unibi_key_f26>
+
+=item C<unibi_key_f27>
+
+=item C<unibi_key_f28>
+
+=item C<unibi_key_f29>
+
+=item C<unibi_key_f30>
+
+=item C<unibi_key_f31>
+
+=item C<unibi_key_f32>
+
+=item C<unibi_key_f33>
+
+=item C<unibi_key_f34>
+
+=item C<unibi_key_f35>
+
+=item C<unibi_key_f36>
+
+=item C<unibi_key_f37>
+
+=item C<unibi_key_f38>
+
+=item C<unibi_key_f39>
+
+=item C<unibi_key_f40>
+
+=item C<unibi_key_f41>
+
+=item C<unibi_key_f42>
+
+=item C<unibi_key_f43>
+
+=item C<unibi_key_f44>
+
+=item C<unibi_key_f45>
+
+=item C<unibi_key_f46>
+
+=item C<unibi_key_f47>
+
+=item C<unibi_key_f48>
+
+=item C<unibi_key_f49>
+
+=item C<unibi_key_f50>
+
+=item C<unibi_key_f51>
+
+=item C<unibi_key_f52>
+
+=item C<unibi_key_f53>
+
+=item C<unibi_key_f54>
+
+=item C<unibi_key_f55>
+
+=item C<unibi_key_f56>
+
+=item C<unibi_key_f57>
+
+=item C<unibi_key_f58>
+
+=item C<unibi_key_f59>
+
+=item C<unibi_key_f60>
+
+=item C<unibi_key_f61>
+
+=item C<unibi_key_f62>
+
+=item C<unibi_key_f63>
+
+=item C<unibi_clr_bol>
+
+=item C<unibi_clear_margins>
+
+=item C<unibi_set_left_margin>
+
+=item C<unibi_set_right_margin>
+
+=item C<unibi_label_format>
+
+=item C<unibi_set_clock>
+
+=item C<unibi_display_clock>
+
+=item C<unibi_remove_clock>
+
+=item C<unibi_create_window>
+
+=item C<unibi_goto_window>
+
+=item C<unibi_hangup>
+
+=item C<unibi_dial_phone>
+
+=item C<unibi_quick_dial>
+
+=item C<unibi_tone>
+
+=item C<unibi_pulse>
+
+=item C<unibi_flash_hook>
+
+=item C<unibi_fixed_pause>
+
+=item C<unibi_wait_tone>
+
+=item C<unibi_user0>
+
+=item C<unibi_user1>
+
+=item C<unibi_user2>
+
+=item C<unibi_user3>
+
+=item C<unibi_user4>
+
+=item C<unibi_user5>
+
+=item C<unibi_user6>
+
+=item C<unibi_user7>
+
+=item C<unibi_user8>
+
+=item C<unibi_user9>
+
+=item C<unibi_orig_pair>
+
+=item C<unibi_orig_colors>
+
+=item C<unibi_initialize_color>
+
+=item C<unibi_initialize_pair>
+
+=item C<unibi_set_color_pair>
+
+=item C<unibi_set_foreground>
+
+=item C<unibi_set_background>
+
+=item C<unibi_change_char_pitch>
+
+=item C<unibi_change_line_pitch>
+
+=item C<unibi_change_res_horz>
+
+=item C<unibi_change_res_vert>
+
+=item C<unibi_define_char>
+
+=item C<unibi_enter_doublewide_mode>
+
+=item C<unibi_enter_draft_quality>
+
+=item C<unibi_enter_italics_mode>
+
+=item C<unibi_enter_leftward_mode>
+
+=item C<unibi_enter_micro_mode>
+
+=item C<unibi_enter_near_letter_quality>
+
+=item C<unibi_enter_normal_quality>
+
+=item C<unibi_enter_shadow_mode>
+
+=item C<unibi_enter_subscript_mode>
+
+=item C<unibi_enter_superscript_mode>
+
+=item C<unibi_enter_upward_mode>
+
+=item C<unibi_exit_doublewide_mode>
+
+=item C<unibi_exit_italics_mode>
+
+=item C<unibi_exit_leftward_mode>
+
+=item C<unibi_exit_micro_mode>
+
+=item C<unibi_exit_shadow_mode>
+
+=item C<unibi_exit_subscript_mode>
+
+=item C<unibi_exit_superscript_mode>
+
+=item C<unibi_exit_upward_mode>
+
+=item C<unibi_micro_column_address>
+
+=item C<unibi_micro_down>
+
+=item C<unibi_micro_left>
+
+=item C<unibi_micro_right>
+
+=item C<unibi_micro_row_address>
+
+=item C<unibi_micro_up>
+
+=item C<unibi_order_of_pins>
+
+=item C<unibi_parm_down_micro>
+
+=item C<unibi_parm_left_micro>
+
+=item C<unibi_parm_right_micro>
+
+=item C<unibi_parm_up_micro>
+
+=item C<unibi_select_char_set>
+
+=item C<unibi_set_bottom_margin>
+
+=item C<unibi_set_bottom_margin_parm>
+
+=item C<unibi_set_left_margin_parm>
+
+=item C<unibi_set_right_margin_parm>
+
+=item C<unibi_set_top_margin>
+
+=item C<unibi_set_top_margin_parm>
+
+=item C<unibi_start_bit_image>
+
+=item C<unibi_start_char_set_def>
+
+=item C<unibi_stop_bit_image>
+
+=item C<unibi_stop_char_set_def>
+
+=item C<unibi_subscript_characters>
+
+=item C<unibi_superscript_characters>
+
+=item C<unibi_these_cause_cr>
+
+=item C<unibi_zero_motion>
+
+=item C<unibi_char_set_names>
+
+=item C<unibi_key_mouse>
+
+=item C<unibi_mouse_info>
+
+=item C<unibi_req_mouse_pos>
+
+=item C<unibi_get_mouse>
+
+=item C<unibi_set_a_foreground>
+
+=item C<unibi_set_a_background>
+
+=item C<unibi_pkey_plab>
+
+=item C<unibi_device_type>
+
+=item C<unibi_code_set_init>
+
+=item C<unibi_set0_des_seq>
+
+=item C<unibi_set1_des_seq>
+
+=item C<unibi_set2_des_seq>
+
+=item C<unibi_set3_des_seq>
+
+=item C<unibi_set_lr_margin>
+
+=item C<unibi_set_tb_margin>
+
+=item C<unibi_bit_image_repeat>
+
+=item C<unibi_bit_image_newline>
+
+=item C<unibi_bit_image_carriage_return>
+
+=item C<unibi_color_names>
+
+=item C<unibi_define_bit_image_region>
+
+=item C<unibi_end_bit_image_region>
+
+=item C<unibi_set_color_band>
+
+=item C<unibi_set_page_length>
+
+=item C<unibi_display_pc_char>
+
+=item C<unibi_enter_pc_charset_mode>
+
+=item C<unibi_exit_pc_charset_mode>
+
+=item C<unibi_enter_scancode_mode>
+
+=item C<unibi_exit_scancode_mode>
+
+=item C<unibi_pc_term_options>
+
+=item C<unibi_scancode_escape>
+
+=item C<unibi_alt_scancode_esc>
+
+=item C<unibi_enter_horizontal_hl_mode>
+
+=item C<unibi_enter_left_hl_mode>
+
+=item C<unibi_enter_low_hl_mode>
+
+=item C<unibi_enter_right_hl_mode>
+
+=item C<unibi_enter_top_hl_mode>
+
+=item C<unibi_enter_vertical_hl_mode>
+
+=item C<unibi_set_a_attributes>
+
+=item C<unibi_set_pglen_inch>
+
+=item C<unibi_termcap_init2>
+
+=item C<unibi_termcap_reset>
+
+=item C<unibi_linefeed_if_not_lf>
+
+=item C<unibi_backspace_if_not_bs>
+
+=item C<unibi_other_non_function_keys>
+
+=item C<unibi_arrow_key_map>
+
+=item C<unibi_acs_ulcorner>
+
+=item C<unibi_acs_llcorner>
+
+=item C<unibi_acs_urcorner>
+
+=item C<unibi_acs_lrcorner>
+
+=item C<unibi_acs_ltee>
+
+=item C<unibi_acs_rtee>
+
+=item C<unibi_acs_btee>
+
+=item C<unibi_acs_ttee>
+
+=item C<unibi_acs_hline>
+
+=item C<unibi_acs_vline>
+
+=item C<unibi_acs_plus>
+
+=item C<unibi_memory_lock>
+
+=item C<unibi_memory_unlock>
+
+=item C<unibi_box_chars_1>
+
+=back
+
+=back
+
+=head1 SEE ALSO
+
+L<terminfo(5)>,
+L<unibi_dummy(3)>,
+L<unibi_from_mem(3)>,
+L<unibi_destroy(3)>,
+L<unibi_dump(3)>,
+L<unibi_get_name(3)>,
+L<unibi_set_name(3)>,
+L<unibi_get_aliases(3)>,
+L<unibi_set_aliases(3)>,
+L<unibi_get_bool(3)>,
+L<unibi_set_bool(3)>,
+L<unibi_get_num(3)>,
+L<unibi_set_num(3)>,
+L<unibi_get_str(3)>,
+L<unibi_set_str(3)>,
+L<unibi_from_fp(3)>,
+L<unibi_from_fd(3)>,
+L<unibi_from_file(3)>,
+L<unibi_from_term(3)>,
+L<unibi_from_env(3)>,
+L<unibi_terminfo_dirs(3)>,
+L<unibi_name_bool(3)>,
+L<unibi_name_num(3)>,
+L<unibi_name_str(3)>
+
+=cut

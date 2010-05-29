@@ -1,0 +1,39 @@
+=pod
+
+=head1 NAME
+
+unibi_get_aliases, unibi_set_aliases - access the aliases of a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ const char **unibi_get_aliases(const unibi_term *ut);
+ void unibi_set_aliases(unibi_term *ut, const char **v);
+
+=head1 DESCRIPTION
+
+C<unibi_get_aliases> returns the list of aliases from I<ut>;
+C<unibi_set_aliases> sets it to I<v>. The format of this list is like C<argv>:
+a null-terminated vector of strings.
+
+The contents of this list come from the ('|'-separated) name section in
+terminfo entries. It's supposed to be a list of lowercase words or
+abbreviations that refer to this terminal, the first one being the most
+common name. The last part of the name section can be more verbose and is not
+stored in the aliases list; it can be accessed with C<unibi_get_name>.
+
+Note that C<unibi_set_aliases> simply stores the pointer it is given; it will not
+free I<v> or make a copy of it (or any of the strings it points to).
+
+=head1 RETURN VALUE
+
+C<unibi_get_aliases> returns a pointer to a null-terminated vector of strings.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_get_name(3)>,
+L<unibi_set_name(3)>
+
+=cut

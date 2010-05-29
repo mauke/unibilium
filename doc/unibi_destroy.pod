@@ -1,0 +1,23 @@
+=pod
+
+=head1 NAME
+
+unibi_destroy - free a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+
+ void unibi_destroy(unibi_term *ut);
+
+=head1 DESCRIPTION
+
+This function frees a terminal object created by C<unibi_dummy> or C<unibi_from_mem>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_dummy(3)>,
+L<unibi_from_mem(3)>
+
+=cut

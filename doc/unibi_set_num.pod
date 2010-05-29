@@ -1,0 +1,33 @@
+=pod
+
+=head1 NAME
+
+unibi_get_bool, unibi_set_bool, unibi_get_num, unibi_set_num, unibi_get_str,
+unibi_set_str - access the capabilities of a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ int unibi_get_bool(const unibi_term *ut, enum unibi_boolean b);
+ void unibi_set_bool(unibi_term *ut, enum unibi_boolean b, int x);
+ 
+ short unibi_get_num(const unibi_term *ut, enum unibi_numeric n);
+ void unibi_set_num(unibi_term *ut, enum unibi_numeric n, short x);
+ 
+ const char *unibi_get_str(const unibi_term *ut, enum unibi_string s);
+ void unibi_set_str(unibi_term *ut, enum unibi_string s, const char *x);
+
+=head1 DESCRIPTION
+
+Get/set boolean, numeric, and string capabilities. Absent numeric capabilities
+are represented as C<-1>, absent string capabilities as C<NULL>.
+
+Note that C<unibi_set_str> simply stores the pointer it is given; it will not
+free I<x> or make a copy of the string.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>
+
+=cut

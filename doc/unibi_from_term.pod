@@ -1,0 +1,53 @@
+=pod
+
+=head1 NAME
+
+unibi_from_term - read a terminfo entry for a named terminal
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ unibi_term *unibi_from_term(const char *name);
+
+=head1 DESCRIPTION
+
+This function locates the terminfo file for I<name>, then calls C<unibi_from_file>.
+
+It looks in the following places:
+
+=over
+
+=item 1.
+
+If the environment variable C<TERMINFO> is set, it is interpreted as the name
+of the directory to search. No other directory is used.
+
+=item 2.
+
+Otherwise, C<$HOME/.terminfo> is tried.
+
+=item 3.
+
+If that was not successful and C<TERMINFO_DIRS> is set, it is interpreted as a
+colon-separated list of directories to search.
+
+=item 4.
+
+If C<TERMINFO_DIRS> is not set, a compiled-in fallback (C<unibi_terminfo_dirs>)
+is used instead.
+
+=back
+
+=head1 RETURN VALUE
+
+See L<unibi_from_file(3)>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_from_file(3)>,
+L<unibi_terminfo_dirs(3)>,
+L<unibi_destroy(3)>
+
+=cut

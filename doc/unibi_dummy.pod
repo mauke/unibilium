@@ -1,0 +1,27 @@
+=pod
+
+=head1 NAME
+
+unibi_dummy - construct a dummy terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ unibi_term *unibi_dummy(void);
+
+=head1 DESCRIPTION
+
+If you want to create a terminfo entry from scratch, use this function to
+create a dummy C<unibi_term>. Set its capabilities with the various
+C<unibi_set_*> functions, get the terminfo representation with C<unibi_dump>,
+and free it with C<unibi_destroy>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_dump(3)>,
+L<unibi_destroy(3)>,
+L<unibi_from_mem(3)>
+
+=cut

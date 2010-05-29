@@ -1,0 +1,27 @@
+=pod
+
+=head1 NAME
+
+unibi_from_fd - read a terminfo entry from a file descriptor
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ unibi_term *unibi_from_fd(int fd);
+
+=head1 DESCRIPTION
+
+This function reads up to 4096 bytes from I<fd>, then calls C<unibi_from_mem>.
+
+=head1 RETURN VALUE
+
+See L<unibi_from_mem(3)>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_from_mem(3)>,
+L<unibi_destroy(3)>
+
+=cut

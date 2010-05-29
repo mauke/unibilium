@@ -1,0 +1,45 @@
+=pod
+
+=head1 NAME
+
+unibi_dump - convert a terminal object to compiled terminfo data
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+ 
+ size_t unibi_dump(const unibi_term *ut, char *p, size_t n);
+
+=head1 DESCRIPTION
+
+This function creates a compiled terminfo entry from I<ut>. The output is
+written to I<p>, which must have room for at least I<n> bytes.
+
+=head1 RETURN VALUE
+
+C<unibi_dump> returns the number of bytes required to store the terminfo data.
+If this exceeds I<n>, nothing is written to I<p>. If the terminal object can't
+be represented in terminfo format (string table too large), the return value is
+C<SIZE_MAX>.
+
+=head1 ERRORS
+
+=over
+
+=item C<EINVAL>
+
+I<ut> can't be converted to terminfo format.
+
+=item C<EFAULT>
+
+The resulting terminfo entry would be longer than I<n> bytes.
+
+=back
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_destroy(3)>,
+L<unibi_from_mem(3)>
+
+=cut
