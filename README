@@ -1,0 +1,7 @@
+This is a very basic terminfo library. It doesn't depend on curses or any other
+library. It also doesn't use global variables, so it should be thread-safe.
+
+Basic documentation is in the doc/ directory.
+
+To use it, compile unibilium.c, uninames.c, and uniutil.c into a library.
+Include "unibilium.h" in your code.
