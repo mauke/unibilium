@@ -1,4 +1,4 @@
-/* Copyright 2008, Lukas Mai.
+/* Copyright 2008, 2010, Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -40,7 +40,7 @@ unibi_term *unibi_from_fp(FILE *fp) {
 		return NULL;
 	}
 
-	return unibi_init(buf, n);
+	return unibi_from_mem(buf, n);
 }
 
 unibi_term *unibi_from_fd(int fd) {
@@ -56,7 +56,7 @@ unibi_term *unibi_from_fd(int fd) {
 		return NULL;
 	}
 
-	return unibi_init(buf, n);
+	return unibi_from_mem(buf, n);
 }
 
 unibi_term *unibi_from_file(const char *file) {

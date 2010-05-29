@@ -1,4 +1,4 @@
-/* Copyright 2010, Lukas Mai.
+/* Copyright 2008, 2010, Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -134,7 +134,7 @@ static size_t mcount(const char *p, size_t n, char c) {
 #define DEL_FAIL_IF(c, e, x) FAIL_IF_(c, e, unibi_destroy(x))
 #define SOFT_FAIL_IF(c) if (!(c)) ; else break
 
-unibi_term *unibi_init(const char *p, size_t n) {
+unibi_term *unibi_from_mem(const char *p, size_t n) {
 	unibi_term *t = NULL;
 	unsigned short magic, namlen, boollen, numlen, strslen, tablsz;
 	char *strp, *namp;

@@ -1,7 +1,7 @@
 #ifndef GUARD_UNIBILIUM_H_
 #define GUARD_UNIBILIUM_H_
 
-/* Copyright 2008, Lukas Mai.
+/* Copyright 2008, 2010, Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -524,7 +524,7 @@ enum unibi_string {
 typedef struct unibi_term unibi_term;
 
 unibi_term *unibi_dummy(void);
-unibi_term *unibi_init(const char *, size_t);
+unibi_term *unibi_from_mem(const char *, size_t);
 void unibi_destroy(unibi_term *);
 
 size_t unibi_dump(const unibi_term *, char *, size_t);
