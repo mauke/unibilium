@@ -133,11 +133,8 @@ unibi_term *unibi_from_term(const char *term) {
 		return NULL;
 	}
 
-	if ((env = getenv("TERMINFO_DIRS"))) {
-		ut = from_dirs(env, term);
-		if (ut) {
-			return ut;
-		}
+	if ((env = getenv("TERMINFO"))) {
+		return from_dir(env, ".", term);
 	}
 
 	if ((env = getenv("HOME"))) {
@@ -145,6 +142,10 @@ unibi_term *unibi_from_term(const char *term) {
 		if (ut) {
 			return ut;
 		}
+	}
+
+	if ((env = getenv("TERMINFO_DIRS"))) {
+		return from_dirs(env, term);
 	}
 
 	return from_dirs(unibi_terminfo_dirs, term);
