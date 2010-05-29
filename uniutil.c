@@ -76,7 +76,8 @@ static unibi_term *from_dir(const char *base, const char *mid, const char *term)
 	char *path;
 
 	path = alloca(strlen(base) + 1 + strlen(mid) + 1 + 1 + 1 + strlen(term) + 1);
-	sprintf(path, "%s"          "/"  "%s"         "/" "%c""/"  "%s", base, mid, term[0], term);
+	sprintf(path,        "%s"   "/"         "%s"  "/" "%c""/"         "%s",
+	                     base,              mid,      term[0],        term);
 	return unibi_from_file(path);
 }
 
