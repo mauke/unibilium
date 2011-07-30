@@ -1,7 +1,7 @@
 #ifndef GUARD_UNIBILIUM_H_
 #define GUARD_UNIBILIUM_H_
 
-/* Copyright 2008, 2010, Lukas Mai.
+/* Copyright 2008, 2010, 2011 Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -564,7 +564,10 @@ unibi_term *unibi_from_env(void);
 extern const char *const unibi_terminfo_dirs;
 
 const char *unibi_name_bool(enum unibi_boolean);
+const char *unibi_short_name_bool(enum unibi_boolean);
 const char *unibi_name_num(enum unibi_numeric);
+const char *unibi_short_name_num(enum unibi_numeric);
 const char *unibi_name_str(enum unibi_string);
+const char *unibi_short_name_str(enum unibi_string);
 
 #endif /* GUARD_UNIBILIUM_H_ */

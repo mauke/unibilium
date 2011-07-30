@@ -1069,7 +1069,10 @@ L<unibi_from_term(3)>,
 L<unibi_from_env(3)>,
 L<unibi_terminfo_dirs(3)>,
 L<unibi_name_bool(3)>,
+L<unibi_short_name_bool(3)>,
 L<unibi_name_num(3)>,
-L<unibi_name_str(3)>
+L<unibi_short_name_num(3)>,
+L<unibi_name_str(3)>,
+L<unibi_short_name_str(3)>
 
 =cut

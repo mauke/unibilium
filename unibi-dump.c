@@ -27,7 +27,7 @@ int main(void) {
 	printf("Boolean capabilities:\n");
 	for (enum unibi_boolean i = unibi_boolean_begin_ + 1; i < unibi_boolean_end_; ++i) {
 		if (unibi_get_bool(ut, i)) {
-			printf("  %s\n", unibi_name_bool(i));
+			printf("  %-25s / %s\n", unibi_name_bool(i), unibi_short_name_bool(i));
 		}
 	}
 	printf("\n");
@@ -36,7 +36,7 @@ int main(void) {
 	for (enum unibi_numeric i = unibi_numeric_begin_ + 1; i < unibi_numeric_end_; ++i) {
 		short n = unibi_get_num(ut, i);
 		if (n != -1) {
-			printf("  %-25s = %hd\n", unibi_name_num(i), n);
+			printf("  %-25s / %-10s = %hd\n", unibi_name_num(i), unibi_short_name_num(i), n);
 		}
 	}
 	printf("\n");
@@ -46,7 +46,7 @@ int main(void) {
 		const char *s = unibi_get_str(ut, i);
 		if (s) {
 			/* Most of these strings will contain escape sequences */
-			printf("  %-25s = ", unibi_name_str(i));
+			printf("  %-25s / %-10s = ", unibi_name_str(i), unibi_short_name_str(i));
 			for (unsigned char c; (c = *s); ++s) {
 				switch (c) {
 					case '\a': printf("\\a"); break;
