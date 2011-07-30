@@ -1,0 +1,9 @@
+libdir=@LIBDIR@
+includedir=@INCDIR@
+version=@VERSION@
+
+Name: unibilium
+Description: terminfo parser and utility functions
+Version: ${version}
+Libs: -L${libdir} -lunibilium
+Cflags: -I${includedir}
