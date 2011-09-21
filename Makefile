@@ -35,7 +35,7 @@ OBJECTS=unibilium.lo uninames.lo uniutil.lo
 LIBRARY=libunibilium.la
 
 .PHONY: all
-all: unibi-dump
+all: $(LIBRARY) unibi-dump
 
 %.lo: %.c unibilium.h
 	$(LIBTOOL) --mode=compile --tag=CC gcc $(CFLAGS) $(CFLAGS_DEBUG) -Wall -std=c99 -o $@ -c $<
