@@ -1,0 +1,35 @@
+=pod
+
+=head1 NAME
+
+sparchways.h - terminfo format string interpreter
+
+=head1 SYNOPSIS
+
+  #include "sparchways.h"
+
+=head1 DESCRIPTION
+
+This library provides a simple and generic interpreter for terminfo format strings.
+
+=head2 Types
+
+The following types are provided:
+
+=over
+
+=item sparch_var_t
+
+A union with two members, C<int i> and C<char *p>. It represents the values
+used in format string operations.
+
+=back
+
+=head1 SEE ALSO
+
+L<terminfo(5)>,
+L<unibilium.h(3)>,
+L<sparch_format(3)>,
+L<sparch_run(3)>
+
+=cut
