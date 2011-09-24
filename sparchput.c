@@ -1,3 +1,9 @@
+/* Copyright 2011 Lukas Mai.
+ *
+ * This library is under the GNU Lesser General Public License;
+ * see the file LGPLv3 for details.
+ */
+
 #include "unibilium.h"
 #include "sparchways.h"
 
