@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 			}
 			sparch_var_t vars[9] = {{0}};
 			switch (i) {
-#define REQ(N) do { if (argc - 2 < (N)) { fprintf(stderr, "%s: %s: missing arugment\n", argv[0], argv[1]); return 4; } } while (0)
+#define REQ(N) do { if (argc - 2 < (N)) { fprintf(stderr, "%s: %s: missing argument\n", argv[0], argv[1]); return 4; } } while (0)
 
 				case unibi_dial_phone:
 				case unibi_quick_dial:
