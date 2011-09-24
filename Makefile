@@ -25,7 +25,7 @@ MAN3DIR=$(MANDIR)/man3
 TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo"
 
 POD2MAN=pod2man
-POD2MAN_OPTS=-c "unibilium"
+POD2MAN_OPTS=-c "unibilium" -s3 -r "unibilium-$(PKG_VERSION)"
 
 ifeq ($(DEBUG),1)
   CFLAGS_DEBUG=-ggdb -DDEBUG
@@ -34,8 +34,11 @@ endif
 OBJECTS=unibilium.lo uninames.lo uniutil.lo
 LIBRARY=libunibilium.la
 
+PODS=$(wildcard doc/*.pod)
+MANPAGES=$(addprefix man/,$(notdir $(PODS:.pod=.3.gz)))
+
 .PHONY: all
-all: $(LIBRARY) unibi-dump
+all: $(LIBRARY) unibi-dump build-man
 
 %.lo: %.c unibilium.h
 	$(LIBTOOL) --mode=compile --tag=CC gcc $(CFLAGS) $(CFLAGS_DEBUG) -Wall -std=c99 -o $@ -c $<
@@ -54,6 +57,7 @@ clean:
 	$(LIBTOOL) --mode=clean rm -f $(OBJECTS) unibi-dump.lo
 	$(LIBTOOL) --mode=clean rm -f $(LIBRARY)
 	$(LIBTOOL) --mode=clean rm -f unibi-dump
+	$(LIBTOOL) --mode=clean rm -f $(MANPAGES)
 
 .PHONY: install
 install: install-inc install-lib install-man
@@ -72,8 +76,12 @@ install-lib:
 	$(LIBTOOL) --mode=install cp libunibilium.la '$(DESTDIR)$(LIBDIR)/libunibilium.la'
 
 .PHONY: install-man
-install-man:
+install-man: build-man
 	install -d '$(DESTDIR)$(MAN3DIR)'
-	for F in $(notdir $(wildcard doc/*.pod)); do \
-	  $(POD2MAN) $(POD2MAN_OPTS) doc/$$F | gzip >'$(DESTDIR)$(MAN3DIR)'/`basename $$F .pod`.3.gz ; \
-	done
+	install -m644 $(MANPAGES) '$(DESTDIR)$(MAN3DIR)'
+
+.PHONY: build-man
+build-man: $(MANPAGES)
+
+man/%.3.gz: doc/%.pod
+	$(POD2MAN) $(POD2MAN_OPTS) $< | gzip > $@
