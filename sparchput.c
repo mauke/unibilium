@@ -30,7 +30,10 @@ int main(int argc, char **argv) {
 	}
 
 	for (enum unibi_boolean i = unibi_boolean_begin_ + 1; i < unibi_boolean_end_; ++i) {
-		if (strcmp(argv[1], unibi_name_bool(i)) == 0) {
+		if (
+			strcmp(argv[1], unibi_name_bool(i)) == 0 ||
+			strcmp(argv[1], unibi_short_name_bool(i)) == 0
+		) {
 			if (unibi_get_bool(t, i)) {
 				return 0;
 			} else {
@@ -40,14 +43,20 @@ int main(int argc, char **argv) {
 	}
 
 	for (enum unibi_numeric i = unibi_numeric_begin_ + 1; i < unibi_numeric_end_; ++i) {
-		if (strcmp(argv[1], unibi_name_num(i)) == 0) {
+		if (
+			strcmp(argv[1], unibi_name_num(i)) == 0 ||
+			strcmp(argv[1], unibi_short_name_num(i)) == 0
+		) {
 			printf("%hd\n", unibi_get_num(t, i));
 			return 0;
 		}
 	}
 
 	for (enum unibi_string i = unibi_string_begin_ + 1; i < unibi_string_end_; ++i) {
-		if (strcmp(argv[1], unibi_name_str(i)) == 0) {
+		if (
+			strcmp(argv[1], unibi_name_str(i)) == 0 ||
+			strcmp(argv[1], unibi_short_name_str(i)) == 0
+		) {
 			const char *fmt = unibi_get_str(t, i);
 			if (!fmt) {
 				return 1;
