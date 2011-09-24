@@ -51,10 +51,10 @@ static long cstrtol(const char *s, const char **pp) {
 }
 
 void sparch_format(
-	sparch_var_t vdyn[26],
-	sparch_var_t vsta[26],
+	sparch_var_t var_dyn[26],
+	sparch_var_t var_static[26],
 	const char *fmt,
-	sparch_var_t parm[9],
+	sparch_var_t param[9],
 	void (*out)(void *, const char *, size_t),
 	void *ctx1,
 	void (*pad)(void *, size_t, int, int),
@@ -208,7 +208,7 @@ void sparch_format(
 			case 'p':
 				if (*fmt >= '1' && *fmt <= '9') {
 					size_t n = *fmt++ - '1';
-					PUSH(parm[n]);
+					PUSH(param[n]);
 				} else {
 					out(ctx1, fmt - 2, 2);
 				}
@@ -217,10 +217,10 @@ void sparch_format(
 			case 'P':
 				if (*fmt >= 'a' && *fmt <= 'z') {
 					++fmt;
-					vdyn[*fmt - 'a'] = POP();
+					var_dyn[*fmt - 'a'] = POP();
 				} else if (*fmt >= 'A' && *fmt <= 'Z') {
 					++fmt;
-					vsta[*fmt - 'A'] = POP();
+					var_static[*fmt - 'A'] = POP();
 				} else {
 					out(ctx1, fmt - 2, 2);
 				}
@@ -229,10 +229,10 @@ void sparch_format(
 			case 'g':
 				if (*fmt >= 'a' && *fmt <= 'z') {
 					++fmt;
-					PUSH(vdyn[*fmt - 'a']);
+					PUSH(var_dyn[*fmt - 'a']);
 				} else if (*fmt >= 'A' && *fmt <= 'Z') {
 					++fmt;
-					PUSH(vsta[*fmt - 'A']);
+					PUSH(var_static[*fmt - 'A']);
 				} else {
 					out(ctx1, fmt - 2, 2);
 				}
@@ -263,8 +263,8 @@ void sparch_format(
 				break;
 
 			case 'i':
-				++parm[0].i;
-				++parm[1].i;
+				++param[0].i;
+				++param[1].i;
 				break;
 
 			case '?':
@@ -377,7 +377,7 @@ static void out(void *vctx, const char *p, size_t n) {
 	ctx->n -= k;
 }
 
-size_t sparch_run(const char *fmt, sparch_var_t parm[9], char *p, size_t n) {
+size_t sparch_run(const char *fmt, sparch_var_t param[9], char *p, size_t n) {
 	sparch_var_t vars[26 + 26] = {{0}};
 	run_ctx_t ctx;
 
@@ -385,6 +385,6 @@ size_t sparch_run(const char *fmt, sparch_var_t parm[9], char *p, size_t n) {
 	ctx.n = n;
 	ctx.w = 0;
 
-	sparch_format(vars, vars + 26, fmt, parm, out, &ctx, NULL, NULL);
+	sparch_format(vars, vars + 26, fmt, param, out, &ctx, NULL, NULL);
 	return ctx.w;
 }
