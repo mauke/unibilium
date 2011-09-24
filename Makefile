@@ -4,6 +4,8 @@ CFLAGS?=
 
 CFLAGS_DEBUG=
 
+PACKAGE=unibilium
+
 PKG_MAJOR=0
 PKG_MINOR=1
 PKG_REVISION=0
@@ -25,7 +27,7 @@ MAN3DIR=$(MANDIR)/man3
 TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo"
 
 POD2MAN=pod2man
-POD2MAN_OPTS=-c "unibilium" -s3 -r "unibilium-$(PKG_VERSION)"
+POD2MAN_OPTS=-c "$(PACKAGE)" -s3 -r "$(PACKAGE)-$(PKG_VERSION)"
 
 ifeq ($(DEBUG),1)
   CFLAGS_DEBUG=-ggdb -DDEBUG
@@ -38,7 +40,7 @@ PODS=$(wildcard doc/*.pod)
 MANPAGES=$(addprefix man/,$(notdir $(PODS:.pod=.3.gz)))
 
 .PHONY: all
-all: $(LIBRARY) unibi-dump build-man
+all: $(LIBRARY) build-man unibi-dump
 
 %.lo: %.c unibilium.h
 	$(LIBTOOL) --mode=compile --tag=CC gcc $(CFLAGS) $(CFLAGS_DEBUG) -Wall -std=c99 -o $@ -c $<
@@ -54,10 +56,8 @@ unibi-dump: $(LIBRARY) unibi-dump.lo
 
 .PHONY: clean
 clean:
-	$(LIBTOOL) --mode=clean rm -f $(OBJECTS) unibi-dump.lo
-	$(LIBTOOL) --mode=clean rm -f $(LIBRARY)
-	$(LIBTOOL) --mode=clean rm -f unibi-dump
-	$(LIBTOOL) --mode=clean rm -f $(MANPAGES)
+	$(LIBTOOL) --mode=clean rm -f $(OBJECTS) $(LIBRARY) $(MANPAGES)
+	$(LIBTOOL) --mode=clean rm -f unibi-dump unibi-dump.lo
 
 .PHONY: install
 install: install-inc install-lib install-man
@@ -73,7 +73,7 @@ install-inc:
 .PHONY: install-lib
 install-lib:
 	install -d '$(DESTDIR)$(LIBDIR)'
-	$(LIBTOOL) --mode=install cp libunibilium.la '$(DESTDIR)$(LIBDIR)/libunibilium.la'
+	$(LIBTOOL) --mode=install cp $(LIBRARY) '$(DESTDIR)$(LIBDIR)/$(LIBRARY)'
 
 .PHONY: install-man
 install-man: build-man
