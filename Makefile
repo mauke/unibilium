@@ -6,8 +6,8 @@ CFLAGS_DEBUG=
 
 PACKAGE=unibilium
 
-PKG_MAJOR=0
-PKG_MINOR=1
+PKG_MAJOR=1
+PKG_MINOR=0
 PKG_REVISION=0
 
 PKG_VERSION=$(PKG_MAJOR).$(PKG_MINOR).$(PKG_REVISION)
@@ -15,8 +15,8 @@ PKG_VERSION=$(PKG_MAJOR).$(PKG_MINOR).$(PKG_REVISION)
 # I am implementation $LT_REVISION of binary interface $LT_CURRENT, which is
 # a superset of all interfaces back to $LT_CURRENT - $LT_AGE.
 LT_REVISION=0
-LT_CURRENT=0
-LT_AGE=0
+LT_CURRENT=1
+LT_AGE=1
 
 PREFIX=/usr/local
 LIBDIR=$(PREFIX)/lib
