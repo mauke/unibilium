@@ -12,11 +12,61 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define ASSERT_RETURN(COND, VAL) do { \
+	assert(COND); \
+	if (!(COND)) return VAL; \
+} while (0)
+
+#define ASSERT_RETURN_(COND) ASSERT_RETURN(COND, )
+
 #define COUNTOF(a) (sizeof (a) / sizeof *(a))
 
 #define NCONTAINERS(n, csize) (((n) - 1) / (csize) + 1u)
 
+#define SIZE_ERR ((size_t)-1)
+
 #define MAX15BITS 0x7fff
+
+#define DYNARR(W, X) DynArr_ ## W ## _ ## X
+#define DYNARR_T(W) DYNARR(W, t)
+#define DEFDYNARRAY(T, W) \
+	typedef struct { T (*data); size_t used, size; } DYNARR_T(W); \
+	static void DYNARR(W, init)(DYNARR_T(W) *const d) { \
+		d->data = NULL; \
+		d->used = d->size = 0; \
+	} \
+	static void DYNARR(W, free)(DYNARR_T(W) *const d) { \
+		free(d->data); \
+		DYNARR(W, init)(d); \
+	} \
+	static int DYNARR(W, ensure_slots)(DYNARR_T(W) *const d, const size_t n) { \
+		size_t k = d->size; \
+		while (d->used + n > k) { \
+			k = next_alloc(k); \
+		} \
+		if (k > d->size) { \
+			T (*const p) = realloc(d->data, k * sizeof *p); \
+			if (!p) { \
+				return 0; \
+			} \
+			d->data = p; \
+			d->size = k; \
+		} \
+		return 1; \
+	} \
+	static int DYNARR(W, ensure_slot)(DYNARR_T(W) *const d) { \
+		return DYNARR(W, ensure_slots)(d, 1); \
+	} \
+	static void DYNARR(W, init)(DYNARR_T(W) *)
+
+static size_t next_alloc(size_t n) {
+	return n * 3 / 2 + 5;
+}
+
+DEFDYNARRAY(unsigned char, bool);
+DEFDYNARRAY(short, num);
+DEFDYNARRAY(const char *, str);
+
 
 enum {MAGIC = 0432};
 
@@ -29,39 +79,15 @@ struct unibi_term {
 	const char *strs[unibi_string_end_ - unibi_string_begin_ - 1];
 	char *alloc;
 
-#if 0
-	size_t ext_bsize;
-	struct { const char *name; } *ext_bools;
-	size_t ext_nsize;
-	struct { const char *name; short value; } *ext_nums;
-	size_t ext_ssize;
-	struct { const char *name; const char *value; } *ext_strs;
+	DYNARR_T(bool) ext_bools;
+	DYNARR_T(num) ext_nums;
+	DYNARR_T(str) ext_strs;
+	DYNARR_T(str) ext_names;
 	char *ext_alloc;
-#endif
 };
 
-/* No extended terminfo attributes for me. term(5) says the extended header
- * consists of:
- * |  (1)  count of extended boolean capabilities
- * |  (2)  count of extended numeric capabilities
- * |  (3)  count of extended string capabilities
- * |  (4)  size of the extended string table in bytes.
- * |  (5)  last offset of the extended string table in bytes.
- *
- * I have no idea why (5) is necessary. From this description it seems like (5)
- * should always be (4) - 1. Looking at the ncurses source code I find that it
- * completely ignores (4). However, it treats (5) as the size of the string
- * table. Later on, (5) is used as the size of both an array A and the part of
- * A starting at some offset > 0. This looks obviously broken. In addition, the
- * function responsible for checking these bounds has an off-by-one error.
- * Finally, I don't actually have any terminfo files that use extended
- * capabilities on my system.
- *
- * In conclusion: The docs are vague, the source contradicts the docs (but is
- * buggy), and I have no data files to reverse engineer the format. Until this
- * changes, I have no idea what to do in this library; therefore I simply
- * ignore extended capabilities.
- */
+#define ASSERT_EXT_NAMES(X) assert((X)->ext_names.used == (X)->ext_bools.used + (X)->ext_nums.used + (X)->ext_strs.used)
+
 
 static unsigned short get_ushort(const char *p) {
 	const unsigned char *q = (const unsigned char *)p;
@@ -91,6 +117,7 @@ static const char *off_of(const char *p, size_t n, short i) {
 
 unibi_term *unibi_dummy(void) {
 	unibi_term *t;
+
 	if (!(t = malloc(sizeof *t))) {
 		return NULL;
 	}
@@ -106,15 +133,11 @@ unibi_term *unibi_dummy(void) {
 	fill_1(t->nums, COUNTOF(t->nums));
 	fill_null(t->strs, COUNTOF(t->strs));
 
-#if 0
-	t->ext_bsize = 0;
-	t->ext_bools = NULL;
-	t->ext_nsize = 0;
-	t->ext_nums = NULL;
-	t->ext_ssize = 0;
-	t->ext_strs = NULL;
+	DYNARR(bool, init)(&t->ext_bools);
+	DYNARR(num, init)(&t->ext_nums);
+	DYNARR(str, init)(&t->ext_strs);
+	DYNARR(str, init)(&t->ext_names);
 	t->ext_alloc = NULL;
-#endif
 
 	return t;
 }
@@ -123,16 +146,19 @@ static size_t mcount(const char *p, size_t n, char c) {
 	size_t r = 0;
 	while (n--) {
 		if (*p++ == c) {
-			++r;
+			r++;
 		}
 	}
 	return r;
 }
 
+static size_t size_max(size_t a, size_t b) {
+	return a >= b ? a : b;
+}
+
 #define FAIL_IF_(c, e, f) do { if (c) { f; errno = (e); return NULL; } } while (0)
 #define FAIL_IF(c, e) FAIL_IF_(c, e, (void)0)
 #define DEL_FAIL_IF(c, e, x) FAIL_IF_(c, e, unibi_destroy(x))
-#define SOFT_FAIL_IF(c) if (!(c)) ; else break
 
 unibi_term *unibi_from_mem(const char *p, size_t n) {
 	unibi_term *t = NULL;
@@ -189,19 +215,15 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 		t->name = a;
 	}
 
-#if 0
-	t->ext_bsize = 0;
-	t->ext_bools = NULL;
-	t->ext_nsize = 0;
-	t->ext_nums = NULL;
-	t->ext_ssize = 0;
-	t->ext_strs = NULL;
+	DYNARR(bool, init)(&t->ext_bools);
+	DYNARR(num, init)(&t->ext_nums);
+	DYNARR(str, init)(&t->ext_strs);
+	DYNARR(str, init)(&t->ext_names);
 	t->ext_alloc = NULL;
-#endif
 
 	DEL_FAIL_IF(n < boollen, EFAULT, t);
 	memset(t->bools, '\0', sizeof t->bools);
-	for (i = 0; i < boollen && i / CHAR_BIT < COUNTOF(t->bools); ++i) {
+	for (i = 0; i < boollen && i / CHAR_BIT < COUNTOF(t->bools); i++) {
 		if (p[i]) {
 			t->bools[i / CHAR_BIT] |= 1 << i % CHAR_BIT;
 		}
@@ -215,7 +237,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 	}
 
 	DEL_FAIL_IF(n < numlen * 2u, EFAULT, t);
-	for (i = 0; i < numlen && i < COUNTOF(t->nums); ++i) {
+	for (i = 0; i < numlen && i < COUNTOF(t->nums); i++) {
 		t->nums[i] = get_short(p + i * 2);
 	}
 	fill_1(t->nums + i, COUNTOF(t->nums) - i);
@@ -223,7 +245,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 	n -= numlen * 2;
 
 	DEL_FAIL_IF(n < strslen * 2u, EFAULT, t);
-	for (i = 0; i < strslen && i < COUNTOF(t->strs); ++i) {
+	for (i = 0; i < strslen && i < COUNTOF(t->strs); i++) {
 		t->strs[i] = off_of(strp, tablsz, get_short(p + i * 2));
 	}
 	fill_null(t->strs + i, COUNTOF(t->strs) - i);
@@ -232,39 +254,153 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 
 	DEL_FAIL_IF(n < tablsz, EFAULT, t);
 	memcpy(strp, p, tablsz);
+	if (tablsz) {
+		strp[tablsz - 1] = '\0';
+	}
 	p += tablsz;
 	n -= tablsz;
 
-#if 0
-	do {
-		unsigned short extboollen, extnumlen, extstrslen, exttablsz, exttablend;
+	if (tablsz % 2 && n > 0) {
+		p += 1;
+		n -= 1;
+	}
 
-		if (tablsz % 2 && n > 0) {
-			p += 1;
-			n -= 1;
-		}
+	if (n >= 10) {
+		unsigned short extboollen, extnumlen, extstrslen, extofflen, exttablsz;
+		size_t extalllen;
 
-		SOFT_FAIL_IF(n < 10);
 		extboollen = get_ushort(p + 0);
 		extnumlen  = get_ushort(p + 2);
 		extstrslen = get_ushort(p + 4);
-		exttablsz  = get_ushort(p + 6);
-		exttablend = get_ushort(p + 8);
-		p += 10;
-		n -= 10;
+		extofflen  = get_ushort(p + 6);
+		exttablsz  = get_ushort(p + 8);
 
-		SOFT_FAIL_IF(n < extboollen + extboollen % 2 + extnumlen * 2 + extstrslen * 2);
-	} while (0);
-#endif
+		if (
+			extboollen <= MAX15BITS &&
+			extnumlen <= MAX15BITS &&
+			extstrslen <= MAX15BITS &&
+			extofflen <= MAX15BITS &&
+			exttablsz <= MAX15BITS
+		) {
+			p += 10;
+			n -= 10;
+
+			extalllen = 0;
+			extalllen += extboollen;
+			extalllen += extnumlen;
+			extalllen += extstrslen;
+
+			DEL_FAIL_IF(extofflen != extalllen + extstrslen, EINVAL, t);
+
+			DEL_FAIL_IF(
+				n <
+				extboollen +
+				extboollen % 2 +
+				extnumlen * 2 +
+				extstrslen * 2 +
+				extalllen * 2 +
+				exttablsz,
+				EFAULT,
+				t
+			);
+
+			DEL_FAIL_IF(
+				!DYNARR(bool, ensure_slots)(&t->ext_bools, extboollen) ||
+				!DYNARR(num, ensure_slots)(&t->ext_nums, extnumlen) ||
+				!DYNARR(str, ensure_slots)(&t->ext_strs, extstrslen) ||
+				!DYNARR(str, ensure_slots)(&t->ext_names, extalllen) ||
+				(exttablsz && !(t->ext_alloc = malloc(exttablsz))),
+				ENOMEM,
+				t
+			);
+
+			for (i = 0; i < extboollen; i++) {
+				t->ext_bools.data[i] = !!p[i];
+			}
+			t->ext_bools.used = extboollen;
+			p += extboollen;
+			n -= extboollen;
+
+			if (extboollen % 2) {
+				p += 1;
+				n -= 1;
+			}
+
+			for (i = 0; i < extnumlen; i++) {
+				t->ext_nums.data[i] = get_short(p + i * 2);
+			}
+			t->ext_nums.used = extnumlen;
+			p += extnumlen * 2;
+			n -= extnumlen * 2;
+
+			{
+				char *ext_alloc2;
+				size_t tblsz2;
+				const char *const tbl1 = p + extstrslen * 2 + extalllen * 2;
+				size_t s_max = 0, s_sum = 0;
+
+				for (i = 0; i < extstrslen; i++) {
+					const short v = get_short(p + i * 2);
+					if (v < 0 || (unsigned short)v >= exttablsz) {
+						t->ext_strs.data[i] = NULL;
+					} else {
+						const char *start = tbl1 + v;
+						const char *end = memchr(start, '\0', exttablsz - v);
+						if (end) {
+							end++;
+						} else {
+							end = tbl1 + exttablsz;
+						}
+						s_sum += end - start;
+						s_max = size_max(s_max, end - tbl1);
+						t->ext_strs.data[i] = t->ext_alloc + v;
+					}
+				}
+				t->ext_strs.used = extstrslen;
+				p += extstrslen * 2;
+				n -= extstrslen * 2;
+
+				DEL_FAIL_IF(s_max != s_sum, EINVAL, t);
+
+				ext_alloc2 = t->ext_alloc + s_sum;
+				tblsz2 = exttablsz - s_sum;
+
+				for (i = 0; i < extalllen; i++) {
+					const short v = get_short(p + i * 2);
+					DEL_FAIL_IF(v < 0 || (unsigned short)v >= tblsz2, EINVAL, t);
+					t->ext_names.data[i] = ext_alloc2 + v;
+				}
+				p += extalllen * 2;
+				n -= extalllen * 2;
+
+				assert(p == tbl1);
+
+				if (exttablsz) {
+					memcpy(t->ext_alloc, p, exttablsz);
+					t->ext_alloc[exttablsz - 1] = '\0';
+
+					p += exttablsz;
+					n -= exttablsz;
+				}
+			}
+		}
+	}
 
 	return t;
 }
 
+#undef FAIL_IF
+#undef FAIL_IF_
+#undef DEL_FAIL_IF
+
 void unibi_destroy(unibi_term *t) {
-#if 0
+	DYNARR(bool, free)(&t->ext_bools);
+	DYNARR(num, free)(&t->ext_nums);
+	DYNARR(str, free)(&t->ext_strs);
+	DYNARR(str, free)(&t->ext_names);
 	free(t->ext_alloc);
-	t->ext_alloc = (char *)":-S";
-#endif
+	t->ext_alloc = (char *)">_>";
+
 	t->aliases = NULL;
 	free(t->alloc);
 	t->alloc = (char *)":-O";
@@ -289,15 +425,22 @@ static void put_short(char *p, short n) {
 	);
 }
 
+#define FAIL_INVAL_IF(c) if (c) { errno = EINVAL; return SIZE_ERR; } else (void)0
+
 size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 	size_t req, i;
 	size_t namlen, boollen, numlen, strslen, tablsz;
-	char *p = ptr;
+	size_t ext_count, ext_tablsz1, ext_tablsz2;
+	char *p;
 
-	req = 12;
+	ASSERT_EXT_NAMES(t);
+
+	p = ptr;
+
+	req = 2 + 5 * 2;
 
 	namlen = strlen(t->name) + 1;
-	for (i = 0; t->aliases[i]; ++i) {
+	for (i = 0; t->aliases[i]; i++) {
 		namlen += strlen(t->aliases[i]) + 1;
 	}
 	req += namlen;
@@ -307,7 +450,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 			break;
 		}
 	}
-	++i;
+	i++;
 	boollen = i;
 	req += boollen;
 
@@ -320,7 +463,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 			break;
 		}
 	}
-	++i;
+	i++;
 	numlen = i;
 	req += numlen * 2;
 
@@ -329,7 +472,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 			break;
 		}
 	}
-	++i;
+	i++;
 	strslen = i;
 	req += strslen * 2;
 
@@ -341,9 +484,48 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 	}
 	req += tablsz;
 
-	if (tablsz > MAX15BITS) {
-		errno = EINVAL;
-		return ~(size_t)0;
+	FAIL_INVAL_IF(tablsz > MAX15BITS);
+
+	FAIL_INVAL_IF(t->ext_bools.used > MAX15BITS);
+	FAIL_INVAL_IF(t->ext_nums.used > MAX15BITS);
+	FAIL_INVAL_IF(t->ext_strs.used > MAX15BITS);
+
+	ext_tablsz1 = ext_tablsz2 = 0;
+
+	ext_count = t->ext_bools.used + t->ext_nums.used + t->ext_strs.used;
+	assert(ext_count == t->ext_names.used);
+
+	if (ext_count) {
+		if (req % 2) {
+			req += 1;
+		}
+
+		req += 5 * 2;
+
+		req += t->ext_bools.used;
+		if (req % 2) {
+			req += 1;
+		}
+
+		req += t->ext_nums.used * 2;
+
+		req += t->ext_strs.used * 2;
+
+		req += ext_count * 2;
+
+		for (i = 0; i < t->ext_strs.used; i++) {
+			ext_tablsz1 += strlen(t->ext_strs.data[i]) + 1;
+		}
+		FAIL_INVAL_IF(ext_tablsz1 > MAX15BITS);
+		req += ext_tablsz1;
+
+		for (i = 0; i < t->ext_names.used; i++) {
+			ext_tablsz2 += strlen(t->ext_names.data[i]) + 1;
+		}
+		FAIL_INVAL_IF(ext_tablsz2 > MAX15BITS);
+		req += ext_tablsz2;
+
+		FAIL_INVAL_IF(ext_tablsz1 + ext_tablsz2 > MAX15BITS);
 	}
 
 	if (req > n) {
@@ -359,7 +541,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 	put_ushort(p + 10, tablsz);
 	p += 12;
 
-	for (i = 0; t->aliases[i]; ++i) {
+	for (i = 0; t->aliases[i]; i++) {
 		size_t k = strlen(t->aliases[i]);
 		memcpy(p, t->aliases[i], k);
 		p += k;
@@ -371,7 +553,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 		p += k;
 	}
 
-	for (i = 0; i < boollen; ++i) {
+	for (i = 0; i < boollen; i++) {
 		*p++ = t->bools[i / UCHAR_MAX] >> i % UCHAR_MAX & 1;
 	}
 
@@ -379,7 +561,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 		*p++ = '\0';
 	}
 
-	for (i = 0; i < numlen; ++i) {
+	for (i = 0; i < numlen; i++) {
 		put_short(p, t->nums[i]);
 		p += 2;
 	}
@@ -388,7 +570,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 		char *const tbl = p + strslen * 2;
 		size_t off = 0;
 
-		for (i = 0; i < strslen; ++i) {
+		for (i = 0; i < strslen; i++) {
 			if (!t->strs[i]) {
 				put_short(p, -1);
 				p += 2;
@@ -406,6 +588,65 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 		assert(p == tbl);
 
 		p += off;
+	}
+
+	if (ext_count) {
+		if ((p - ptr) % 2) {
+			*p++ = '\0';
+		}
+
+		put_ushort(p + 0, t->ext_bools.used);
+		put_ushort(p + 2, t->ext_nums.used);
+		put_ushort(p + 4, t->ext_strs.used);
+		put_ushort(p + 6, t->ext_strs.used + ext_count);
+		put_ushort(p + 8, ext_tablsz1 + ext_tablsz2);
+		p += 10;
+
+		memcpy(p, t->ext_bools.data, t->ext_bools.used);
+		p += t->ext_bools.used;
+
+		if (t->ext_bools.used % 2) {
+			*p++ = '\0';
+		}
+
+		for (i = 0; i < t->ext_nums.used; i++) {
+			put_short(p, t->ext_nums.data[i]);
+			p += 2;
+		}
+
+		{
+			char *const tbl1 = p + (t->ext_strs.used + ext_count) * 2;
+			char *const tbl2 = tbl1 + ext_tablsz1;
+			size_t off = 0;
+
+			for (i = 0; i < t->ext_strs.used; i++) {
+				const char *const s = t->ext_strs.data[i];
+				const size_t k = strlen(s) + 1;
+				assert(off < MAX15BITS);
+				put_ushort(p, off);
+				p += 2;
+				memcpy(tbl1 + off, s, k);
+				off += k;
+			}
+
+			assert(off == ext_tablsz1);
+			assert(p + ext_count * 2 == tbl1);
+
+			off = 0;
+			for (i = 0; i < t->ext_names.used; i++) {
+				const char *const s = t->ext_names.data[i];
+				const size_t k = strlen(s) + 1;
+				assert(off < MAX15BITS);
+				put_ushort(p, off);
+				p += 2;
+				memcpy(tbl2 + off, s, k);
+				off += k;
+			}
+
+			assert(off == ext_tablsz2);
+			assert(p == tbl1);
+			p += ext_tablsz1 + ext_tablsz2;
+		}
 	}
 
 	assert((size_t)(p - ptr) == req);
@@ -431,20 +672,14 @@ void unibi_set_aliases(unibi_term *t, const char **a) {
 
 int unibi_get_bool(const unibi_term *t, enum unibi_boolean v) {
 	size_t i;
-	assert(v > unibi_boolean_begin_ && v < unibi_boolean_end_);
-	if (v <= unibi_boolean_begin_ || v >= unibi_boolean_end_) {
-		return -1;
-	}
+	ASSERT_RETURN(v > unibi_boolean_begin_ && v < unibi_boolean_end_, -1);
 	i = v - unibi_boolean_begin_ - 1;
 	return t->bools[i / CHAR_BIT] >> i % CHAR_BIT & 1;
 }
 
 void unibi_set_bool(unibi_term *t, enum unibi_boolean v, int x) {
 	size_t i;
-	assert(v > unibi_boolean_begin_ && v < unibi_boolean_end_);
-	if (v <= unibi_boolean_begin_ || v >= unibi_boolean_end_) {
-		return;
-	}
+	ASSERT_RETURN_(v > unibi_boolean_begin_ && v < unibi_boolean_end_);
 	i = v - unibi_boolean_begin_ - 1;
 	if (x) {
 		t->bools[i / CHAR_BIT] |= 1 << i % CHAR_BIT;
@@ -455,185 +690,208 @@ void unibi_set_bool(unibi_term *t, enum unibi_boolean v, int x) {
 
 short unibi_get_num(const unibi_term *t, enum unibi_numeric v) {
 	size_t i;
-	assert(v > unibi_numeric_begin_ && v < unibi_numeric_end_);
-	if (v <= unibi_numeric_begin_ || v >= unibi_numeric_end_) {
-		return -2;
-	}
+	ASSERT_RETURN(v > unibi_numeric_begin_ && v < unibi_numeric_end_, -2);
 	i = v - unibi_numeric_begin_ - 1;
 	return t->nums[i];
 }
 
 void unibi_set_num(unibi_term *t, enum unibi_numeric v, short x) {
 	size_t i;
-	assert(v > unibi_numeric_begin_ && v < unibi_numeric_end_);
-	if (v <= unibi_numeric_begin_ || v >= unibi_numeric_end_) {
-		return;
-	}
+	ASSERT_RETURN_(v > unibi_numeric_begin_ && v < unibi_numeric_end_);
 	i = v - unibi_numeric_begin_ - 1;
 	t->nums[i] = x;
 }
 
 const char *unibi_get_str(const unibi_term *t, enum unibi_string v) {
 	size_t i;
-	assert(v > unibi_string_begin_ && v < unibi_string_end_);
-	if (v <= unibi_string_begin_ || v >= unibi_string_end_) {
-		return NULL;
-	}
+	ASSERT_RETURN(v > unibi_string_begin_ && v < unibi_string_end_, NULL);
 	i = v - unibi_string_begin_ - 1;
 	return t->strs[i];
 }
 
 void unibi_set_str(unibi_term *t, enum unibi_string v, const char *x) {
 	size_t i;
-	assert(v > unibi_string_begin_ && v < unibi_string_end_);
-	if (v <= unibi_string_begin_ || v >= unibi_string_end_) {
-		return;
-	}
+	ASSERT_RETURN_(v > unibi_string_begin_ && v < unibi_string_end_);
 	i = v - unibi_string_begin_ - 1;
 	t->strs[i] = x;
 }
 
 
-#if 0
-int unibi_get_ext_bool(const unibi_term *t, const char *k) {
-	size_t i;
-
-	for (i = 0; i < t->ext_bsize && t->ext_bools[i].name; ++i) {
-		if (strcmp(t->ext_bools[i].name, k) == 0) {
-			return 1;
-		}
-	}
-
-	return 0;
+size_t unibi_count_ext_bool(const unibi_term *t) {
+	return t->ext_bools.used;
 }
 
-int unibi_set_ext_bool(unibi_term *t, const char *k, int v) {
-	size_t i;
-
-	for (i = 0; i < t->ext_bsize && t->ext_bools[i].name; ++i) {
-		if (strcmp(t->ext_bools[i].name, k) == 0) {
-			if (!v) {
-				size_t j;
-				for (j = i + 1; j < t->ext_bsize && t->ext_bools[j].name; ++j)
-					;
-				memmove(t->ext_bools + i, t->ext_bools + i + 1, j - (i + 1));
-				t->ext_bools[j - 1].name = NULL;
-			}
-			return 0;
-		}
-	}
-
-	if (!v) {
-		return 0;
-	}
-
-	if (i >= t->ext_bsize) {
-		const size_t size = (t->ext_bsize + 1) * 3 / 2;
-		void *p = realloc(t->ext_bools, sizeof *t->ext_bools * size);
-		if (!p) {
-			return -1;
-		}
-		t->ext_bools = p;
-		t->ext_bools[t->ext_bsize].name = NULL;
-		t->ext_bsize = size;
-	}
-
-	t->ext_bools[i].name = k;
-	if (i + 1 < t->ext_bsize) {
-		t->ext_bools[i + 1].name = NULL;
-	}
-	return 0;
+size_t unibi_count_ext_num(const unibi_term *t) {
+	return t->ext_nums.used;
 }
 
-short unibi_get_ext_num(const unibi_term *t, const char *k) {
-	size_t i;
-
-	for (i = 0; i < t->ext_nsize && t->ext_nums[i].name; ++i) {
-		if (strcmp(t->ext_nums[i].name, k) == 0) {
-			return t->ext_nums[i].value;
-		}
-	}
-
-	return -1;
+size_t unibi_count_ext_str(const unibi_term *t) {
+	return t->ext_strs.used;
 }
 
-int unibi_set_ext_num(unibi_term *t, const char *k, short v) {
-	size_t i;
+int unibi_get_ext_bool(const unibi_term *t, size_t i) {
+	ASSERT_RETURN(i < t->ext_bools.used, -1);
+	return t->ext_bools.data[i] ? 1 : 0;
+}
 
-	for (i = 0; i < t->ext_nsize && t->ext_nums[i].name; ++i) {
-		if (strcmp(t->ext_nums[i].name, k) == 0) {
-			t->ext_nums[i].value = v;
-			return 0;
-		}
+const char *unibi_get_ext_bool_name(const unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN(i < t->ext_bools.used, NULL);
+	return t->ext_names.data[i];
+}
+
+short unibi_get_ext_num(const unibi_term *t, size_t i) {
+	ASSERT_RETURN(i < t->ext_nums.used, -2);
+	return t->ext_nums.data[i];
+}
+
+const char *unibi_get_ext_num_name(const unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN(i < t->ext_nums.used, NULL);
+	return t->ext_names.data[t->ext_bools.used + i];
+}
+
+const char *unibi_get_ext_str(const unibi_term *t, size_t i) {
+	ASSERT_RETURN(i < t->ext_strs.used, NULL);
+	return t->ext_strs.data[i];
+}
+
+const char *unibi_get_ext_str_name(const unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN(i < t->ext_strs.used, NULL);
+	return t->ext_names.data[t->ext_bools.used + t->ext_nums.used + i];
+}
+
+void unibi_set_ext_bool(unibi_term *t, size_t i, int v) {
+	ASSERT_RETURN_(i < t->ext_bools.used);
+	t->ext_bools.data[i] = !!v;
+}
+
+void unibi_set_ext_bool_name(unibi_term *t, size_t i, const char *c) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_bools.used);
+	t->ext_names.data[i] = c;
+}
+
+void unibi_set_ext_num(unibi_term *t, size_t i, short v) {
+	ASSERT_RETURN_(i < t->ext_nums.used);
+	t->ext_nums.data[i] = v;
+}
+
+void unibi_set_ext_num_name(unibi_term *t, size_t i, const char *c) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_nums.used);
+	t->ext_names.data[t->ext_bools.used + i] = c;
+}
+
+void unibi_set_ext_str(unibi_term *t, size_t i, const char *v) {
+	ASSERT_RETURN_(i < t->ext_strs.used);
+	t->ext_strs.data[i] = v;
+}
+
+void unibi_set_ext_str_name(unibi_term *t, size_t i, const char *c) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_strs.used);
+	t->ext_names.data[t->ext_bools.used + t->ext_nums.used + i] = c;
+}
+
+size_t unibi_add_ext_bool(unibi_term *t, const char *c, int v) {
+	size_t r;
+	ASSERT_EXT_NAMES(t);
+	if (
+		!DYNARR(bool, ensure_slot)(&t->ext_bools) ||
+		!DYNARR(str, ensure_slot)(&t->ext_names)
+	) {
+		return SIZE_ERR;
 	}
-
-	if ((unsigned short)v > MAX15BITS) {
-		return 0;
-	}
-
 	{
-		const size_t size = (t->ext_nsize + 1) * 3 / 2;
-		void *p = realloc(t->ext_nums, sizeof *t->ext_nums * size);
-		if (!p) {
-			return -1;
-		}
-
-		t->ext_nums = p;
-		t->ext_nums[t->ext_nsize].name = NULL;
-		t->ext_nsize = size;
+		const char **const p = t->ext_names.data + t->ext_bools.used;
+		memmove(p + 1, p, (t->ext_names.used - t->ext_bools.used) * sizeof *t->ext_names.data);
+		*p = c;
+		t->ext_names.used++;
 	}
-
-	t->ext_nums[i].name = k;
-	t->ext_nums[i].value = v;
-	if (i + 1 < t->ext_nsize) {
-		t->ext_nums[i + 1].name = NULL;
-	}
-	return 0;
+	r = t->ext_bools.used++;
+	t->ext_bools.data[r] = !!v;
+	return r;
 }
 
-const char *unibi_get_ext_str(const unibi_term *t, const char *k) {
-	size_t i;
-
-	for (i = 0; i < t->ext_ssize && t->ext_strs[i].name; ++i) {
-		if (strcmp(t->ext_strs[i].name, k) == 0) {
-			return t->ext_strs[i].value;
-		}
+size_t unibi_add_ext_num(unibi_term *t, const char *c, short v) {
+	size_t r;
+	ASSERT_EXT_NAMES(t);
+	if (
+		!DYNARR(num, ensure_slot)(&t->ext_nums) ||
+		!DYNARR(str, ensure_slot)(&t->ext_names)
+	) {
+		return SIZE_ERR;
 	}
-
-	return NULL;
-}
-
-int unibi_set_ext_str(unibi_term *t, const char *k, const char *v) {
-	size_t i;
-
-	for (i = 0; i < t->ext_ssize && t->ext_strs[i].name; ++i) {
-		if (strcmp(t->ext_strs[i].name, k) == 0) {
-			t->ext_strs[i].value = v;
-			return 0;
-		}
-	}
-
-	if (!v) {
-		return 0;
-	}
-
 	{
-		const size_t size = (t->ext_ssize + 1) * 3 / 2;
-		void *p = realloc(t->ext_strs, sizeof *t->ext_strs * size);
-		if (!p) {
-			return -1;
-		}
-
-		t->ext_strs = p;
-		t->ext_strs[t->ext_ssize].name = NULL;
-		t->ext_ssize = size;
+		const char **const p = t->ext_names.data + t->ext_bools.used + t->ext_nums.used;
+		memmove(p + 1, p, (t->ext_names.used - t->ext_bools.used - t->ext_nums.used) * sizeof *t->ext_names.data);
+		*p = c;
+		t->ext_names.used++;
 	}
-
-	t->ext_strs[i].name = k;
-	t->ext_strs[i].value = v;
-	if (i + 1 < t->ext_ssize) {
-		t->ext_strs[i + 1].name = NULL;
-	}
-	return 0;
+	r = t->ext_nums.used++;
+	t->ext_nums.data[r] = v;
+	return r;
 }
-#endif
+
+size_t unibi_add_ext_str(unibi_term *t, const char *c, const char *v) {
+	size_t r;
+	ASSERT_EXT_NAMES(t);
+	if (
+		!DYNARR(str, ensure_slot)(&t->ext_strs) ||
+		!DYNARR(str, ensure_slot)(&t->ext_names)
+	) {
+		return SIZE_ERR;
+	}
+	t->ext_names.data[t->ext_names.used++] = c;
+	r = t->ext_strs.used++;
+	t->ext_strs.data[r] = v;
+	return r;
+}
+
+void unibi_del_ext_bool(unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_bools.used);
+	{
+		unsigned char *const p = t->ext_bools.data + i;
+		memmove(p, p + 1, (t->ext_bools.used - i - 1) * sizeof *t->ext_bools.data);
+		t->ext_bools.used--;
+	}
+	{
+		const char **const p = t->ext_names.data + i;
+		memmove(p, p + 1, (t->ext_names.used - i - 1) * sizeof *t->ext_names.data);
+		t->ext_names.used--;
+	}
+}
+
+void unibi_del_ext_num(unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_nums.used);
+	{
+		short *const p = t->ext_nums.data + i;
+		memmove(p, p + 1, (t->ext_nums.used - i - 1) * sizeof *t->ext_nums.data);
+		t->ext_nums.used--;
+	}
+	{
+		const char **const p = t->ext_names.data + t->ext_bools.used + i;
+		memmove(p, p + 1, (t->ext_names.used - i - 1) * sizeof *t->ext_names.data);
+		t->ext_names.used--;
+	}
+}
+
+void unibi_del_ext_str(unibi_term *t, size_t i) {
+	ASSERT_EXT_NAMES(t);
+	ASSERT_RETURN_(i < t->ext_strs.used);
+	{
+		const char **const p = t->ext_strs.data + i;
+		memmove(p, p + 1, (t->ext_strs.used - i - 1) * sizeof *t->ext_strs.data);
+		t->ext_strs.used--;
+	}
+	{
+		const char **const p = t->ext_names.data + t->ext_bools.used + t->ext_nums.used + i;
+		memmove(p, p + 1, (t->ext_names.used - i - 1) * sizeof *t->ext_names.data);
+		t->ext_names.used--;
+	}
+}
+

@@ -1,7 +1,7 @@
 #ifndef GUARD_UNIBILIUM_H_
 #define GUARD_UNIBILIUM_H_
 
-/* Copyright 2008, 2010, 2011 Lukas Mai.
+/* Copyright 2008, 2010-2012 Lukas Mai.
  *
  * This library is under the GNU Lesser General Public License;
  * see the file LGPLv3 for details.
@@ -544,17 +544,6 @@ void  unibi_set_num(unibi_term *, enum unibi_numeric, short);
 const char *unibi_get_str(const unibi_term *, enum unibi_string);
 void        unibi_set_str(unibi_term *, enum unibi_string, const char *);
 
-#if 0
-int unibi_get_ext_bool(const unibi_term *, const char *);
-int unibi_set_ext_bool(unibi_term *, const char *, int);
-
-short unibi_get_ext_num(const unibi_term *, const char *);
-int   unibi_set_ext_num(unibi_term *, const char *, short);
-
-const char *unibi_get_ext_str(const unibi_term *, const char *);
-int         unibi_set_ext_str(unibi_term *, const char *, const char *);
-#endif
-
 unibi_term *unibi_from_fp(FILE *);
 unibi_term *unibi_from_fd(int);
 unibi_term *unibi_from_file(const char *);
@@ -569,5 +558,32 @@ const char *unibi_name_num(enum unibi_numeric);
 const char *unibi_short_name_num(enum unibi_numeric);
 const char *unibi_name_str(enum unibi_string);
 const char *unibi_short_name_str(enum unibi_string);
+
+
+size_t unibi_count_ext_bool(const unibi_term *);
+size_t unibi_count_ext_num(const unibi_term *);
+size_t unibi_count_ext_str(const unibi_term *);
+
+int unibi_get_ext_bool(const unibi_term *, size_t);
+const char *unibi_get_ext_bool_name(const unibi_term *, size_t);
+short unibi_get_ext_num(const unibi_term *, size_t);
+const char *unibi_get_ext_num_name(const unibi_term *, size_t);
+const char *unibi_get_ext_str(const unibi_term *, size_t);
+const char *unibi_get_ext_str_name(const unibi_term *, size_t);
+
+void unibi_set_ext_bool(unibi_term *, size_t, int);
+void unibi_set_ext_bool_name(unibi_term *, size_t, const char *);
+void unibi_set_ext_num(unibi_term *, size_t, short);
+void unibi_set_ext_num_name(unibi_term *, size_t, const char *);
+void unibi_set_ext_str(unibi_term *, size_t, const char *);
+void unibi_set_ext_str_name(unibi_term *, size_t, const char *);
+
+size_t unibi_add_ext_bool(unibi_term *, const char *, int);
+size_t unibi_add_ext_num(unibi_term *, const char *, short);
+size_t unibi_add_ext_str(unibi_term *, const char *, const char *);
+
+void unibi_del_ext_bool(unibi_term *, size_t);
+void unibi_del_ext_num(unibi_term *, size_t);
+void unibi_del_ext_str(unibi_term *, size_t);
 
 #endif /* GUARD_UNIBILIUM_H_ */
