@@ -1,0 +1,29 @@
+=pod
+
+=head1 NAME
+
+unibi_del_ext_bool, unibi_del_ext_num, unibi_del_ext_str - remove extended capabilities from a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+
+ void unibi_del_ext_bool(unibi_term *ut, size_t i);
+ void unibi_del_ext_num(unibi_term *ut, size_t i);
+ void unibi_del_ext_str(unibi_term *ut, size_t i);
+
+=head1 DESCRIPTION
+
+Remove an extended boolean, numeric, or string capability.
+I<i> is the index of the extended capability to act on; it must be less than
+C<unibi_count_ext_bool(ut)>, C<unibi_count_ext_num(ut)>, or
+C<unibi_count_ext_str(ut)>, respectively.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_add_ext_bool(3)>,
+L<unibi_add_ext_num(3)>,
+L<unibi_add_ext_str(3)>
+
+=cut

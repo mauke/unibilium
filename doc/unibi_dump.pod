@@ -19,8 +19,8 @@ written to I<p>, which must have room for at least I<n> bytes.
 
 C<unibi_dump> returns the number of bytes required to store the terminfo data.
 If this exceeds I<n>, nothing is written to I<p>. If the terminal object can't
-be represented in terminfo format (string table too large), the return value is
-C<SIZE_MAX>.
+be represented in terminfo format (e.g. because the string table would be too
+large), the return value is C<SIZE_MAX>.
 
 =head1 ERRORS
 

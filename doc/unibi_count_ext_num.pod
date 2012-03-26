@@ -1,0 +1,28 @@
+=pod
+
+=head1 NAME
+
+unibi_count_ext_bool, unibi_count_ext_num, unibi_count_ext_str - count extended terminal capabilities
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+
+ size_t unibi_count_ext_bool(const unibi_term *ut);
+ size_t unibi_count_ext_num(const unibi_term *ut);
+ size_t unibi_count_ext_str(const unibi_term *ut);
+
+=head1 DESCRIPTION
+
+These functions count the number of extended (i.e. user specified)
+capabilities of the respective type in I<ut>.
+
+=head1 RETURN VALUE
+
+The number of extended capabilities.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>
+
+=cut

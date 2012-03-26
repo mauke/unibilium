@@ -1,0 +1,36 @@
+=pod
+
+=head1 NAME
+
+unibi_get_ext_bool_name, unibi_set_ext_bool_name, unibi_get_ext_num_name, unibi_set_ext_num_name, unibi_get_ext_str_name, unibi_set_ext_str_name - access the names of extended capabilities of a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+
+ const char *unibi_get_ext_bool_name(const unibi_term *ut, size_t i);
+ const char *unibi_get_ext_num_name(const unibi_term *ut, size_t i);
+ const char *unibi_get_ext_str_name(const unibi_term *ut, size_t i);
+ 
+ void unibi_set_ext_bool_name(unibi_term *ut, size_t i, const char *s);
+ void unibi_set_ext_num_name(unibi_term *ut, size_t i, const char *s);
+ void unibi_set_ext_str_name(unibi_term *ut, size_t i, const char *s);
+
+=head1 DESCRIPTION
+
+Get/set the names of extended boolean, numeric, and string capabilities.
+I<i> is the index of the extended capability to act on; it must be less than
+C<unibi_count_ext_bool(ut)>, C<unibi_count_ext_num(ut)>, or
+C<unibi_count_ext_str(ut)>, respectively.
+
+Note that
+C<unibi_set_ext_bool_name>/C<unibi_set_ext_num_name>/C<unibi_set_ext_str_name>
+simply store the pointer they are given; they will not free I<s> or make a
+copy of the string.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>
+
+=cut
+

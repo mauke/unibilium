@@ -1,0 +1,36 @@
+=pod
+
+=head1 NAME
+
+unibi_add_ext_bool, unibi_add_ext_num, unibi_add_ext_str - add extended capabilities to a terminal object
+
+=head1 SYNOPSIS
+
+ #include "unibilium.h"
+
+ size_t unibi_add_ext_bool(unibi_term *ut, const char *t, int b);
+ size_t unibi_add_ext_num(unibi_term *ut, const char *t, short v);
+ size_t unibi_add_ext_str(unibi_term *ut, const char *t, const char *s);
+
+=head1 DESCRIPTION
+
+Add an extended boolean, numeric, or string capability with the specified
+name and value.
+
+Note that these functions simply store any pointers they are given. They will
+not free I<t> or I<s> or copy any strings.
+
+=head1 RETURN VALUE
+
+The return value is the index of the new capability, which can be used in
+L<unibi_get_ext_bool(3)>, L<unibi_set_ext_bool(3)>, etc. If an error occurs,
+C<SIZE_MAX> is returned.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>,
+L<unibi_del_ext_bool(3)>,
+L<unibi_del_ext_num(3)>,
+L<unibi_del_ext_str(3)>
+
+=cut

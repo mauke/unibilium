@@ -12,11 +12,14 @@ unibi_from_mem - construct a terminal object from a compiled terminfo entry
 
 =head1 DESCRIPTION
 
-This function parses a compiled terminfo entry that starts at I<p> and is I<n> bytes long and constructs a C<unibi_term> object from it. When you're done with it, you should call C<unibi_destroy> to free it.
+This function parses a compiled terminfo entry that starts at I<p> and is I<n>
+bytes long and constructs a C<unibi_term> object from it. When you're done with
+it, you should call C<unibi_destroy> to free it.
 
 =head1 RETURN VALUE
 
-A pointer to a new C<unibi_term>. In case of failure, C<NULL> is returned and C<errno> is set.
+A pointer to a new C<unibi_term>. In case of failure, C<NULL> is returned and
+C<errno> is set.
 
 =head1 ERRORS
 

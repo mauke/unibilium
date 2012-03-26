@@ -121,6 +121,11 @@ An enumeration of boolean capabilities. It has the following elements:
 
 =back
 
+The special values C<unibi_boolean_begin_> and C<unibi_boolean_end_> are
+provided to make it easier for programs to loop over all boolean capabilities.
+All of the enum values listed above are greater than C<unibi_boolean_begin_>
+and less than C<unibi_boolean_end_>.
+
 =item enum unibi_numeric
 
 An enumeration of numeric capabilities. It has the following elements:
@@ -206,7 +211,12 @@ An enumeration of numeric capabilities. It has the following elements:
 =item C<unibi_number_of_function_keys>
 
 =back
-	
+
+The special values C<unibi_numeric_begin_> and C<unibi_numeric_end_> are
+provided to make it easier for programs to loop over all numeric capabilities.
+All of the enum values listed above are greater than C<unibi_numeric_begin_>
+and less than C<unibi_numeric_end_>.
+
 =item enum unibi_string
 
 An enumeration of string capabilities. It has the following elements:
@@ -1043,6 +1053,11 @@ An enumeration of string capabilities. It has the following elements:
 
 =back
 
+The special values C<unibi_string_begin_> and C<unibi_string_end_> are
+provided to make it easier for programs to loop over all string capabilities.
+All of the enum values listed above are greater than C<unibi_string_begin_>
+and less than C<unibi_string_end_>.
+
 =back
 
 =head1 SEE ALSO
@@ -1073,6 +1088,27 @@ L<unibi_short_name_bool(3)>,
 L<unibi_name_num(3)>,
 L<unibi_short_name_num(3)>,
 L<unibi_name_str(3)>,
-L<unibi_short_name_str(3)>
+L<unibi_short_name_str(3)>,
+L<unibi_count_ext_bool(3)>,
+L<unibi_count_ext_num(3)>,
+L<unibi_count_ext_str(3)>,
+L<unibi_get_ext_bool(3)>,
+L<unibi_get_ext_num(3)>,
+L<unibi_get_ext_str(3)>,
+L<unibi_set_ext_bool(3)>,
+L<unibi_set_ext_num(3)>,
+L<unibi_set_ext_str(3)>,
+L<unibi_get_ext_bool_name(3)>,
+L<unibi_get_ext_num_name(3)>,
+L<unibi_get_ext_str_name(3)>,
+L<unibi_set_ext_bool_name(3)>,
+L<unibi_set_ext_num_name(3)>,
+L<unibi_set_ext_str_name(3)>,
+L<unibi_add_ext_bool(3)>,
+L<unibi_add_ext_num(3)>,
+L<unibi_add_ext_str(3)>,
+L<unibi_del_ext_bool(3)>,
+L<unibi_del_ext_num(3)>,
+L<unibi_del_ext_str(3)>
 
 =cut
