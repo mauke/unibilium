@@ -565,17 +565,19 @@ size_t unibi_count_ext_num(const unibi_term *);
 size_t unibi_count_ext_str(const unibi_term *);
 
 int unibi_get_ext_bool(const unibi_term *, size_t);
-const char *unibi_get_ext_bool_name(const unibi_term *, size_t);
 short unibi_get_ext_num(const unibi_term *, size_t);
-const char *unibi_get_ext_num_name(const unibi_term *, size_t);
 const char *unibi_get_ext_str(const unibi_term *, size_t);
-const char *unibi_get_ext_str_name(const unibi_term *, size_t);
 
 void unibi_set_ext_bool(unibi_term *, size_t, int);
-void unibi_set_ext_bool_name(unibi_term *, size_t, const char *);
 void unibi_set_ext_num(unibi_term *, size_t, short);
-void unibi_set_ext_num_name(unibi_term *, size_t, const char *);
 void unibi_set_ext_str(unibi_term *, size_t, const char *);
+
+const char *unibi_get_ext_bool_name(const unibi_term *, size_t);
+const char *unibi_get_ext_num_name(const unibi_term *, size_t);
+const char *unibi_get_ext_str_name(const unibi_term *, size_t);
+
+void unibi_set_ext_bool_name(unibi_term *, size_t, const char *);
+void unibi_set_ext_num_name(unibi_term *, size_t, const char *);
 void unibi_set_ext_str_name(unibi_term *, size_t, const char *);
 
 size_t unibi_add_ext_bool(unibi_term *, const char *, int);
