@@ -6,7 +6,7 @@ unibi_name_bool, unibi_name_num, unibi_name_str, unibi_short_name_bool, unibit_s
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  const char *unibi_name_bool(enum unibi_boolean b);
  const char *unibi_name_num(enum unibi_numeric n);
@@ -25,7 +25,7 @@ the shorter "capnames".
 =head1 EXAMPLE
 
  #include <stdio.h>
- #include "unibilium.h"
+ #include <unibilium.h>
  
  int main(void) {
    printf("%s - %s\n", unibi_name_bool(unibi_has_status_line), unibi_short_name_bool(unibi_has_status_line));

@@ -6,7 +6,7 @@ unibi_get_ext_bool_name, unibi_set_ext_bool_name, unibi_get_ext_num_name, unibi_
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
 
  const char *unibi_get_ext_bool_name(const unibi_term *ut, size_t i);
  const char *unibi_get_ext_num_name(const unibi_term *ut, size_t i);

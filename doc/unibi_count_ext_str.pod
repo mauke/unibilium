@@ -6,7 +6,7 @@ unibi_count_ext_bool, unibi_count_ext_num, unibi_count_ext_str - count extended 
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
 
  size_t unibi_count_ext_bool(const unibi_term *ut);
  size_t unibi_count_ext_num(const unibi_term *ut);

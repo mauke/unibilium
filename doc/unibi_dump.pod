@@ -6,7 +6,7 @@ unibi_dump - convert a terminal object to compiled terminfo data
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  size_t unibi_dump(const unibi_term *ut, char *p, size_t n);
 

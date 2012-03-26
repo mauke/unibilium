@@ -7,7 +7,7 @@ unibi_set_str - access the capabilities of a terminal object
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  int unibi_get_bool(const unibi_term *ut, enum unibi_boolean b);
  void unibi_set_bool(unibi_term *ut, enum unibi_boolean b, int x);

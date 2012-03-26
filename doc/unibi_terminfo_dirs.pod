@@ -6,7 +6,7 @@ unibi_terminfo_dirs - fallback terminfo search path
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  extern const char *const unibi_terminfo_dirs;
 

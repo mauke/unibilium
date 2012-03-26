@@ -6,7 +6,7 @@ unibi_from_file - read a terminfo entry from a file
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  unibi_term *unibi_from_file(const char *file);
 

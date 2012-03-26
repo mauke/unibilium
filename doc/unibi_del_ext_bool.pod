@@ -6,7 +6,7 @@ unibi_del_ext_bool, unibi_del_ext_num, unibi_del_ext_str - remove extended capab
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
 
  void unibi_del_ext_bool(unibi_term *ut, size_t i);
  void unibi_del_ext_num(unibi_term *ut, size_t i);

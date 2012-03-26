@@ -6,7 +6,7 @@ unibi_dummy - construct a dummy terminal object
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  unibi_term *unibi_dummy(void);
 

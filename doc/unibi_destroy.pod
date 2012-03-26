@@ -6,7 +6,7 @@ unibi_destroy - free a terminal object
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
 
  void unibi_destroy(unibi_term *ut);
 

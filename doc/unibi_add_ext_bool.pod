@@ -6,7 +6,7 @@ unibi_add_ext_bool, unibi_add_ext_num, unibi_add_ext_str - add extended capabili
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
 
  size_t unibi_add_ext_bool(unibi_term *ut, const char *t, int b);
  size_t unibi_add_ext_num(unibi_term *ut, const char *t, short v);

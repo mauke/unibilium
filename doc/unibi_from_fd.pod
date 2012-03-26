@@ -6,7 +6,7 @@ unibi_from_fd - read a terminfo entry from a file descriptor
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  unibi_term *unibi_from_fd(int fd);
 

@@ -6,7 +6,7 @@ unibi_from_term - read a terminfo entry for a named terminal
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  unibi_term *unibi_from_term(const char *name);
 

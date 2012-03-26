@@ -6,7 +6,7 @@ unibilium.h - terminfo parser and utility functions
 
 =head1 SYNOPSIS
 
-  #include "unibilium.h"
+  #include <unibilium.h>
 
 =head1 DESCRIPTION
 

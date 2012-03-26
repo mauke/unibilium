@@ -6,7 +6,7 @@ unibi_get_aliases, unibi_set_aliases - access the aliases of a terminal object
 
 =head1 SYNOPSIS
 
- #include "unibilium.h"
+ #include <unibilium.h>
  
  const char **unibi_get_aliases(const unibi_term *ut);
  void unibi_set_aliases(unibi_term *ut, const char **v);
