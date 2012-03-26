@@ -1,3 +1,7 @@
+/* Sample program to demonstrate basic unibilium features.
+ * This code is in the public domain; you can do whatever you want with it.
+ */
+
 #include "unibilium.h"
 
 #include <stdio.h>
