@@ -139,6 +139,8 @@ unibi_term *unibi_dummy(void) {
 	DYNARR(str, init)(&t->ext_names);
 	t->ext_alloc = NULL;
 
+	ASSERT_EXT_NAMES(t);
+
 	return t;
 }
 
@@ -370,6 +372,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 					DEL_FAIL_IF(v < 0 || (unsigned short)v >= tblsz2, EINVAL, t);
 					t->ext_names.data[i] = ext_alloc2 + v;
 				}
+				t->ext_names.used = extalllen;
 				p += extalllen * 2;
 				n -= extalllen * 2;
 
@@ -385,6 +388,8 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 			}
 		}
 	}
+
+	ASSERT_EXT_NAMES(t);
 
 	return t;
 }
@@ -621,12 +626,16 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 
 			for (i = 0; i < t->ext_strs.used; i++) {
 				const char *const s = t->ext_strs.data[i];
-				const size_t k = strlen(s) + 1;
-				assert(off < MAX15BITS);
-				put_ushort(p, off);
+				if (!s) {
+					put_short(p, -1);
+				} else {
+					const size_t k = strlen(s) + 1;
+					assert(off < MAX15BITS);
+					put_ushort(p, off);
+					memcpy(tbl1 + off, s, k);
+					off += k;
+				}
 				p += 2;
-				memcpy(tbl1 + off, s, k);
-				off += k;
 			}
 
 			assert(off == ext_tablsz1);
