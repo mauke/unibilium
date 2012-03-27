@@ -576,7 +576,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 	}
 
 	for (i = 0; i < boollen; i++) {
-		*p++ = t->bools[i / UCHAR_MAX] >> i % UCHAR_MAX & 1;
+		*p++ = t->bools[i / CHAR_BIT] >> i % CHAR_BIT & 1;
 	}
 
 	if ((namlen + boollen) % 2) {
