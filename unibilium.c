@@ -534,7 +534,9 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 		req += ext_count * 2;
 
 		for (i = 0; i < t->ext_strs.used; i++) {
-			ext_tablsz1 += strlen(t->ext_strs.data[i]) + 1;
+			if (t->ext_strs.data[i]) {
+				ext_tablsz1 += strlen(t->ext_strs.data[i]) + 1;
+			}
 		}
 		FAIL_INVAL_IF(ext_tablsz1 > MAX15BITS);
 		req += ext_tablsz1;
