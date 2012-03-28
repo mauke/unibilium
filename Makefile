@@ -29,6 +29,8 @@ TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo
 POD2MAN=pod2man
 POD2MAN_OPTS=-c "$(PACKAGE)" -s3 -r "$(PACKAGE)-$(PKG_VERSION)"
 
+PROVE=prove
+
 ifeq ($(DEBUG),1)
   CFLAGS_DEBUG=-ggdb -DDEBUG
 endif
@@ -39,25 +41,42 @@ LIBRARY=libunibilium.la
 PODS=$(wildcard doc/*.pod)
 MANPAGES=$(addprefix man/,$(notdir $(PODS:.pod=.3.gz)))
 
+TOOLS=$(wildcard tools/*.c)
+
+TESTS=$(wildcard t/*.c)
+
 .PHONY: all
-all: $(LIBRARY) build-man unibi-dump
+all: $(LIBRARY) build-man build-tools build-test
 
 %.lo: %.c unibilium.h
-	$(LIBTOOL) --mode=compile --tag=CC gcc $(CFLAGS) $(CFLAGS_DEBUG) -Wall -std=c99 -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC gcc -I. -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
 
 uniutil.lo: uniutil.c unibilium.h
-	$(LIBTOOL) --mode=compile --tag=CC gcc -DTERMINFO_DIRS='$(TERMINFO_DIRS)' $(CFLAGS) $(CFLAGS_DEBUG) -Wall -std=c99 -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC gcc -I. -DTERMINFO_DIRS='$(TERMINFO_DIRS)' -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
 
 $(LIBRARY): $(OBJECTS)
 	$(LIBTOOL) --mode=link --tag=CC gcc -rpath '$(LIBDIR)' -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o $@ $^
 
-unibi-dump: $(LIBRARY) unibi-dump.lo
+tools/%: $(LIBRARY) tools/%.lo
 	$(LIBTOOL) --mode=link --tag=CC gcc -o $@ $^
+
+%.t: $(LIBRARY) %.lo
+	$(LIBTOOL) --mode=link --tag=CC gcc -o $@ $^
+
+.PHONY: build-tools
+build-tools: $(TOOLS:.c=)
+
+.PHONY: build-test
+build-test: $(TESTS:.c=.t)
+
+.PHONY: test
+test: build-test
+	$(PROVE)
 
 .PHONY: clean
 clean:
 	$(LIBTOOL) --mode=clean rm -f $(OBJECTS) $(LIBRARY) $(MANPAGES)
-	$(LIBTOOL) --mode=clean rm -f unibi-dump unibi-dump.lo
+	$(LIBTOOL) --mode=clean rm -f $(TOOLS:.c=) $(TOOLS:.c=.o) $(TESTS:.c=.t) $(TESTS:.c=.o)
 
 .PHONY: install
 install: install-inc install-lib install-man
