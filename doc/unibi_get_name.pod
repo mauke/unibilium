@@ -29,6 +29,6 @@ or was set by C<unibi_set_name>.
 
 L<unibilium.h(3)>,
 L<unibi_get_aliases(3)>,
-L<unibi_set_aliases>
+L<unibi_set_aliases(3)>
 
 =cut
