@@ -29,7 +29,6 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <alloca.h>
 
 #ifndef TERMINFO_DIRS
 #error "internal error: TERMINFO_DIRS is not defined"
@@ -89,11 +88,16 @@ unibi_term *unibi_from_file(const char *file) {
 
 static unibi_term *from_dir(const char *base, const char *mid, const char *term) {
 	char *path;
+	unibi_term *ret;
 
-	path = alloca(strlen(base) + 1 + strlen(mid) + 1 + 1 + 1 + strlen(term) + 1);
+	path = malloc(strlen(base) + 1 + strlen(mid) + 1 + 1 + 1 + strlen(term) + 1);
+	if(!path)
+		return NULL;
 	sprintf(path,        "%s"   "/"         "%s"  "/" "%c""/"         "%s",
 	                     base,              mid,      term[0],        term);
-	return unibi_from_file(path);
+	ret = unibi_from_file(path);
+	free(path);
+	return ret;
 }
 
 static unibi_term *from_dirs(const char *list, const char *term) {
@@ -104,7 +108,10 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 		return NULL;
 	}
 
-	copy = alloca(strlen(list) + 1);
+	copy = malloc(strlen(list) + 1);
+	if(!copy)
+		return NULL;
+
 	strcpy(copy, list);
 
 	a = copy;
@@ -126,6 +133,7 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 
 		ut = from_dir(a, ".", term);
 		if (ut) {
+			free(copy);
 			return ut;
 		}
 
@@ -135,6 +143,7 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 		a = z + 1;
 	}
 
+	free(copy);
 	errno = ENOENT;
 	return NULL;
 }
