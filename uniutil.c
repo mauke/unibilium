@@ -86,37 +86,33 @@ unibi_term *unibi_from_file(const char *file) {
 	return ut;
 }
 
-static unibi_term *from_dir(const char *base, const char *mid, const char *term) {
+static unibi_term *from_dir(const char *dir_begin, const char *dir_end, const char *mid, const char *term) {
 	char *path;
 	unibi_term *ut;
+	int dir_len;
 
-	path = malloc(strlen(base) + 1 + strlen(mid) + 1 + 1 + 1 + strlen(term) + 1);
+	dir_len = dir_end - dir_begin;
+	path = malloc(dir_len            + 1 + (mid ? strlen(mid)    + 1  : 0) + 1 + 1 + strlen(term) + 1);
 	if (!path) {
 		return NULL;
 	}
-	sprintf(path,        "%s"   "/"         "%s"  "/" "%c""/"         "%s",
-	                     base,              mid,      term[0],        term);
+	sprintf(path, "%.*s"              "/"        "%s"             "%s"      "%c""/"        "%s",
+	              dir_len, dir_begin,       mid ? mid : "", mid ? "/" : "",  term[0],       term);
+
 	ut = unibi_from_file(path);
 	free(path);
 	return ut;
 }
 
 static unibi_term *from_dirs(const char *list, const char *term) {
-	char *copy, *a, *z;
+	const char *a, *z;
 
 	if (list[0] == '\0') {
 		errno = ENOENT;
 		return NULL;
 	}
 
-	copy = malloc(strlen(list) + 1);
-	if (!copy) {
-		return NULL;
-	}
-
-	strcpy(copy, list);
-
-	a = copy;
+	a = list;
 
 	for (;;) {
 		unibi_term *ut;
@@ -128,24 +124,19 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 			break;
 		}
 
-		z = strchr(a, ':');
-		if (z) {
-			*z = '\0';
-		}
+		z = a + strcspn(a, ":");
 
-		ut = from_dir(a, ".", term);
+		ut = from_dir(a, z, NULL, term);
 		if (ut) {
-			free(copy);
 			return ut;
 		}
 
-		if (!z) {
+		if (*z == '\0') {
 			break;
 		}
 		a = z + 1;
 	}
 
-	free(copy);
 	errno = ENOENT;
 	return NULL;
 }
@@ -160,11 +151,11 @@ unibi_term *unibi_from_term(const char *term) {
 	}
 
 	if ((env = getenv("TERMINFO"))) {
-		return from_dir(env, ".", term);
+		return from_dir(env, env + strlen(env), NULL, term);
 	}
 
 	if ((env = getenv("HOME"))) {
-		ut = from_dir(env, ".terminfo", term);
+		ut = from_dir(env, env + strlen(env), ".terminfo", term);
 		if (ut) {
 			return ut;
 		}
