@@ -89,15 +89,30 @@ unibi_term *unibi_from_file(const char *file) {
 static unibi_term *from_dir(const char *dir_begin, const char *dir_end, const char *mid, const char *term) {
 	char *path;
 	unibi_term *ut;
-	int dir_len;
+	size_t dir_len, term_len, path_size;
 
-	dir_len = dir_end - dir_begin;
-	path = malloc(dir_len            + 1 + (mid ? strlen(mid)    + 1  : 0) + 1 + 1 + strlen(term) + 1);
-	if (!path) {
+	dir_len = dir_end ? (size_t)(dir_end - dir_begin) : strlen(dir_begin);
+	term_len = strlen(term);
+
+	path_size =    dir_len + 1 + (mid ? strlen(mid)    + 1  : 0) + 1 + 1 +  term_len + 1;
+
+	if (
+		dir_len + term_len < dir_len ||
+		dir_len + term_len < term_len ||
+		path_size < dir_len ||
+		path_size < term_len
+	) {
+		/* overflow */
+		errno = ENOMEM;
 		return NULL;
 	}
-	sprintf(path, "%.*s"              "/"        "%s"             "%s"      "%c""/"        "%s",
-	              dir_len, dir_begin,       mid ? mid : "", mid ? "/" : "",  term[0],       term);
+	if (!(path = malloc(path_size))) {
+		return NULL;
+	}
+
+	memcpy(path, dir_begin, dir_len);
+	sprintf(path + dir_len, "/"        "%s"             "%s"      "%c""/"  "%s",
+	                              mid ? mid : "", mid ? "/" : "",  term[0], term);
 
 	ut = unibi_from_file(path);
 	free(path);
@@ -124,14 +139,14 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 			break;
 		}
 
-		z = a + strcspn(a, ":");
+		z = strchr(a, ':');
 
 		ut = from_dir(a, z, NULL, term);
 		if (ut) {
 			return ut;
 		}
 
-		if (*z == '\0') {
+		if (!z) {
 			break;
 		}
 		a = z + 1;
@@ -151,11 +166,11 @@ unibi_term *unibi_from_term(const char *term) {
 	}
 
 	if ((env = getenv("TERMINFO"))) {
-		return from_dir(env, env + strlen(env), NULL, term);
+		return from_dir(env, NULL, NULL, term);
 	}
 
 	if ((env = getenv("HOME"))) {
-		ut = from_dir(env, env + strlen(env), ".terminfo", term);
+		ut = from_dir(env, NULL, ".terminfo", term);
 		if (ut) {
 			return ut;
 		}
