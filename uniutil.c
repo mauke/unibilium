@@ -1,6 +1,6 @@
 /*
 
-Copyright 2008, 2010 Lukas Mai.
+Copyright 2008, 2010, 2012 Lukas Mai.
 
 This file is part of unibilium.
 
@@ -88,16 +88,17 @@ unibi_term *unibi_from_file(const char *file) {
 
 static unibi_term *from_dir(const char *base, const char *mid, const char *term) {
 	char *path;
-	unibi_term *ret;
+	unibi_term *ut;
 
 	path = malloc(strlen(base) + 1 + strlen(mid) + 1 + 1 + 1 + strlen(term) + 1);
-	if(!path)
+	if (!path) {
 		return NULL;
+	}
 	sprintf(path,        "%s"   "/"         "%s"  "/" "%c""/"         "%s",
 	                     base,              mid,      term[0],        term);
-	ret = unibi_from_file(path);
+	ut = unibi_from_file(path);
 	free(path);
-	return ret;
+	return ut;
 }
 
 static unibi_term *from_dirs(const char *list, const char *term) {
@@ -109,8 +110,9 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 	}
 
 	copy = malloc(strlen(list) + 1);
-	if(!copy)
+	if (!copy) {
 		return NULL;
+	}
 
 	strcpy(copy, list);
 
