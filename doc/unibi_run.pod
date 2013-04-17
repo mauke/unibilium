@@ -1,0 +1,62 @@
+=pod
+
+=head1 NAME
+
+unibi_format, unibi_run - interpret a terminfo format string
+
+=head1 SYNOPSIS
+
+  #include <unibilium.h>
+  
+  void unibi_format(
+      unibi_var_t var_dyn[26],
+      unibi_var_t var_static[26],
+      const char *fmt,
+      unibi_var_t param[9],
+      void (*out)(void *, const char *, size_t),
+      void *ctx1,
+      void (*pad)(void *, size_t, int, int),
+      void *ctx2
+  );
+  
+  size_t unibi_run(const char *fmt, unibi_var_t param[9], char *p, size_t n);
+
+=head1 DESCRIPTION
+
+C<unibi_format> takes a format string I<fmt> and executes it. All output is
+done by (possibly repeated) calls to I<out>. In the calls to I<out> the first
+argument is always I<ctx1>, the second argument is a pointer to a chunk of
+data, and the third argument is a count specifying the size of the chunk in
+bytes.
+
+I<pad> is used when the format string contains C<< $<...> >> padding
+instructions. In the calls to I<pad> the first argument is always I<ctx2>, the
+second argument is the delay in tenths of milliseconds, the third argument is a
+boolean flag indicating whether C<*> (proportional delay) was specified in the
+format string, and the fourth argument is a boolean flag indicating whether
+C</> (forced padding) was specified in the format string. Thus a format string
+of C<< $<5/> >> would translate into C<pad(ctx2, 50, 0, 1)>. You may pass a
+null pointer for I<pad>; in that case padding instructions are silently
+skipped.
+
+The values of I<param> are used for the format codes C<%p1> .. C<%p9>; the
+values of I<var_dyn> and I<var_static> are used for the so-called
+dynamic/static variables C<%Pa> .. C<%Pz> and C<%PA> .. C<%PZ>, respectively.
+
+C<unibi_run> is a wrapper around C<unibi_format>. It passes two arrays (each
+initialized to 26 zeroes) as I<var_dyn> and I<var_static>. I<fmt> and I<param>
+are passed on unchanged. It ignores padding and places all normal output in the
+buffer pointed to by I<p>. I<n> is the size of the buffer; at most I<n> bytes
+will be written to I<p>.
+
+=head1 RETURN VALUE
+
+C<unibi_run> returns the number of bytes that would have been written if the
+buffer was big enough. Thus the number of valid bytes in I<p> after a call to
+C<unibi_run> is the minimum of I<n> and the return value of C<unibi_run>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>
+
+=cut

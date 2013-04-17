@@ -5,7 +5,6 @@
  */
 
 #include "unibilium.h"
-#include "sparchways.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +64,7 @@ int main(int argc, char **argv) {
 				fputs(fmt, stdout);
 				return 0;
 			}
-			sparch_var_t vars[9] = {{0}};
+			unibi_var_t vars[9] = {{0}};
 			switch (i) {
 #define REQ(N) do { if (argc - 2 < (N)) { fprintf(stderr, "%s: %s: missing argument\n", argv[0], argv[1]); return 4; } } while (0)
 
@@ -101,7 +100,7 @@ int main(int argc, char **argv) {
 				}
 			}
 			char buf[1024];
-			size_t r = sparch_run(fmt, vars, buf, sizeof buf);
+			size_t r = unibi_run(fmt, vars, buf, sizeof buf);
 			fwrite(buf, 1, r, stdout);
 			return 0;
 		}

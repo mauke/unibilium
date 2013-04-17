@@ -25,6 +25,11 @@ The following types are provided:
 The main type. It represents a terminfo entry. Most functions take a pointer to
 this structure.
 
+=item unibi_var_t
+
+A union with two members, C<int i> and C<char *p>. It represents the values
+used in format string operations.
+
 =item enum unibi_boolean
 
 An enumeration of boolean capabilities. It has the following elements:
@@ -1109,6 +1114,8 @@ L<unibi_add_ext_num(3)>,
 L<unibi_add_ext_str(3)>,
 L<unibi_del_ext_bool(3)>,
 L<unibi_del_ext_num(3)>,
-L<unibi_del_ext_str(3)>
+L<unibi_del_ext_str(3)>,
+L<unibi_format(3)>,
+L<unibi_run(3)>
 
 =cut

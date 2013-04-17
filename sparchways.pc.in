@@ -1,9 +1,0 @@
-libdir=@LIBDIR@
-includedir=@INCDIR@
-version=@VERSION@
-
-Name: sparchways
-Description: terminfo format string interpreter
-Version: ${version}
-Libs: -L${libdir} -lsparchways
-Cflags: -I${includedir}

@@ -3,7 +3,7 @@
 
 /*
 
-Copyright 2008, 2010, 2011, 2012 Lukas Mai.
+Copyright 2008, 2010-2013 Lukas Mai.
 
 This file is part of unibilium.
 
@@ -602,5 +602,24 @@ size_t unibi_add_ext_str(unibi_term *, const char *, const char *);
 void unibi_del_ext_bool(unibi_term *, size_t);
 void unibi_del_ext_num(unibi_term *, size_t);
 void unibi_del_ext_str(unibi_term *, size_t);
+
+
+typedef union {
+	int i;
+	char *p;
+} unibi_var_t;
+
+void unibi_format(
+	unibi_var_t [26],
+	unibi_var_t [26],
+	const char *,
+	unibi_var_t [9],
+	void (*)(void *, const char *, size_t),
+	void *,
+	void (*)(void *, size_t, int, int),
+	void *
+);
+
+size_t unibi_run(const char *, unibi_var_t [9], char *, size_t);
 
 #endif /* GUARD_UNIBILIUM_H_ */
