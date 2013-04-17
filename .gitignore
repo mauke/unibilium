@@ -2,3 +2,4 @@
 *.lo
 *.la
 .libs
+t/*.t
