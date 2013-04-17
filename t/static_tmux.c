@@ -135,7 +135,7 @@ int main(void) {
     ok(strcmp(unibi_get_name(ut), "tmux terminal multiplexer") == 0, "terminal name = \"tmux terminal multiplexer\"");
     unibi_set_name(dt, "tmux terminal multiplexer");
     {
-        const char *def_aliases[] = {"tmux", NULL};
+        static const char *def_aliases[] = {"tmux", NULL};
         const char **aliases = unibi_get_aliases(ut);
         ok(strcmp(aliases[0], def_aliases[0]) == 0, "terminal alias #0 = \"tmux\"");
         ok(aliases[1] == NULL, "terminal alias #1 = null");

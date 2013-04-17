@@ -213,7 +213,7 @@ int main(void) {
     ok(strcmp(unibi_get_name(ut), "xterm terminal emulator (X Window System)") == 0, "terminal name = \"xterm terminal emulator (X Window System)\"");
     unibi_set_name(dt, "xterm terminal emulator (X Window System)");
     {
-        const char *def_aliases[] = {"xterm", NULL};
+        static const char *def_aliases[] = {"xterm", NULL};
         const char **aliases = unibi_get_aliases(ut);
         ok(strcmp(aliases[0], def_aliases[0]) == 0, "terminal alias #0 = \"xterm\"");
         ok(aliases[1] == NULL, "terminal alias #1 = null");

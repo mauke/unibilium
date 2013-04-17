@@ -129,7 +129,7 @@ int main(void) {
 		size_t i;
 		const char **aliases = unibi_get_aliases(ut);
 		say("    {");
-		say_("        const char *def_aliases[] = {");
+		say_("        static const char *def_aliases[] = {");
 		for (i = 0; aliases[i]; i++) {
 			if (i) {
 				say_(", ");

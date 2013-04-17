@@ -128,7 +128,7 @@ int main(void) {
     ok(strcmp(unibi_get_name(ut), "VT 100/ANSI X3.64 virtual terminal") == 0, "terminal name = \"VT 100/ANSI X3.64 virtual terminal\"");
     unibi_set_name(dt, "VT 100/ANSI X3.64 virtual terminal");
     {
-        const char *def_aliases[] = {"screen", NULL};
+        static const char *def_aliases[] = {"screen", NULL};
         const char **aliases = unibi_get_aliases(ut);
         ok(strcmp(aliases[0], def_aliases[0]) == 0, "terminal alias #0 = \"screen\"");
         ok(aliases[1] == NULL, "terminal alias #1 = null");
