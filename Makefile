@@ -76,6 +76,7 @@ test: build-test
 .PHONY: clean
 clean:
 	$(LIBTOOL) --mode=clean rm -f $(OBJECTS) $(LIBRARY) $(MANPAGES)
+	$(LIBTOOL) --mode=clean rm -f tools/.libs/* t/.libs/*  # XXX there has to be a better way
 	$(LIBTOOL) --mode=clean rm -f $(TOOLS:.c=) $(TOOLS:.c=.o) $(TESTS:.c=.t) $(TESTS:.c=.o)
 
 .PHONY: install
