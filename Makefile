@@ -49,19 +49,19 @@ TESTS=$(wildcard t/*.c)
 all: $(LIBRARY) build-man build-tools build-test
 
 %.lo: %.c unibilium.h
-	$(LIBTOOL) --mode=compile --tag=CC gcc -I. -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC $(CC) -I. -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
 
 uniutil.lo: uniutil.c unibilium.h
-	$(LIBTOOL) --mode=compile --tag=CC gcc -I. -DTERMINFO_DIRS='$(TERMINFO_DIRS)' -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
+	$(LIBTOOL) --mode=compile --tag=CC $(CC) -I. -DTERMINFO_DIRS='$(TERMINFO_DIRS)' -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
 
 $(LIBRARY): $(OBJECTS)
-	$(LIBTOOL) --mode=link --tag=CC gcc -rpath '$(LIBDIR)' -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) -rpath '$(LIBDIR)' -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o $@ $^
 
 tools/%: $(LIBRARY) tools/%.lo
-	$(LIBTOOL) --mode=link --tag=CC gcc -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) -o $@ $^
 
 %.t: $(LIBRARY) %.lo
-	$(LIBTOOL) --mode=link --tag=CC gcc -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) -o $@ $^
 
 .PHONY: build-tools
 build-tools: $(TOOLS:.c=)
