@@ -1,4 +1,8 @@
-LIBTOOL=libtool
+ifeq ($(shell uname),Darwin)
+  LIBTOOL ?= glibtool
+else
+  LIBTOOL ?= libtool
+endif
 
 CFLAGS?=
 
