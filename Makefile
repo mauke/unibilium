@@ -1,7 +1,7 @@
 ifeq ($(shell uname),Darwin)
-  LIBTOOL ?= glibtool
+  LIBTOOL?=glibtool
 else
-  LIBTOOL ?= libtool
+  LIBTOOL?=libtool
 endif
 
 CFLAGS?=
@@ -12,7 +12,7 @@ PACKAGE=unibilium
 
 PKG_MAJOR=1
 PKG_MINOR=1
-PKG_REVISION=0
+PKG_REVISION=1
 
 PKG_VERSION=$(PKG_MAJOR).$(PKG_MINOR).$(PKG_REVISION)
 
