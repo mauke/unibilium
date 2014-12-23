@@ -14,5 +14,4 @@ Other variables that can be set on the command line include CFLAGS
 (C compiler options) and DESTDIR (build for installation into $PREFIX
 but copy the built files into $DESTDIR/$PREFIX instead).
 
-This library is under the GNU Lesser General Public License; see the file
-LGPLv3 for details.
+See the LICENSE file for licensing information.
