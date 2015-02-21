@@ -86,21 +86,27 @@ unibi_term *unibi_from_file(const char *file) {
     return ut;
 }
 
+static int add_overflowed(size_t *dst, size_t src) {
+    *dst += src;
+    return *dst < src;
+}
+
 static unibi_term *from_dir(const char *dir_begin, const char *dir_end, const char *mid, const char *term) {
     char *path;
     unibi_term *ut;
-    size_t dir_len, term_len, path_size;
+    size_t dir_len, mid_len, term_len, path_size;
 
     dir_len = dir_end ? (size_t)(dir_end - dir_begin) : strlen(dir_begin);
+    mid_len = mid ? strlen(mid) + 1 : 0;
     term_len = strlen(term);
 
-    path_size =    dir_len + 1 + (mid ? strlen(mid)    + 1  : 0) + 1 + 1 +  term_len + 1;
-
+    path_size = 0;
     if (
-        dir_len + term_len < dir_len ||
-        dir_len + term_len < term_len ||
-        path_size < dir_len ||
-        path_size < term_len
+        add_overflowed(&path_size, dir_len) ||
+        add_overflowed(&path_size, mid_len) ||
+        add_overflowed(&path_size, term_len) ||
+        add_overflowed(&path_size, 1 + 2           + 1 + 1)
+                                /* /   (%c | %02x)   /   \0 */
     ) {
         /* overflow */
         errno = ENOMEM;
@@ -111,10 +117,18 @@ static unibi_term *from_dir(const char *dir_begin, const char *dir_end, const ch
     }
 
     memcpy(path, dir_begin, dir_len);
-    sprintf(path + dir_len, "/"        "%s"             "%s"      "%c""/"  "%s",
-                                  mid ? mid : "", mid ? "/" : "",  term[0], term);
+    sprintf(path + dir_len, "/" "%s"            "%s"             "%c" "/" "%s",
+                                 mid ? mid : "", mid ? "/" : "",  term[0], term);
 
+    errno = 0;
     ut = unibi_from_file(path);
+    if (!ut && errno == ENOENT) {
+        /* OS X likes to use /usr/share/terminfo/<hexcode>/name instead of the first letter */
+        sprintf(path + dir_len + 1 + mid_len, "%02x/%s",
+                                               (unsigned int)((unsigned char)term[0] & 0xff),
+                                               term);
+        ut = unibi_from_file(path);
+    }
     free(path);
     return ut;
 }
