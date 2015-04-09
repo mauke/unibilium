@@ -89,19 +89,19 @@ install: install-inc install-lib install-man
 
 .PHONY: install-inc
 install-inc:
-	install -d '$(DESTDIR)$(INCDIR)'
+	if [ ! -d $(DESTDIR)$(INCDIR) ]; then install -d '$(DESTDIR)$(INCDIR)'; fi
 	install -m644 unibilium.h '$(DESTDIR)$(INCDIR)'
 	install -d '$(DESTDIR)$(LIBDIR)/pkgconfig'
 	sed 's,@VERSION@,$(PKG_VERSION),;s,@LIBDIR@,$(LIBDIR),;s,@INCDIR@,$(INCDIR),' <unibilium.pc.in >'$(DESTDIR)$(LIBDIR)/pkgconfig/unibilium.pc'
 
 .PHONY: install-lib
 install-lib:
-	install -d '$(DESTDIR)$(LIBDIR)'
+	if [ ! -d $(DESTDIR)$(LIBDIR) ]; then install -d '$(DESTDIR)$(LIBDIR)'; fi
 	$(LIBTOOL) --mode=install cp $(LIBRARY) '$(DESTDIR)$(LIBDIR)/$(LIBRARY)'
 
 .PHONY: install-man
 install-man: build-man
-	install -d '$(DESTDIR)$(MAN3DIR)'
+	if [ ! -d $(DESTDIR)$(MAN3DIR) ]; then install -d '$(DESTDIR)$(MAN3DIR)'; fi
 	install -m644 $(MANPAGES) '$(DESTDIR)$(MAN3DIR)'
 
 .PHONY: build-man
