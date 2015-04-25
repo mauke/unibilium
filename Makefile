@@ -59,13 +59,13 @@ uniutil.lo: uniutil.c unibilium.h
 	$(LIBTOOL) --mode=compile --tag=CC $(CC) -I. -DTERMINFO_DIRS='$(TERMINFO_DIRS)' -Wall -std=c99 $(CFLAGS) $(CFLAGS_DEBUG) -o $@ -c $<
 
 $(LIBRARY): $(OBJECTS)
-	$(LIBTOOL) --mode=link --tag=CC $(CC) -rpath '$(LIBDIR)' -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) $(LDFLAGS) -rpath '$(LIBDIR)' -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) -o $@ $^
 
 tools/%: $(LIBRARY) tools/%.lo
-	$(LIBTOOL) --mode=link --tag=CC $(CC) -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) $(LDFLAGS) -o $@ $^
 
 %.t: $(LIBRARY) %.lo
-	$(LIBTOOL) --mode=link --tag=CC $(CC) -o $@ $^
+	$(LIBTOOL) --mode=link --tag=CC $(CC) $(LDFLAGS) -o $@ $^
 
 .PHONY: build-tools
 build-tools: $(TOOLS:.c=)
