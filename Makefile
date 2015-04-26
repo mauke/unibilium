@@ -8,7 +8,7 @@ else
   LIBTOOL?=libtool
 endif
 
-CFLAGS?=
+CFLAGS?=-O2
 
 CFLAGS_DEBUG=
 
