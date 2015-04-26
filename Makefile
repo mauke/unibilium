@@ -1,3 +1,7 @@
+ifneq ($(wildcard .git),)
+  -include maint.mk
+endif
+
 ifeq ($(shell uname),Darwin)
   LIBTOOL?=glibtool
 else
