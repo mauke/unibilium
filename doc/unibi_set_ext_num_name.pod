@@ -23,10 +23,9 @@ I<i> is the index of the extended capability to act on; it must be less than
 C<unibi_count_ext_bool(ut)>, C<unibi_count_ext_num(ut)>, or
 C<unibi_count_ext_str(ut)>, respectively.
 
-Note that
-C<unibi_set_ext_bool_name>/C<unibi_set_ext_num_name>/C<unibi_set_ext_str_name>
-simply store the pointer they are given; they will not free I<s> or make a
-copy of the string.
+Note that C<unibi_set_ext_bool_name>, C<unibi_set_ext_num_name>, and
+C<unibi_set_ext_str_name> simply store the pointer they are given; they will
+not free I<s> or make a copy of the string.
 
 =head1 SEE ALSO
 
