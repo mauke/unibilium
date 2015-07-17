@@ -1130,11 +1130,11 @@ void unibi_format(
 
             case 'P':
                 if (*fmt >= 'a' && *fmt <= 'z') {
-                    ++fmt;
                     var_dyn[*fmt - 'a'] = POP();
+                    fmt++;
                 } else if (*fmt >= 'A' && *fmt <= 'Z') {
-                    ++fmt;
                     var_static[*fmt - 'A'] = POP();
+                    fmt++;
                 } else {
                     out(ctx1, fmt - 2, 2);
                 }
@@ -1142,11 +1142,11 @@ void unibi_format(
 
             case 'g':
                 if (*fmt >= 'a' && *fmt <= 'z') {
-                    ++fmt;
                     PUSH(var_dyn[*fmt - 'a']);
+                    fmt++;
                 } else if (*fmt >= 'A' && *fmt <= 'Z') {
-                    ++fmt;
                     PUSH(var_static[*fmt - 'A']);
+                    fmt++;
                 } else {
                     out(ctx1, fmt - 2, 2);
                 }
