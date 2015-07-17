@@ -1,3 +1,8 @@
+1.1.5   2015-07-17
+        - fix invalid memory access in %P/%g (gh #14)
+        - avoid badly formatted lines in unibi_{g,s}et_ext_{bool,num,str}_name
+          man pages (gh PR #12)
+
 1.1.4   2015-04-26
         - move maintainer options from GNUmakefile to maint.mk
         - compile with -O2 by default

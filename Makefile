@@ -16,13 +16,13 @@ PACKAGE=unibilium
 
 PKG_MAJOR=1
 PKG_MINOR=1
-PKG_REVISION=4
+PKG_REVISION=5
 
 PKG_VERSION=$(PKG_MAJOR).$(PKG_MINOR).$(PKG_REVISION)
 
 # I am implementation $LT_REVISION of binary interface $LT_CURRENT, which is
 # a superset of all interfaces back to $LT_CURRENT - $LT_AGE.
-LT_REVISION=1
+LT_REVISION=2
 LT_CURRENT=2
 LT_AGE=2
 
