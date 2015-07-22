@@ -19,7 +19,6 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#define UNIBI_DEPRECATED(MSG)  /* We're the implementation. Bypass deprecations. */
 #include "unibilium.h"
 
 #include <errno.h>
@@ -927,23 +926,25 @@ void unibi_del_ext_str(unibi_term *t, size_t i) {
 
 unibi_var_t unibi_var_from_num(int i) {
     unibi_var_t v;
-    v.i = i;
+    v.p_ = NULL;
+    v.i_ = i;
     return v;
 }
 
 unibi_var_t unibi_var_from_str(char *p) {
     unibi_var_t v;
     assert(p != NULL);
-    v.p = p;
+    v.i_ = INT_MIN;
+    v.p_ = p;
     return v;
 }
 
 int unibi_num_from_var(unibi_var_t v) {
-    return v.i;
+    return v.p_ ? INT_MIN : v.i_;
 }
 
 const char *unibi_str_from_var(unibi_var_t v) {
-    return v.p;
+    return v.p_ ? v.p_ : "";
 }
 
 static void dput(
