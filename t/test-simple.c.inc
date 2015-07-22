@@ -26,6 +26,7 @@ THE SOFTWARE.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 static unsigned test_counter;
 
@@ -35,8 +36,13 @@ static void plan(unsigned n) {
     printf("1..%u\n", n);
 }
 
-static void ok(int b, const char *s) {
-    printf("%sok %u - %s\n", b ? "" : "not ", test_counter++, s);
+static void ok(int b, const char *fmt, ...) {
+    va_list ap;
+    printf("%sok %u - ", b ? "" : "not ", test_counter++);
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
+    printf("\n");
 }
 
 static void bail_out(const char *s) {

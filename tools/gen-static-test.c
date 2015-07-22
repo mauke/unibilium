@@ -106,9 +106,9 @@ int main(void) {
         const char *name = unibi_get_name(ut);
         printf("    ok(strcmp(unibi_get_name(ut), \"");
         print_str_esc(name, 0);
-        printf("\") == 0, \"terminal name = \\\"");
+        printf("\") == 0, \"terminal name = \\\"%%s\\\"\", \"");
         print_str_esc(name, 1);
-        printf("\\\"\");\n");
+        printf("\");\n");
         test_counter++;
         printf("    unibi_set_name(dt, \"");
         print_str_esc(name, 0);
@@ -133,9 +133,9 @@ int main(void) {
         say("NULL};");
         say("        const char **aliases = unibi_get_aliases(ut);");
         for (i = 0; aliases[i]; i++) {
-            printf("        ok(strcmp(aliases[%zu], def_aliases[%zu]) == 0, \"terminal alias #%zu = \\\"", i, i, i);
+            printf("        ok(strcmp(aliases[%zu], def_aliases[%zu]) == 0, \"terminal alias #%zu = \\\"%%s\\\"\", \"", i, i, i);
             print_str_esc(aliases[i], 0);
-            printf("\\\"\");\n");
+            printf("\");\n");
             test_counter++;
         }
         printf("        ok(aliases[%zu] == NULL, \"terminal alias #%zu = null\");\n", i, i);
@@ -173,9 +173,9 @@ int main(void) {
         if (s) {
             printf("    ok(strcmp(unibi_get_str(ut, unibi_%s), \"", c);
             print_str_esc(s, 0);
-            printf("\") == 0, \"%s = \\\"", c);
+            printf("\") == 0, \"%s = \\\"%%s\\\"\", \"", c);
             print_str_esc(s, 1);
-            printf("\\\"\");\n");
+            printf("\");\n");
             printf("    unibi_set_str(dt, unibi_%s, \"", c);
             print_str_esc(s, 0);
             printf("\");\n");
@@ -202,9 +202,9 @@ int main(void) {
             printf("        ok(%zu < n_ext && strcmp(unibi_get_ext_bool_name(ut, %zu), \"", i, i);
             test_counter++;
             print_str_esc(c, 0);
-            printf("\") == 0, \"ext_bool[%zu].name = \\\"", i);
+            printf("\") == 0, \"ext_bool[%zu].name = \\\"%%s\\\"\", \"", i);
             print_str_esc(c, 1);
-            printf("\\\"\");\n");
+            printf("\");\n");
             printf("        unibi_add_ext_bool(dt, \"");
             print_str_esc(c, 0);
             printf("\", %d);\n", b);
@@ -229,9 +229,9 @@ int main(void) {
             printf("        ok(%zu < n_ext && strcmp(unibi_get_ext_num_name(ut, %zu), \"", i, i);
             test_counter++;
             print_str_esc(c, 0);
-            printf("\") == 0, \"ext_num[%zu].name = \\\"", i);
+            printf("\") == 0, \"ext_num[%zu].name = \\\"%%s\\\"\", \"", i);
             print_str_esc(c, 1);
-            printf("\\\"\");\n");
+            printf("\");\n");
             printf("        unibi_add_ext_num(dt, \"");
             print_str_esc(c, 0);
             printf("\", %hd);\n", v);
@@ -255,9 +255,9 @@ int main(void) {
             if (s) {
                 printf("strcmp(unibi_get_ext_str(ut, %zu), \"", i);
                 print_str_esc(s, 0);
-                printf("\") == 0, \"ext_str[%zu].value = \\\"", i);
+                printf("\") == 0, \"ext_str[%zu].value = \\\"%%s\\\"\", \"", i);
                 print_str_esc(s, 1);
-                printf("\\\"\");\n");
+                printf("\");\n");
                 printf("        unibi_add_ext_str(dt, \"");
                 print_str_esc(c, 0);
                 printf("\", \"");
@@ -273,9 +273,9 @@ int main(void) {
             printf("        ok(%zu < n_ext && strcmp(unibi_get_ext_str_name(ut, %zu), \"", i, i);
             test_counter++;
             print_str_esc(c, 0);
-            printf("\") == 0, \"ext_str[%zu].name = \\\"", i);
+            printf("\") == 0, \"ext_str[%zu].name = \\\"%%s\\\"\", \"", i);
             print_str_esc(c, 1);
-            printf("\\\"\");\n");
+            printf("\");\n");
         }
         say("    }");
     }
