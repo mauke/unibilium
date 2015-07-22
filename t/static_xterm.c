@@ -1,27 +1,7 @@
 #include <unibilium.h>
-#include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include <stdlib.h>
-
-static unsigned test_counter;
-
-static void plan(unsigned n) {
-    printf("1..%u\n", n);
-}
-
-static void ok(int b, const char *s) {
-    printf("%sok %u - %s\n", b ? "" : "not ", test_counter++, s);
-}
-
-static void bail_out(const char *s) {
-    printf("Bail out! %s\n", s);
-    exit(EXIT_FAILURE);
-}
-
-static void diag(const char *s) {
-    printf("# %s\n", s);
-}
+#include "test-simple.c.inc"
 
 const char terminfo[] = {
     26, 1, 48, 0, 38, 0, 15, 0, -99, 1, 108, 5, 120, 116, 101, 114, 109, 124, 120, 116,
@@ -193,10 +173,12 @@ const char terminfo[] = {
 static void setup(void);
 
 int main(void) {
+    int e;
+    unibi_term *dt;
+
     setup();
 
-    int e;
-    unibi_term *dt = unibi_dummy();
+    dt = unibi_dummy();
     e = errno;
     ok(dt != NULL, "dummy constructed");
     if (!dt) {
@@ -1128,8 +1110,5 @@ int main(void) {
 }
 
 static void setup(void) {
-    setvbuf(stdout, NULL, _IOLBF, 0);
-
     plan(631);
-    test_counter = 1;
 }

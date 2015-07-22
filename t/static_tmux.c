@@ -1,124 +1,98 @@
 #include <unibilium.h>
-#include <stdio.h>
 #include <errno.h>
 #include <string.h>
-#include <stdlib.h>
-
-static unsigned test_counter;
-
-static void plan(unsigned n) {
-    printf("1..%u\n", n);
-}
-
-static void ok(int b, const char *s) {
-    printf("%sok %u - %s\n", b ? "" : "not ", test_counter++, s);
-}
-
-static void bail_out(const char *s) {
-    printf("Bail out! %s\n", s);
-    exit(EXIT_FAILURE);
-}
-
-static void diag(const char *s) {
-    printf("# %s\n", s);
-}
+#include "test-simple.c.inc"
 
 const char terminfo[] = {
-    26, 1, 31, 0, 15, 0, 16, 0, 105, 1, -128, 3, 116, 109, 117, 120, 124, 116, 109, 117,
-    120, 32, 116, 101, 114, 109, 105, 110, 97, 108, 32, 109, 117, 108, 116, 105, 112, 108, 101, 120,
-    101, 114, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 80, 0,
-    8, 0, 24, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, 0, 1, 64, 0, 3, 0, 0, 0, 4, 0, 6, 0, 8, 0, 25, 0,
-    30, 0, 37, 0, 41, 0, -1, -1, -1, -1, 45, 0, 62, 0, 64, 0, 68, 0, 75, 0,
-    -1, -1, 77, 0, 89, 0, -1, -1, 93, 0, 96, 0, 102, 0, 106, 0, -1, -1, -1, -1,
-    110, 0, 112, 0, 117, 0, -1, -1, -1, -1, -1, -1, 122, 0, -1, -1, -1, -1, 127, 0,
-    -124, 0, -119, 0, -1, -1, -114, 0, -112, 0, -1, -1, -1, -1, -107, 0, -102, 0, -96, 0,
-    -90, 0, -1, -1, -1, -1, -1, -1, -87, 0, -1, -1, -1, -1, -1, -1, -83, 0, -1, -1,
-    -79, 0, -1, -1, -1, -1, -1, -1, -77, 0, -1, -1, -72, 0, -1, -1, -1, -1, -1, -1,
-    -1, -1, -67, 0, -62, 0, -56, 0, -51, 0, -46, 0, -41, 0, -35, 0, -29, 0, -23, 0,
-    -17, 0, -11, 0, -6, 0, -1, -1, -1, 0, -1, -1, 4, 1, 9, 1, 14, 1, -1, -1,
-    -1, -1, -1, -1, 19, 1, 24, 1, 32, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 40, 1, -1, -1,
-    43, 1, 52, 1, 61, 1, 70, 1, -1, -1, 79, 1, 88, 1, 97, 1, -1, -1, 106, 1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 115, 1, -1, -1,
-    -1, -1, -124, 1, -1, -1, -121, 1, -118, 1, -116, 1, -113, 1, -40, 1, -1, -1, -37, 1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -35, 1, -31, 1, -27, 1, -23, 1, -19, 1, -1, -1,
-    -1, -1, -15, 1, -1, -1, 50, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    54, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 61, 2,
+    26, 1, 56, 0, 15, 0, 15, 0, 105, 1, -48, 2, 116, 109, 117, 120, 124, 86, 84, 32,
+    49, 48, 48, 47, 65, 78, 83, 73, 32, 88, 51, 46, 54, 52, 32, 118, 105, 114, 116, 117,
+    97, 108, 32, 116, 101, 114, 109, 105, 110, 97, 108, 32, 119, 105, 116, 104, 32, 50, 53, 54,
+    32, 99, 111, 108, 111, 114, 115, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0,
+    0, 1, 1, 0, 80, 0, 8, 0, 24, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, -1, 127, 0, 0, 4, 0, 6, 0,
+    8, 0, 25, 0, 30, 0, 37, 0, 41, 0, -1, -1, -1, -1, 45, 0, 62, 0, 64, 0,
+    68, 0, 75, 0, -1, -1, 77, 0, 89, 0, -1, -1, 93, 0, 96, 0, 102, 0, 106, 0,
+    -1, -1, -1, -1, 110, 0, 112, 0, 117, 0, 122, 0, -1, -1, -1, -1, 123, 0, -1, -1,
+    -1, -1, -128, 0, -123, 0, -118, 0, -1, -1, -113, 0, -111, 0, -106, 0, -1, -1, -105, 0,
+    -100, 0, -94, 0, -88, 0, -1, -1, -1, -1, -1, -1, -85, 0, -1, -1, -1, -1, -1, -1,
+    -81, 0, -1, -1, -77, 0, -1, -1, -1, -1, -1, -1, -75, 0, -1, -1, -70, 0, -1, -1,
+    -1, -1, -1, -1, -1, -1, -66, 0, -62, 0, -56, 0, -52, 0, -48, 0, -44, 0, -38, 0,
+    -32, 0, -26, 0, -20, 0, -14, 0, -9, 0, -1, -1, -4, 0, -1, -1, 0, 1, 5, 1,
+    10, 1, -1, -1, -1, -1, -1, -1, 14, 1, 18, 1, 26, 1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 66, 2, -1, -1, -1, -1, 73, 2,
-    -1, -1, -1, -1, -1, -1, -1, -1, 80, 2, -1, -1, 87, 2, -1, -1, -1, -1, 94, 2,
-    -1, -1, 101, 2, -1, -1, -1, -1, -1, -1, 108, 2, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, 115, 2, 121, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    34, 1, -1, -1, 37, 1, 46, 1, 55, 1, 64, 1, -1, -1, 73, 1, 82, 1, 91, 1,
+    -1, -1, 100, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    109, 1, -1, -1, -1, -1, 126, 1, -1, -1, -127, 1, -124, 1, -122, 1, -119, 1, -46, 1,
+    -1, -1, -43, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -41, 1, -1, -1, 24, 2, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, 28, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, 35, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, 127, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -124, 2, -1, -1, -1, -1, -1, -1, -1, -1, -115, 2, -15, 2, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 85, 3, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 90, 3, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, 40, 2, 46, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    96, 3, -1, -1, -1, -1, -1, -1, 100, 3, 114, 3, 27, 91, 90, 0, 7, 0, 13, 0,
-    27, 91, 37, 105, 37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 114, 0, 27, 91, 51,
-    103, 0, 27, 91, 72, 27, 91, 74, 0, 27, 91, 75, 0, 27, 91, 74, 0, 27, 91, 37,
-    105, 37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 72, 0, 10, 0, 27, 91, 72, 0,
-    27, 91, 63, 50, 53, 108, 0, 8, 0, 27, 91, 51, 52, 104, 27, 91, 63, 50, 53, 104,
-    0, 27, 91, 67, 0, 27, 77, 0, 27, 91, 51, 52, 108, 0, 27, 91, 80, 0, 27, 91,
-    77, 0, 14, 0, 27, 91, 53, 109, 0, 27, 91, 49, 109, 0, 27, 91, 52, 104, 0, 27,
-    91, 55, 109, 0, 27, 91, 55, 109, 0, 27, 91, 52, 109, 0, 15, 0, 27, 91, 109, 15,
-    0, 27, 91, 52, 108, 0, 27, 91, 50, 55, 109, 0, 27, 91, 50, 52, 109, 0, 27, 103,
-    0, 27, 41, 48, 0, 27, 91, 76, 0, 127, 0, 27, 91, 51, 126, 0, 27, 91, 49, 66,
-    0, 27, 91, 49, 80, 0, 27, 91, 50, 49, 126, 0, 27, 91, 49, 81, 0, 27, 91, 49,
-    82, 0, 27, 91, 49, 83, 0, 27, 91, 49, 53, 126, 0, 27, 91, 49, 55, 126, 0, 27,
-    91, 49, 56, 126, 0, 27, 91, 49, 57, 126, 0, 27, 91, 50, 48, 126, 0, 27, 91, 49,
-    72, 0, 27, 91, 50, 126, 0, 27, 91, 49, 68, 0, 27, 91, 54, 126, 0, 27, 91, 53,
-    126, 0, 27, 91, 49, 67, 0, 27, 91, 49, 65, 0, 27, 91, 63, 49, 108, 27, 62, 0,
-    27, 91, 63, 49, 104, 27, 61, 0, 27, 69, 0, 27, 91, 37, 112, 49, 37, 100, 80, 0,
-    27, 91, 37, 112, 49, 37, 100, 77, 0, 27, 91, 37, 112, 49, 37, 100, 66, 0, 27, 91,
-    37, 112, 49, 37, 100, 64, 0, 27, 91, 37, 112, 49, 37, 100, 76, 0, 27, 91, 37, 112,
-    49, 37, 100, 68, 0, 27, 91, 37, 112, 49, 37, 100, 67, 0, 27, 91, 37, 112, 49, 37,
-    100, 65, 0, 27, 99, 27, 91, 63, 49, 48, 48, 48, 108, 27, 91, 63, 50, 53, 104, 0,
-    27, 56, 0, 27, 55, 0, 10, 0, 27, 77, 0, 27, 91, 48, 37, 63, 37, 112, 54, 37,
-    116, 59, 49, 37, 59, 37, 63, 37, 112, 49, 37, 116, 59, 51, 37, 59, 37, 63, 37, 112,
-    50, 37, 116, 59, 52, 37, 59, 37, 63, 37, 112, 51, 37, 116, 59, 55, 37, 59, 37, 63,
-    37, 112, 52, 37, 116, 59, 53, 37, 59, 109, 37, 63, 37, 112, 57, 37, 116, 14, 37, 101,
-    15, 37, 59, 0, 27, 72, 0, 9, 0, 27, 79, 119, 0, 27, 79, 121, 0, 27, 79, 117,
-    0, 27, 79, 113, 0, 27, 79, 115, 0, 43, 43, 44, 44, 45, 45, 46, 46, 48, 48, 96,
-    96, 97, 97, 102, 102, 103, 103, 104, 104, 105, 105, 106, 106, 107, 107, 108, 108, 109, 109, 110,
-    110, 111, 111, 112, 112, 113, 113, 114, 114, 115, 115, 116, 116, 117, 117, 118, 118, 119, 119, 120,
-    120, 121, 121, 122, 122, 123, 123, 124, 124, 125, 125, 126, 126, 0, 27, 91, 90, 0, 27, 40,
-    66, 27, 41, 48, 0, 27, 91, 49, 70, 0, 27, 91, 50, 59, 50, 126, 0, 27, 91, 49,
-    59, 50, 70, 0, 27, 91, 49, 59, 50, 72, 0, 27, 91, 49, 59, 50, 68, 0, 27, 91,
-    54, 59, 50, 126, 0, 27, 91, 53, 59, 50, 126, 0, 27, 91, 49, 59, 50, 67, 0, 27,
-    91, 50, 51, 126, 0, 27, 91, 50, 52, 126, 0, 27, 91, 49, 75, 0, 27, 91, 51, 57,
-    59, 52, 57, 109, 0, 37, 63, 37, 112, 49, 37, 123, 55, 125, 37, 62, 37, 116, 27, 91,
-    51, 56, 59, 53, 59, 37, 112, 49, 37, 100, 109, 37, 101, 27, 91, 51, 37, 63, 37, 112,
-    49, 37, 123, 49, 125, 37, 61, 37, 116, 52, 37, 101, 37, 112, 49, 37, 123, 51, 125, 37,
-    61, 37, 116, 54, 37, 101, 37, 112, 49, 37, 123, 52, 125, 37, 61, 37, 116, 49, 37, 101,
-    37, 112, 49, 37, 123, 54, 125, 37, 61, 37, 116, 51, 37, 101, 37, 112, 49, 37, 100, 37,
-    59, 109, 37, 59, 0, 37, 63, 37, 112, 49, 37, 123, 55, 125, 37, 62, 37, 116, 27, 91,
-    52, 56, 59, 53, 59, 37, 112, 49, 37, 100, 109, 37, 101, 27, 91, 52, 37, 63, 37, 112,
-    49, 37, 123, 49, 125, 37, 61, 37, 116, 52, 37, 101, 37, 112, 49, 37, 123, 51, 125, 37,
-    61, 37, 116, 54, 37, 101, 37, 112, 49, 37, 123, 52, 125, 37, 61, 37, 116, 49, 37, 101,
-    37, 112, 49, 37, 123, 54, 125, 37, 61, 37, 116, 51, 37, 101, 37, 112, 49, 37, 100, 37,
-    59, 109, 37, 59, 0, 27, 91, 51, 109, 0, 27, 91, 50, 51, 109, 0, 27, 91, 77, 0,
-    27, 91, 51, 56, 59, 53, 59, 37, 112, 49, 37, 100, 109, 0, 27, 91, 52, 56, 59, 53,
-    59, 37, 112, 49, 37, 100, 109, 0
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 52, 2, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, 57, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 66, 2, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 71, 2, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, 77, 2, -1, -1, -1, -1, -1, -1, 81, 2, -112, 2, 27, 91, 90, 0,
+    7, 0, 13, 0, 27, 91, 37, 105, 37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 114,
+    0, 27, 91, 51, 103, 0, 27, 91, 72, 27, 91, 74, 0, 27, 91, 75, 0, 27, 91, 74,
+    0, 27, 91, 37, 105, 37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 72, 0, 10, 0,
+    27, 91, 72, 0, 27, 91, 63, 50, 53, 108, 0, 8, 0, 27, 91, 51, 52, 104, 27, 91,
+    63, 50, 53, 104, 0, 27, 91, 67, 0, 27, 77, 0, 27, 91, 51, 52, 108, 0, 27, 91,
+    80, 0, 27, 91, 77, 0, 14, 0, 27, 91, 53, 109, 0, 27, 91, 49, 109, 0, 0, 27,
+    91, 52, 104, 0, 27, 91, 55, 109, 0, 27, 91, 55, 109, 0, 27, 91, 52, 109, 0, 15,
+    0, 27, 91, 109, 15, 0, 0, 27, 91, 52, 108, 0, 27, 91, 50, 55, 109, 0, 27, 91,
+    50, 52, 109, 0, 27, 103, 0, 27, 41, 48, 0, 27, 91, 76, 0, 8, 0, 27, 91, 51,
+    126, 0, 27, 79, 66, 0, 27, 79, 80, 0, 27, 91, 50, 49, 126, 0, 27, 79, 81, 0,
+    27, 79, 82, 0, 27, 79, 83, 0, 27, 91, 49, 53, 126, 0, 27, 91, 49, 55, 126, 0,
+    27, 91, 49, 56, 126, 0, 27, 91, 49, 57, 126, 0, 27, 91, 50, 48, 126, 0, 27, 91,
+    49, 126, 0, 27, 91, 50, 126, 0, 27, 79, 68, 0, 27, 91, 54, 126, 0, 27, 91, 53,
+    126, 0, 27, 79, 67, 0, 27, 79, 65, 0, 27, 91, 63, 49, 108, 27, 62, 0, 27, 91,
+    63, 49, 104, 27, 61, 0, 27, 69, 0, 27, 91, 37, 112, 49, 37, 100, 80, 0, 27, 91,
+    37, 112, 49, 37, 100, 77, 0, 27, 91, 37, 112, 49, 37, 100, 66, 0, 27, 91, 37, 112,
+    49, 37, 100, 64, 0, 27, 91, 37, 112, 49, 37, 100, 76, 0, 27, 91, 37, 112, 49, 37,
+    100, 68, 0, 27, 91, 37, 112, 49, 37, 100, 67, 0, 27, 91, 37, 112, 49, 37, 100, 65,
+    0, 27, 99, 27, 91, 63, 49, 48, 48, 48, 108, 27, 91, 63, 50, 53, 104, 0, 27, 56,
+    0, 27, 55, 0, 10, 0, 27, 77, 0, 27, 91, 48, 37, 63, 37, 112, 54, 37, 116, 59,
+    49, 37, 59, 37, 63, 37, 112, 49, 37, 116, 59, 55, 37, 59, 37, 63, 37, 112, 50, 37,
+    116, 59, 52, 37, 59, 37, 63, 37, 112, 51, 37, 116, 59, 55, 37, 59, 37, 63, 37, 112,
+    52, 37, 116, 59, 53, 37, 59, 109, 37, 63, 37, 112, 57, 37, 116, 14, 37, 101, 15, 37,
+    59, 0, 27, 72, 0, 9, 0, 43, 43, 44, 44, 45, 45, 46, 46, 48, 48, 96, 96, 97,
+    97, 102, 102, 103, 103, 104, 104, 105, 105, 106, 106, 107, 107, 108, 108, 109, 109, 110, 110, 111,
+    111, 112, 112, 113, 113, 114, 114, 115, 115, 116, 116, 117, 117, 118, 118, 119, 119, 120, 120, 121,
+    121, 122, 122, 123, 123, 124, 124, 125, 125, 126, 126, 0, 27, 91, 90, 0, 27, 40, 66, 27,
+    41, 48, 0, 27, 91, 52, 126, 0, 27, 91, 50, 51, 126, 0, 27, 91, 50, 52, 126, 0,
+    27, 91, 49, 75, 0, 27, 91, 51, 57, 59, 52, 57, 109, 0, 27, 91, 51, 109, 0, 27,
+    91, 50, 51, 109, 0, 27, 91, 77, 0, 27, 91, 37, 63, 37, 112, 49, 37, 123, 56, 125,
+    37, 60, 37, 116, 51, 37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123, 49, 54, 125,
+    37, 60, 37, 116, 57, 37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100, 37, 101, 51, 56,
+    59, 53, 59, 37, 112, 49, 37, 100, 37, 59, 109, 0, 27, 91, 37, 63, 37, 112, 49, 37,
+    123, 56, 125, 37, 60, 37, 116, 52, 37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123,
+    49, 54, 125, 37, 60, 37, 116, 49, 48, 37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100,
+    37, 101, 52, 56, 59, 53, 59, 37, 112, 49, 37, 100, 37, 59, 109, 0
 };
 
 static void setup(void);
 
 int main(void) {
+    int e;
+    unibi_term *dt;
+
     setup();
 
-    int e;
-    unibi_term *dt = unibi_dummy();
+    dt = unibi_dummy();
     e = errno;
     ok(dt != NULL, "dummy constructed");
     if (!dt) {
@@ -132,8 +106,8 @@ int main(void) {
     }
 
     diag("terminal name");
-    ok(strcmp(unibi_get_name(ut), "tmux terminal multiplexer") == 0, "terminal name = \"tmux terminal multiplexer\"");
-    unibi_set_name(dt, "tmux terminal multiplexer");
+    ok(strcmp(unibi_get_name(ut), "VT 100/ANSI X3.64 virtual terminal with 256 colors") == 0, "terminal name = \"VT 100/ANSI X3.64 virtual terminal with 256 colors\"");
+    unibi_set_name(dt, "VT 100/ANSI X3.64 virtual terminal with 256 colors");
     {
         static const char *def_aliases[] = {"tmux", NULL};
         const char **aliases = unibi_get_aliases(ut);
@@ -212,10 +186,9 @@ int main(void) {
     ok(unibi_get_num(ut, unibi_maximum_windows) == -1, "maximum_windows = -1");
     ok(unibi_get_num(ut, unibi_max_colors) == 256, "max_colors = 256");
     unibi_set_num(dt, unibi_max_colors, 256);
-    ok(unibi_get_num(ut, unibi_max_pairs) == 64, "max_pairs = 64");
-    unibi_set_num(dt, unibi_max_pairs, 64);
-    ok(unibi_get_num(ut, unibi_no_color_video) == 3, "no_color_video = 3");
-    unibi_set_num(dt, unibi_no_color_video, 3);
+    ok(unibi_get_num(ut, unibi_max_pairs) == 32767, "max_pairs = 32767");
+    unibi_set_num(dt, unibi_max_pairs, 32767);
+    ok(unibi_get_num(ut, unibi_no_color_video) == -1, "no_color_video = -1");
     ok(unibi_get_num(ut, unibi_buffer_capacity) == -1, "buffer_capacity = -1");
     ok(unibi_get_num(ut, unibi_dot_vert_spacing) == -1, "dot_vert_spacing = -1");
     ok(unibi_get_num(ut, unibi_dot_horz_spacing) == -1, "dot_horz_spacing = -1");
@@ -291,7 +264,8 @@ int main(void) {
     unibi_set_str(dt, unibi_enter_blink_mode, "\033[5m");
     ok(strcmp(unibi_get_str(ut, unibi_enter_bold_mode), "\033[1m") == 0, "enter_bold_mode = \"\\033[1m\"");
     unibi_set_str(dt, unibi_enter_bold_mode, "\033[1m");
-    ok(unibi_get_str(ut, unibi_enter_ca_mode) == NULL, "enter_ca_mode = null");
+    ok(strcmp(unibi_get_str(ut, unibi_enter_ca_mode), "") == 0, "enter_ca_mode = \"\"");
+    unibi_set_str(dt, unibi_enter_ca_mode, "");
     ok(unibi_get_str(ut, unibi_enter_delete_mode) == NULL, "enter_delete_mode = null");
     ok(unibi_get_str(ut, unibi_enter_dim_mode) == NULL, "enter_dim_mode = null");
     ok(strcmp(unibi_get_str(ut, unibi_enter_insert_mode), "\033[4h") == 0, "enter_insert_mode = \"\\033[4h\"");
@@ -309,7 +283,8 @@ int main(void) {
     unibi_set_str(dt, unibi_exit_alt_charset_mode, "\017");
     ok(strcmp(unibi_get_str(ut, unibi_exit_attribute_mode), "\033[m\017") == 0, "exit_attribute_mode = \"\\033[m\\017\"");
     unibi_set_str(dt, unibi_exit_attribute_mode, "\033[m\017");
-    ok(unibi_get_str(ut, unibi_exit_ca_mode) == NULL, "exit_ca_mode = null");
+    ok(strcmp(unibi_get_str(ut, unibi_exit_ca_mode), "") == 0, "exit_ca_mode = \"\"");
+    unibi_set_str(dt, unibi_exit_ca_mode, "");
     ok(unibi_get_str(ut, unibi_exit_delete_mode) == NULL, "exit_delete_mode = null");
     ok(strcmp(unibi_get_str(ut, unibi_exit_insert_mode), "\033[4l") == 0, "exit_insert_mode = \"\\033[4l\"");
     unibi_set_str(dt, unibi_exit_insert_mode, "\033[4l");
@@ -330,30 +305,30 @@ int main(void) {
     ok(strcmp(unibi_get_str(ut, unibi_insert_line), "\033[L") == 0, "insert_line = \"\\033[L\"");
     unibi_set_str(dt, unibi_insert_line, "\033[L");
     ok(unibi_get_str(ut, unibi_insert_padding) == NULL, "insert_padding = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_backspace), "\177") == 0, "key_backspace = \"\\177\"");
-    unibi_set_str(dt, unibi_key_backspace, "\177");
+    ok(strcmp(unibi_get_str(ut, unibi_key_backspace), "\010") == 0, "key_backspace = \"\\010\"");
+    unibi_set_str(dt, unibi_key_backspace, "\010");
     ok(unibi_get_str(ut, unibi_key_catab) == NULL, "key_catab = null");
     ok(unibi_get_str(ut, unibi_key_clear) == NULL, "key_clear = null");
     ok(unibi_get_str(ut, unibi_key_ctab) == NULL, "key_ctab = null");
     ok(strcmp(unibi_get_str(ut, unibi_key_dc), "\033[3~") == 0, "key_dc = \"\\033[3~\"");
     unibi_set_str(dt, unibi_key_dc, "\033[3~");
     ok(unibi_get_str(ut, unibi_key_dl) == NULL, "key_dl = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_down), "\033[1B") == 0, "key_down = \"\\033[1B\"");
-    unibi_set_str(dt, unibi_key_down, "\033[1B");
+    ok(strcmp(unibi_get_str(ut, unibi_key_down), "\033OB") == 0, "key_down = \"\\033OB\"");
+    unibi_set_str(dt, unibi_key_down, "\033OB");
     ok(unibi_get_str(ut, unibi_key_eic) == NULL, "key_eic = null");
     ok(unibi_get_str(ut, unibi_key_eol) == NULL, "key_eol = null");
     ok(unibi_get_str(ut, unibi_key_eos) == NULL, "key_eos = null");
     ok(unibi_get_str(ut, unibi_key_f0) == NULL, "key_f0 = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_f1), "\033[1P") == 0, "key_f1 = \"\\033[1P\"");
-    unibi_set_str(dt, unibi_key_f1, "\033[1P");
+    ok(strcmp(unibi_get_str(ut, unibi_key_f1), "\033OP") == 0, "key_f1 = \"\\033OP\"");
+    unibi_set_str(dt, unibi_key_f1, "\033OP");
     ok(strcmp(unibi_get_str(ut, unibi_key_f10), "\033[21~") == 0, "key_f10 = \"\\033[21~\"");
     unibi_set_str(dt, unibi_key_f10, "\033[21~");
-    ok(strcmp(unibi_get_str(ut, unibi_key_f2), "\033[1Q") == 0, "key_f2 = \"\\033[1Q\"");
-    unibi_set_str(dt, unibi_key_f2, "\033[1Q");
-    ok(strcmp(unibi_get_str(ut, unibi_key_f3), "\033[1R") == 0, "key_f3 = \"\\033[1R\"");
-    unibi_set_str(dt, unibi_key_f3, "\033[1R");
-    ok(strcmp(unibi_get_str(ut, unibi_key_f4), "\033[1S") == 0, "key_f4 = \"\\033[1S\"");
-    unibi_set_str(dt, unibi_key_f4, "\033[1S");
+    ok(strcmp(unibi_get_str(ut, unibi_key_f2), "\033OQ") == 0, "key_f2 = \"\\033OQ\"");
+    unibi_set_str(dt, unibi_key_f2, "\033OQ");
+    ok(strcmp(unibi_get_str(ut, unibi_key_f3), "\033OR") == 0, "key_f3 = \"\\033OR\"");
+    unibi_set_str(dt, unibi_key_f3, "\033OR");
+    ok(strcmp(unibi_get_str(ut, unibi_key_f4), "\033OS") == 0, "key_f4 = \"\\033OS\"");
+    unibi_set_str(dt, unibi_key_f4, "\033OS");
     ok(strcmp(unibi_get_str(ut, unibi_key_f5), "\033[15~") == 0, "key_f5 = \"\\033[15~\"");
     unibi_set_str(dt, unibi_key_f5, "\033[15~");
     ok(strcmp(unibi_get_str(ut, unibi_key_f6), "\033[17~") == 0, "key_f6 = \"\\033[17~\"");
@@ -364,25 +339,25 @@ int main(void) {
     unibi_set_str(dt, unibi_key_f8, "\033[19~");
     ok(strcmp(unibi_get_str(ut, unibi_key_f9), "\033[20~") == 0, "key_f9 = \"\\033[20~\"");
     unibi_set_str(dt, unibi_key_f9, "\033[20~");
-    ok(strcmp(unibi_get_str(ut, unibi_key_home), "\033[1H") == 0, "key_home = \"\\033[1H\"");
-    unibi_set_str(dt, unibi_key_home, "\033[1H");
+    ok(strcmp(unibi_get_str(ut, unibi_key_home), "\033[1~") == 0, "key_home = \"\\033[1~\"");
+    unibi_set_str(dt, unibi_key_home, "\033[1~");
     ok(strcmp(unibi_get_str(ut, unibi_key_ic), "\033[2~") == 0, "key_ic = \"\\033[2~\"");
     unibi_set_str(dt, unibi_key_ic, "\033[2~");
     ok(unibi_get_str(ut, unibi_key_il) == NULL, "key_il = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_left), "\033[1D") == 0, "key_left = \"\\033[1D\"");
-    unibi_set_str(dt, unibi_key_left, "\033[1D");
+    ok(strcmp(unibi_get_str(ut, unibi_key_left), "\033OD") == 0, "key_left = \"\\033OD\"");
+    unibi_set_str(dt, unibi_key_left, "\033OD");
     ok(unibi_get_str(ut, unibi_key_ll) == NULL, "key_ll = null");
     ok(strcmp(unibi_get_str(ut, unibi_key_npage), "\033[6~") == 0, "key_npage = \"\\033[6~\"");
     unibi_set_str(dt, unibi_key_npage, "\033[6~");
     ok(strcmp(unibi_get_str(ut, unibi_key_ppage), "\033[5~") == 0, "key_ppage = \"\\033[5~\"");
     unibi_set_str(dt, unibi_key_ppage, "\033[5~");
-    ok(strcmp(unibi_get_str(ut, unibi_key_right), "\033[1C") == 0, "key_right = \"\\033[1C\"");
-    unibi_set_str(dt, unibi_key_right, "\033[1C");
+    ok(strcmp(unibi_get_str(ut, unibi_key_right), "\033OC") == 0, "key_right = \"\\033OC\"");
+    unibi_set_str(dt, unibi_key_right, "\033OC");
     ok(unibi_get_str(ut, unibi_key_sf) == NULL, "key_sf = null");
     ok(unibi_get_str(ut, unibi_key_sr) == NULL, "key_sr = null");
     ok(unibi_get_str(ut, unibi_key_stab) == NULL, "key_stab = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_up), "\033[1A") == 0, "key_up = \"\\033[1A\"");
-    unibi_set_str(dt, unibi_key_up, "\033[1A");
+    ok(strcmp(unibi_get_str(ut, unibi_key_up), "\033OA") == 0, "key_up = \"\\033OA\"");
+    unibi_set_str(dt, unibi_key_up, "\033OA");
     ok(strcmp(unibi_get_str(ut, unibi_keypad_local), "\033[?1l\033>") == 0, "keypad_local = \"\\033[?1l\\033>\"");
     unibi_set_str(dt, unibi_keypad_local, "\033[?1l\033>");
     ok(strcmp(unibi_get_str(ut, unibi_keypad_xmit), "\033[?1h\033=") == 0, "keypad_xmit = \"\\033[?1h\\033=\"");
@@ -442,8 +417,8 @@ int main(void) {
     unibi_set_str(dt, unibi_scroll_forward, "\012");
     ok(strcmp(unibi_get_str(ut, unibi_scroll_reverse), "\033M") == 0, "scroll_reverse = \"\\033M\"");
     unibi_set_str(dt, unibi_scroll_reverse, "\033M");
-    ok(strcmp(unibi_get_str(ut, unibi_set_attributes), "\033[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;") == 0, "set_attributes = \"\\033[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\\016%e\\017%;\"");
-    unibi_set_str(dt, unibi_set_attributes, "\033[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;");
+    ok(strcmp(unibi_get_str(ut, unibi_set_attributes), "\033[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;") == 0, "set_attributes = \"\\033[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\\016%e\\017%;\"");
+    unibi_set_str(dt, unibi_set_attributes, "\033[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;");
     ok(strcmp(unibi_get_str(ut, unibi_set_tab), "\033H") == 0, "set_tab = \"\\033H\"");
     unibi_set_str(dt, unibi_set_tab, "\033H");
     ok(unibi_get_str(ut, unibi_set_window) == NULL, "set_window = null");
@@ -453,16 +428,11 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_underline_char) == NULL, "underline_char = null");
     ok(unibi_get_str(ut, unibi_up_half_line) == NULL, "up_half_line = null");
     ok(unibi_get_str(ut, unibi_init_prog) == NULL, "init_prog = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_a1), "\033Ow") == 0, "key_a1 = \"\\033Ow\"");
-    unibi_set_str(dt, unibi_key_a1, "\033Ow");
-    ok(strcmp(unibi_get_str(ut, unibi_key_a3), "\033Oy") == 0, "key_a3 = \"\\033Oy\"");
-    unibi_set_str(dt, unibi_key_a3, "\033Oy");
-    ok(strcmp(unibi_get_str(ut, unibi_key_b2), "\033Ou") == 0, "key_b2 = \"\\033Ou\"");
-    unibi_set_str(dt, unibi_key_b2, "\033Ou");
-    ok(strcmp(unibi_get_str(ut, unibi_key_c1), "\033Oq") == 0, "key_c1 = \"\\033Oq\"");
-    unibi_set_str(dt, unibi_key_c1, "\033Oq");
-    ok(strcmp(unibi_get_str(ut, unibi_key_c3), "\033Os") == 0, "key_c3 = \"\\033Os\"");
-    unibi_set_str(dt, unibi_key_c3, "\033Os");
+    ok(unibi_get_str(ut, unibi_key_a1) == NULL, "key_a1 = null");
+    ok(unibi_get_str(ut, unibi_key_a3) == NULL, "key_a3 = null");
+    ok(unibi_get_str(ut, unibi_key_b2) == NULL, "key_b2 = null");
+    ok(unibi_get_str(ut, unibi_key_c1) == NULL, "key_c1 = null");
+    ok(unibi_get_str(ut, unibi_key_c3) == NULL, "key_c3 = null");
     ok(unibi_get_str(ut, unibi_prtr_non) == NULL, "prtr_non = null");
     ok(unibi_get_str(ut, unibi_char_padding) == NULL, "char_padding = null");
     ok(strcmp(unibi_get_str(ut, unibi_acs_chars), "++,,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~") == 0, "acs_chars = \"++,,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~\"");
@@ -486,8 +456,8 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_key_command) == NULL, "key_command = null");
     ok(unibi_get_str(ut, unibi_key_copy) == NULL, "key_copy = null");
     ok(unibi_get_str(ut, unibi_key_create) == NULL, "key_create = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_end), "\033[1F") == 0, "key_end = \"\\033[1F\"");
-    unibi_set_str(dt, unibi_key_end, "\033[1F");
+    ok(strcmp(unibi_get_str(ut, unibi_key_end), "\033[4~") == 0, "key_end = \"\\033[4~\"");
+    unibi_set_str(dt, unibi_key_end, "\033[4~");
     ok(unibi_get_str(ut, unibi_key_enter) == NULL, "key_enter = null");
     ok(unibi_get_str(ut, unibi_key_exit) == NULL, "key_exit = null");
     ok(unibi_get_str(ut, unibi_key_find) == NULL, "key_find = null");
@@ -514,33 +484,26 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_key_scommand) == NULL, "key_scommand = null");
     ok(unibi_get_str(ut, unibi_key_scopy) == NULL, "key_scopy = null");
     ok(unibi_get_str(ut, unibi_key_screate) == NULL, "key_screate = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_sdc), "\033[2;2~") == 0, "key_sdc = \"\\033[2;2~\"");
-    unibi_set_str(dt, unibi_key_sdc, "\033[2;2~");
+    ok(unibi_get_str(ut, unibi_key_sdc) == NULL, "key_sdc = null");
     ok(unibi_get_str(ut, unibi_key_sdl) == NULL, "key_sdl = null");
     ok(unibi_get_str(ut, unibi_key_select) == NULL, "key_select = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_send), "\033[1;2F") == 0, "key_send = \"\\033[1;2F\"");
-    unibi_set_str(dt, unibi_key_send, "\033[1;2F");
+    ok(unibi_get_str(ut, unibi_key_send) == NULL, "key_send = null");
     ok(unibi_get_str(ut, unibi_key_seol) == NULL, "key_seol = null");
     ok(unibi_get_str(ut, unibi_key_sexit) == NULL, "key_sexit = null");
     ok(unibi_get_str(ut, unibi_key_sfind) == NULL, "key_sfind = null");
     ok(unibi_get_str(ut, unibi_key_shelp) == NULL, "key_shelp = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_shome), "\033[1;2H") == 0, "key_shome = \"\\033[1;2H\"");
-    unibi_set_str(dt, unibi_key_shome, "\033[1;2H");
+    ok(unibi_get_str(ut, unibi_key_shome) == NULL, "key_shome = null");
     ok(unibi_get_str(ut, unibi_key_sic) == NULL, "key_sic = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_sleft), "\033[1;2D") == 0, "key_sleft = \"\\033[1;2D\"");
-    unibi_set_str(dt, unibi_key_sleft, "\033[1;2D");
+    ok(unibi_get_str(ut, unibi_key_sleft) == NULL, "key_sleft = null");
     ok(unibi_get_str(ut, unibi_key_smessage) == NULL, "key_smessage = null");
     ok(unibi_get_str(ut, unibi_key_smove) == NULL, "key_smove = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_snext), "\033[6;2~") == 0, "key_snext = \"\\033[6;2~\"");
-    unibi_set_str(dt, unibi_key_snext, "\033[6;2~");
+    ok(unibi_get_str(ut, unibi_key_snext) == NULL, "key_snext = null");
     ok(unibi_get_str(ut, unibi_key_soptions) == NULL, "key_soptions = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_sprevious), "\033[5;2~") == 0, "key_sprevious = \"\\033[5;2~\"");
-    unibi_set_str(dt, unibi_key_sprevious, "\033[5;2~");
+    ok(unibi_get_str(ut, unibi_key_sprevious) == NULL, "key_sprevious = null");
     ok(unibi_get_str(ut, unibi_key_sprint) == NULL, "key_sprint = null");
     ok(unibi_get_str(ut, unibi_key_sredo) == NULL, "key_sredo = null");
     ok(unibi_get_str(ut, unibi_key_sreplace) == NULL, "key_sreplace = null");
-    ok(strcmp(unibi_get_str(ut, unibi_key_sright), "\033[1;2C") == 0, "key_sright = \"\\033[1;2C\"");
-    unibi_set_str(dt, unibi_key_sright, "\033[1;2C");
+    ok(unibi_get_str(ut, unibi_key_sright) == NULL, "key_sright = null");
     ok(unibi_get_str(ut, unibi_key_srsume) == NULL, "key_srsume = null");
     ok(unibi_get_str(ut, unibi_key_ssave) == NULL, "key_ssave = null");
     ok(unibi_get_str(ut, unibi_key_ssuspend) == NULL, "key_ssuspend = null");
@@ -636,10 +599,8 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_initialize_color) == NULL, "initialize_color = null");
     ok(unibi_get_str(ut, unibi_initialize_pair) == NULL, "initialize_pair = null");
     ok(unibi_get_str(ut, unibi_set_color_pair) == NULL, "set_color_pair = null");
-    ok(strcmp(unibi_get_str(ut, unibi_set_foreground), "%?%p1%{7}%>%t\033[38;5;%p1%dm%e\033[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;") == 0, "set_foreground = \"%?%p1%{7}%>%t\\033[38;5;%p1%dm%e\\033[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;\"");
-    unibi_set_str(dt, unibi_set_foreground, "%?%p1%{7}%>%t\033[38;5;%p1%dm%e\033[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;");
-    ok(strcmp(unibi_get_str(ut, unibi_set_background), "%?%p1%{7}%>%t\033[48;5;%p1%dm%e\033[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;") == 0, "set_background = \"%?%p1%{7}%>%t\\033[48;5;%p1%dm%e\\033[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;\"");
-    unibi_set_str(dt, unibi_set_background, "%?%p1%{7}%>%t\033[48;5;%p1%dm%e\033[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m%;");
+    ok(unibi_get_str(ut, unibi_set_foreground) == NULL, "set_foreground = null");
+    ok(unibi_get_str(ut, unibi_set_background) == NULL, "set_background = null");
     ok(unibi_get_str(ut, unibi_change_char_pitch) == NULL, "change_char_pitch = null");
     ok(unibi_get_str(ut, unibi_change_line_pitch) == NULL, "change_line_pitch = null");
     ok(unibi_get_str(ut, unibi_change_res_horz) == NULL, "change_res_horz = null");
@@ -698,10 +659,10 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_mouse_info) == NULL, "mouse_info = null");
     ok(unibi_get_str(ut, unibi_req_mouse_pos) == NULL, "req_mouse_pos = null");
     ok(unibi_get_str(ut, unibi_get_mouse) == NULL, "get_mouse = null");
-    ok(strcmp(unibi_get_str(ut, unibi_set_a_foreground), "\033[38;5;%p1%dm") == 0, "set_a_foreground = \"\\033[38;5;%p1%dm\"");
-    unibi_set_str(dt, unibi_set_a_foreground, "\033[38;5;%p1%dm");
-    ok(strcmp(unibi_get_str(ut, unibi_set_a_background), "\033[48;5;%p1%dm") == 0, "set_a_background = \"\\033[48;5;%p1%dm\"");
-    unibi_set_str(dt, unibi_set_a_background, "\033[48;5;%p1%dm");
+    ok(strcmp(unibi_get_str(ut, unibi_set_a_foreground), "\033[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m") == 0, "set_a_foreground = \"\\033[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m\"");
+    unibi_set_str(dt, unibi_set_a_foreground, "\033[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m");
+    ok(strcmp(unibi_get_str(ut, unibi_set_a_background), "\033[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m") == 0, "set_a_background = \"\\033[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m\"");
+    unibi_set_str(dt, unibi_set_a_background, "\033[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m");
     ok(unibi_get_str(ut, unibi_pkey_plab) == NULL, "pkey_plab = null");
     ok(unibi_get_str(ut, unibi_device_type) == NULL, "device_type = null");
     ok(unibi_get_str(ut, unibi_code_set_init) == NULL, "code_set_init = null");
@@ -798,8 +759,5 @@ int main(void) {
 }
 
 static void setup(void) {
-    setvbuf(stdout, NULL, _IOLBF, 0);
-
     plan(511);
-    test_counter = 1;
 }
