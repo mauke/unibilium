@@ -939,13 +939,13 @@ static void dput(
 #define BITTY(A, B, C) (!!(A) << 0 | !!(B) << 1 | !!(C) << 2)
 
     switch (BITTY(t == 's', w != -1, p != -1)) {
-        case BITTY(0, 0, 0): snprintf(buf, sizeof buf, fmt, x.i); break;
-        case BITTY(0, 0, 1): snprintf(buf, sizeof buf, fmt, p, x.i); break;
-        case BITTY(0, 1, 0): snprintf(buf, sizeof buf, fmt, w, x.i); break;
+        case BITTY(0, 0, 0): snprintf(buf, sizeof buf, fmt,       x.i); break;
+        case BITTY(0, 0, 1): snprintf(buf, sizeof buf, fmt,    p, x.i); break;
+        case BITTY(0, 1, 0): snprintf(buf, sizeof buf, fmt, w,    x.i); break;
         case BITTY(0, 1, 1): snprintf(buf, sizeof buf, fmt, w, p, x.i); break;
-        case BITTY(1, 0, 0): snprintf(buf, sizeof buf, fmt, x.p); break;
-        case BITTY(1, 0, 1): snprintf(buf, sizeof buf, fmt, p, x.p); break;
-        case BITTY(1, 1, 0): snprintf(buf, sizeof buf, fmt, w, x.p); break;
+        case BITTY(1, 0, 0): snprintf(buf, sizeof buf, fmt,       x.p); break;
+        case BITTY(1, 0, 1): snprintf(buf, sizeof buf, fmt,    p, x.p); break;
+        case BITTY(1, 1, 0): snprintf(buf, sizeof buf, fmt, w,    x.p); break;
         case BITTY(1, 1, 1): snprintf(buf, sizeof buf, fmt, w, p, x.p); break;
     }
 
@@ -1079,7 +1079,7 @@ void unibi_format(
                 if (flags & FlagLft) { *g++ = '-'; }
                 if (flags & FlagZro) { *g++ = '0'; }
                 if (width != -1) { *g++ = '*'; }
-                if (prec != -1) { *g++ = '.'; *g++ = '*'; }
+                if (prec  != -1) { *g++ = '.'; *g++ = '*'; }
                 *g++ = *v;
                 *g = '\0';
                 dput(*v, gen, width, prec, POP(), out, ctx1);
@@ -1108,7 +1108,7 @@ void unibi_format(
             case 'c': {
                 unsigned char c;
                 c = POP().i;
-                out(ctx1, (char *)&c, 1);
+                out(ctx1, (const char *)&c, 1);
                 break;
             }
 
