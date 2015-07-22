@@ -28,6 +28,12 @@ THE SOFTWARE.
 #include <stdlib.h>
 #include <stdarg.h>
 
+#ifdef __GNUC__
+    #define ATTR_UNUSED __attribute__((__unused__))
+#else
+    #define ATTR_UNUSED
+#endif
+
 static unsigned test_counter;
 
 static void plan(unsigned n) {
@@ -36,6 +42,7 @@ static void plan(unsigned n) {
     printf("1..%u\n", n);
 }
 
+ATTR_UNUSED
 static void ok(int b, const char *fmt, ...) {
     va_list ap;
     printf("%sok %u - ", b ? "" : "not ", test_counter++);
@@ -45,11 +52,13 @@ static void ok(int b, const char *fmt, ...) {
     printf("\n");
 }
 
+ATTR_UNUSED
 static void bail_out(const char *s) {
     printf("Bail out! %s\n", s);
     exit(EXIT_FAILURE);
 }
 
+ATTR_UNUSED
 static void diag(const char *s) {
     printf("# %s\n", s);
 }
