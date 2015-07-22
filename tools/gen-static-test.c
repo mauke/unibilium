@@ -2,7 +2,7 @@
 
 This file (it has no associated documentation) is under the MIT license:
 
-Copyright (c) 2012 Lukas Mai
+Copyright (c) 2012, 2015 Lukas Mai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -64,29 +64,9 @@ int main(void) {
     unsigned test_counter = 0;
 
     say("#include <unibilium.h>");
-    say("#include <stdio.h>");
     say("#include <errno.h>");
     say("#include <string.h>");
-    say("#include <stdlib.h>");
-    say("");
-    say("static unsigned test_counter;");
-    say("");
-    say("static void plan(unsigned n) {");
-    say("    printf(\"1..%u\\n\", n);");
-    say("}");
-    say("");
-    say("static void ok(int b, const char *s) {");
-    say("    printf(\"%sok %u - %s\\n\", b ? \"\" : \"not \", test_counter++, s);");
-    say("}");
-    say("");
-    say("static void bail_out(const char *s) {");
-    say("    printf(\"Bail out! %s\\n\", s);");
-    say("    exit(EXIT_FAILURE);");
-    say("}");
-    say("");
-    say("static void diag(const char *s) {");
-    say("    printf(\"# %s\\n\", s);");
-    say("}");
+    say("#include \"test-simple.c.inc\"");
     say("");
     say_("const char terminfo[] = {");
     for (size_t i = 0; i < r; i++) {
@@ -101,10 +81,12 @@ int main(void) {
     say("static void setup(void);");
     say("");
     say("int main(void) {");
+    say("    int e;");
+    say("    unibi_term *dt;");
+    say("");
     say("    setup();");
     say("");
-    say("    int e;");
-    say("    unibi_term *dt = unibi_dummy();");
+    say("    dt = unibi_dummy();");
     say("    e = errno;");
     say("    ok(dt != NULL, \"dummy constructed\");");
     test_counter++;
@@ -331,10 +313,7 @@ int main(void) {
 
     say("");
     say("static void setup(void) {");
-    say("    setvbuf(stdout, NULL, _IOLBF, 0);");
-    say("");
     printf("    plan(%u);\n", test_counter);
-    say("    test_counter = 1;");
     say("}");
 
     return 0;
