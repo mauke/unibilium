@@ -101,7 +101,7 @@ int main(void) {
     say("        bail_out(strerror(e));");
     say("    }");
     say("");
-    say("    diag(\"terminal name\");");
+    say("    note(\"terminal name\");");
     {
         const char *name = unibi_get_name(ut);
         printf("    ok(strcmp(unibi_get_name(ut), \"");
@@ -144,7 +144,7 @@ int main(void) {
         say("    }");
     }
     say("");
-    say("    diag(\"boolean capabilities\");");
+    say("    note(\"boolean capabilities\");");
     for (enum unibi_boolean i = unibi_boolean_begin_ + 1; i < unibi_boolean_end_; i++) {
         int b = unibi_get_bool(ut, i);
         const char *c = unibi_name_bool(i);
@@ -155,7 +155,7 @@ int main(void) {
         }
     }
     say("");
-    say("    diag(\"numeric capabilities\");");
+    say("    note(\"numeric capabilities\");");
     for (enum unibi_numeric i = unibi_numeric_begin_ + 1; i < unibi_numeric_end_; i++) {
         short v = unibi_get_num(ut, i);
         const char *c = unibi_name_num(i);
@@ -166,7 +166,7 @@ int main(void) {
         }
     }
     say("");
-    say("    diag(\"string capabilities\");");
+    say("    note(\"string capabilities\");");
     for (enum unibi_string i = unibi_string_begin_ + 1; i < unibi_string_end_; i++) {
         const char *s = unibi_get_str(ut, i);
         const char *c = unibi_name_str(i);
@@ -185,7 +185,7 @@ int main(void) {
         test_counter++;
     }
     say("");
-    say("    diag(\"extended boolean capabilities\");");
+    say("    note(\"extended boolean capabilities\");");
     {
         const size_t n_ext = unibi_count_ext_bool(ut);
 
@@ -212,7 +212,7 @@ int main(void) {
         say("    }");
     }
     say("");
-    say("    diag(\"extended numeric capabilities\");");
+    say("    note(\"extended numeric capabilities\");");
     {
         const size_t n_ext = unibi_count_ext_num(ut);
 
@@ -239,7 +239,7 @@ int main(void) {
         say("    }");
     }
     say("");
-    say("    diag(\"extended string capabilities\");");
+    say("    note(\"extended string capabilities\");");
     {
         const size_t n_ext = unibi_count_ext_str(ut);
 
