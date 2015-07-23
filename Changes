@@ -1,3 +1,6 @@
+1.1.6   2015-07-23
+        - fix nested conditionals
+
 1.1.5   2015-07-17
         - fix invalid memory access in %P/%g (gh #14)
         - avoid badly formatted lines in unibi_{g,s}et_ext_{bool,num,str}_name
