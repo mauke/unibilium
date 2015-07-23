@@ -105,7 +105,7 @@ int main(void) {
         bail_out(strerror(e));
     }
 
-    diag("terminal name");
+    note("terminal name");
     ok(strcmp(unibi_get_name(ut), "VT 100/ANSI X3.64 virtual terminal with 256 colors") == 0, "terminal name = \"%s\"", "VT 100/ANSI X3.64 virtual terminal with 256 colors");
     unibi_set_name(dt, "VT 100/ANSI X3.64 virtual terminal with 256 colors");
     {
@@ -116,7 +116,7 @@ int main(void) {
         unibi_set_aliases(dt, def_aliases);
     }
 
-    diag("boolean capabilities");
+    note("boolean capabilities");
     ok(unibi_get_bool(ut, unibi_auto_left_margin) == 0, "auto_left_margin = false");
     ok(unibi_get_bool(ut, unibi_auto_right_margin) == 1, "auto_right_margin = true");
     unibi_set_bool(dt, unibi_auto_right_margin, 1);
@@ -167,7 +167,7 @@ int main(void) {
     ok(unibi_get_bool(ut, unibi_has_hardware_tabs) == 0, "has_hardware_tabs = false");
     ok(unibi_get_bool(ut, unibi_return_does_clr_eol) == 0, "return_does_clr_eol = false");
 
-    diag("numeric capabilities");
+    note("numeric capabilities");
     ok(unibi_get_num(ut, unibi_columns) == 80, "columns = 80");
     unibi_set_num(dt, unibi_columns, 80);
     ok(unibi_get_num(ut, unibi_init_tabs) == 8, "init_tabs = 8");
@@ -213,7 +213,7 @@ int main(void) {
     ok(unibi_get_num(ut, unibi_horizontal_tab_delay) == -1, "horizontal_tab_delay = -1");
     ok(unibi_get_num(ut, unibi_number_of_function_keys) == -1, "number_of_function_keys = -1");
 
-    diag("string capabilities");
+    note("string capabilities");
     ok(strcmp(unibi_get_str(ut, unibi_back_tab), "\033[Z") == 0, "back_tab = \"%s\"", "\\033[Z");
     unibi_set_str(dt, unibi_back_tab, "\033[Z");
     ok(strcmp(unibi_get_str(ut, unibi_bell), "\007") == 0, "bell = \"%s\"", "\\007");
@@ -717,19 +717,19 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_memory_unlock) == NULL, "memory_unlock = null");
     ok(unibi_get_str(ut, unibi_box_chars_1) == NULL, "box_chars_1 = null");
 
-    diag("extended boolean capabilities");
+    note("extended boolean capabilities");
     {
         const size_t n_ext = unibi_count_ext_bool(ut);
         ok(n_ext == 0, "#ext_bool = 0");
     }
 
-    diag("extended numeric capabilities");
+    note("extended numeric capabilities");
     {
         const size_t n_ext = unibi_count_ext_num(ut);
         ok(n_ext == 0, "#ext_num = 0");
     }
 
-    diag("extended string capabilities");
+    note("extended string capabilities");
     {
         const size_t n_ext = unibi_count_ext_str(ut);
         ok(n_ext == 0, "#ext_str = 0");
