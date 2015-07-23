@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
                 case unibi_dial_phone:
                 case unibi_quick_dial:
                     REQ(1);
-                    vars[0].p = argv[2];
+                    vars[0] = unibi_var_from_str(argv[2]);
                     break;
 
                 case unibi_pkey_key:
@@ -99,20 +99,20 @@ int main(int argc, char **argv) {
                 case unibi_pkey_xmit:
                 case unibi_plab_norm:
                     REQ(2);
-                    vars[0].i = atoi(argv[2]);
-                    vars[1].p = argv[3];
+                    vars[0] = unibi_var_from_num(atoi(argv[2]));
+                    vars[1] = unibi_var_from_str(argv[3]);
                     break;
 
                 case unibi_pkey_plab:
                     REQ(3);
-                    vars[0].i = atoi(argv[2]);
-                    vars[1].p = argv[3];
-                    vars[2].p = argv[4];
+                    vars[0] = unibi_var_from_num(atoi(argv[2]));
+                    vars[1] = unibi_var_from_str(argv[3]);
+                    vars[2] = unibi_var_from_str(argv[4]);
                     break;
 
                 default: {
                     for (int k = 0; k + 2 < argc; ++k) {
-                        vars[k].i = atoi(argv[k + 2]);
+                        vars[k] = unibi_var_from_num(atoi(argv[k + 2]));
                     }
                     break;
 

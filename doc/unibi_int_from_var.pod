@@ -1,0 +1,35 @@
+=pod
+
+=head1 NAME
+
+unibi_num_from_var, unibi_str_from_var, unibi_var_from_num, unibi_var_from_str
+- create and inspect unibi_var_t values
+
+=head1 SYNOPSIS
+
+ #include <unibilium.h>
+
+ int         unibi_num_from_var(unibi_var_t v);
+ const char *unibi_str_from_var(unibi_var_t v);
+
+ unibi_var_t unibi_var_from_num(int i);
+ unibi_var_t unibi_var_from_str(char *s);
+
+=head1 DESCRIPTION
+
+C<unibi_var_from_num> and C<unibi_var_from_str> wrap the given int or string in
+a C<unibi_var_t> object for use in L<unibi_format(3)> and L<unibi_run(3)>.
+
+C<unibi_num_from_var(v)> returns the number stored in I<v>, which must have
+been constructed by C<unibi_var_from_num>.
+C<unibi_str_from_var(v)> returns the string stored in I<v>, which must have
+been constructed by C<unibi_var_from_str>.
+
+It is an error to pass a wrapped string to C<unibi_num_from_var> or a wrapped
+number to C<unibi_str_from_var>.
+
+=head1 SEE ALSO
+
+L<unibilium.h(3)>
+
+=cut

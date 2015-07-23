@@ -135,8 +135,8 @@ int main(void) {
     );
     is_ms(wlog.buf, wlog.used, "AFHIK", "else-if");
 
-    param[0].i = 26;
-    param[1].p = (char *)"ducks";
+    param[0] = unibi_var_from_num(26);
+    param[1] = unibi_var_from_str((char *)"ducks");
     wlog.used = 0;
     unibi_format(
         var_dyn, var_static,

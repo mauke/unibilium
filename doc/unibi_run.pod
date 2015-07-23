@@ -57,6 +57,8 @@ C<unibi_run> is the minimum of I<n> and the return value of C<unibi_run>.
 
 =head1 SEE ALSO
 
+L<unibi_var_from_num(3)>,
+L<unibi_var_from_str(3)>,
 L<unibilium.h(3)>
 
 =cut

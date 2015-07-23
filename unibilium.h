@@ -3,7 +3,7 @@
 
 /*
 
-Copyright 2008, 2010-2013 Lukas Mai.
+Copyright 2008, 2010-2013, 2015 Lukas Mai.
 
 This file is part of unibilium.
 
@@ -608,6 +608,11 @@ typedef union {
     int i;
     char *p;
 } unibi_var_t;
+
+unibi_var_t unibi_var_from_num(int);
+unibi_var_t unibi_var_from_str(char *);
+int         unibi_num_from_var(unibi_var_t);
+const char *unibi_str_from_var(unibi_var_t);
 
 void unibi_format(
     unibi_var_t [26],
