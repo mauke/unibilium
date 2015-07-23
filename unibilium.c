@@ -1193,12 +1193,15 @@ void unibi_format(
                             ++fmt;
                             if (*fmt == '?') {
                                 ++nesting;
-                            } else if (*fmt == ';' || *fmt == 'e') {
+                            } else if (*fmt == ';') {
                                 if (!nesting) {
                                     ++fmt;
                                     break;
                                 }
                                 --nesting;
+                            } else if (*fmt == 'e' && !nesting) {
+                                ++fmt;
+                                break;
                             } else if (!*fmt) {
                                 break;
                             }
