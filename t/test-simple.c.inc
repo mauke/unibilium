@@ -43,13 +43,14 @@ static void plan(unsigned n) {
 }
 
 ATTR_UNUSED
-static void ok(int b, const char *fmt, ...) {
+static int ok(int b, const char *fmt, ...) {
     va_list ap;
     printf("%sok %u - ", b ? "" : "not ", test_counter++);
     va_start(ap, fmt);
     vprintf(fmt, ap);
     va_end(ap);
     printf("\n");
+    return b;
 }
 
 ATTR_UNUSED
@@ -59,8 +60,23 @@ static void bail_out(const char *s) {
 }
 
 ATTR_UNUSED
-static void diag(const char *s) {
-    printf("# %s\n", s);
+static void diag(const char *fmt, ...) {
+    va_list ap;
+    fprintf(stderr, "# ");
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+    fprintf(stderr, "\n");
+}
+
+ATTR_UNUSED
+static void note(const char *fmt, ...) {
+    va_list ap;
+    printf("# ");
+    va_start(ap, fmt);
+    vprintf(fmt, ap);
+    va_end(ap);
+    printf("\n");
 }
 
 /* vi: set ft=c: */
