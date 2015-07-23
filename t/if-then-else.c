@@ -51,7 +51,7 @@ int main(void) {
 
     struct wlog wlog;
 
-    plan(6);
+    plan(8);
 
     wlog.used = 0;
     unibi_format(
@@ -134,6 +134,50 @@ int main(void) {
         NULL, NULL
     );
     is_ms(wlog.buf, wlog.used, "AFHIK", "else-if");
+
+    param[0].i = 26;
+    param[1].p = (char *)"ducks";
+    wlog.used = 0;
+    unibi_format(
+        var_dyn, var_static,
+        "<ESC>[0;"
+        "%?%p1%{11}%<%t"
+            "%{58}"
+        "%e"
+            "%?%p1%{13}%<%t"
+                "%{122}"
+            "%e"
+                "%?%p1%{23}%<%t"
+                    "%{71}"
+                "%e"
+                    "%?%p1%{25}%<%t"
+                        "%{112}"
+                    "%e"
+                        "%?%p1%{35}%<%t"
+                            "%{69}"
+                        "%e"
+                            "%?%p1%{37}%<%t"
+                                "%{102}"
+                            "%e"
+                                "%?%p1%{47}%<%t"
+                                    "%{67}"
+                                "%e"
+                                    "%{92}"
+                                "%;"
+                            "%;"
+                        "%;"
+                    "%;"
+                "%;"
+            "%;"
+        "%;"
+        "%p1%+%d;"
+        "%p2\"%s\"p"
+        ,
+        param,
+        out, &wlog,
+        NULL, NULL
+    );
+    is_ms(wlog.buf, wlog.used, "<ESC>[0;95;\"ducks\"p", "ansi-pfkey");
 
     return 0;
 }
