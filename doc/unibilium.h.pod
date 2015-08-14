@@ -35,6 +35,9 @@ representation may change in the future.
 See L<unibi_var_from_num(3)>, L<unibi_var_from_str(3)>,
 L<unibi_num_from_var(3)>, L<unibi_str_from_var(3)> instead.
 
+However, it is guaranteed that zero-initializing a C<unibi_var_t> is equivalent
+to C<unibi_var_from_num(0)>.
+
 =item enum unibi_boolean
 
 An enumeration of boolean capabilities. It has the following elements:
