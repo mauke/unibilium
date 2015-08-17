@@ -1,3 +1,7 @@
+1.2.0   2015-08-14
+        - new unibi_var_t helper functions
+          (unibi_var_from_{int,str}, unibi_{int,str}_from_var)
+
 1.1.6   2015-07-23
         - fix nested conditionals
 
