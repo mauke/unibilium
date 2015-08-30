@@ -68,7 +68,7 @@ int main(void) {
     say("#include <string.h>");
     say("#include \"test-simple.c.inc\"");
     say("");
-    say_("const char terminfo[] = {");
+    say_("static const char terminfo[] = {");
     for (size_t i = 0; i < r; i++) {
         if (i) {
             printf(",");
