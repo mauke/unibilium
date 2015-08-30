@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
                 fputs(fmt, stdout);
                 return 0;
             }
-            unibi_var_t vars[9] = {{0}};
+            unibi_var_t vars[9] = {0};
             switch (i) {
 #define REQ(N) do { if (argc - 2 < (N)) { fprintf(stderr, "%s: %s: missing argument\n", argv[0], argv[1]); return 4; } } while (0)
 
