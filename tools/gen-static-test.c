@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
+#include <string.h>
 
 static void say(const char *s) {
     puts(s);
@@ -47,10 +49,22 @@ static void print_str_esc(const char *s, int twice) {
     }
 }
 
-int main(void) {
-    unibi_term *ut = unibi_from_fp(stdin);
-    if (!ut) {
-        perror("unibi_from_fp(stdin)");
+int main(int argc, char **argv) {
+    unibi_term *ut;
+    if (argc < 2) {
+        ut = unibi_from_fp(stdin);
+        if (!ut) {
+            perror("unibi_from_fp(stdin)");
+            return EXIT_FAILURE;
+        }
+    } else if (argc == 2) {
+        ut = unibi_from_term(argv[1]);
+        if (!ut) {
+            fprintf(stderr, "unibi_from_term(\"%s\"): %s\n", argv[1], strerror(errno));
+            return EXIT_FAILURE;
+        }
+    } else {
+        fprintf(stderr, "Usage: %s [TERM]\n", argv[0]);
         return EXIT_FAILURE;
     }
 

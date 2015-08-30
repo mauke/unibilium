@@ -113,3 +113,10 @@ build-man: $(MANPAGES)
 
 man/%.3.gz: doc/%.pod
 	$(POD2MAN) $(POD2MAN_OPTS) $< | gzip > $@
+
+
+.PHONY: regenerate-tests
+regenerate-tests: tools/gen-static-test
+	for t in screen-256color screen tmux xterm; do \
+	    $< $$t > t/static_$$t.c; \
+	done
