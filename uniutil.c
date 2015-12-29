@@ -174,7 +174,7 @@ unibi_term *unibi_from_term(const char *term) {
     unibi_term *ut;
     const char *env;
 
-    if (term[0] == '\0' || term[0] == '.' || strchr(term, '/')) {
+    if (!term || term[0] == '\0' || term[0] == '.' || strchr(term, '/')) {
         errno = EINVAL;
         return NULL;
     }
@@ -198,11 +198,5 @@ unibi_term *unibi_from_term(const char *term) {
 }
 
 unibi_term *unibi_from_env(void) {
-    const char *term = getenv("TERM");
-    if (!term) {
-        errno = ENOENT;
-        return NULL;
-    }
-
-    return unibi_from_term(term);
+    return unibi_from_term(getenv("TERM"));
 }
