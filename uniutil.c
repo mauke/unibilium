@@ -25,6 +25,7 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <assert.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -173,6 +174,8 @@ static unibi_term *from_dirs(const char *list, const char *term) {
 unibi_term *unibi_from_term(const char *term) {
     unibi_term *ut;
     const char *env;
+
+    assert(term != NULL);
 
     if (term[0] == '\0' || term[0] == '.' || strchr(term, '/')) {
         errno = EINVAL;
