@@ -1,5 +1,5 @@
-ifneq ($(wildcard .git),)
-  -include maint.mk
+ifneq ($(wildcard .maint),)
+  include maint.mk
 endif
 
 ifeq ($(shell uname),Darwin)
