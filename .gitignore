@@ -5,3 +5,4 @@
 t/*.t
 tools/*
 !tools/*.c
+.*.swp
