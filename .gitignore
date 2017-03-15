@@ -6,4 +6,5 @@ t/*.t
 tools/*
 !tools/*.c
 .*.swp
-.maint
+/.maint
+/tags
