@@ -32,7 +32,11 @@ INCDIR=$(PREFIX)/include
 MANDIR=$(PREFIX)/share/man
 MAN3DIR=$(MANDIR)/man3
 
-TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo"
+ifneq ($(OS),Windows_NT)
+  TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo"
+else
+  TERMINFO_DIRS=""
+endif
 
 POD2MAN=pod2man
 POD2MAN_OPTS=-c "$(PACKAGE)" -s3 -r "$(PACKAGE)-$(PKG_VERSION)"
