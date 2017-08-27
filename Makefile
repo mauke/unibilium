@@ -42,7 +42,7 @@ POD2MAN=pod2man
 POD2MAN_OPTS=-c "$(PACKAGE)" -s3 -r "$(PACKAGE)-$(PKG_VERSION)"
 
 PROVE=prove
-PROVEFLAGS=`perl -we 'print $$ENV{MAKEFLAGS} =~ /(-j *\d+)/'`
+PROVEFLAGS=`perl -we 'print $$ENV{MAKEFLAGS} =~ /-j *(\d+)?/ ? "-j" . ($$1 || 2) : ""'`
 
 ifeq ($(DEBUG),1)
   CFLAGS_DEBUG=-ggdb -DDEBUG
