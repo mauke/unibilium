@@ -1,0 +1,19 @@
+Unibilium is a very basic terminfo library. It can read and write
+ncurses-style terminfo files. It doesn't depend on curses or any other
+library. It also doesn't use global variables, so it should be
+thread-safe.
+
+Basic documentation is in the `doc/` directory.
+
+To use it, compile `unibilium.c`, `uninames.c`, and `uniutil.c` into a
+library.  Include `unibilium.h` in your code.
+
+Alternatively use the provided Makefile:
+
+    make PREFIX=/usr/local && make install PREFIX=/usr/local
+
+Other variables that can be set on the command line include `CFLAGS` (C
+compiler options) and `DESTDIR` (build for installation into `$PREFIX`
+but copy the built files into `$DESTDIR/$PREFIX` instead).
+
+See the LICENSE file for licensing information.
