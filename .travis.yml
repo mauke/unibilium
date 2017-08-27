@@ -3,3 +3,6 @@ script: make && make test
 compiler:
     - gcc
     - clang
+env:
+    global:
+        MAKEFLAGS="-j2"
