@@ -604,10 +604,36 @@ void unibi_del_ext_num(unibi_term *, size_t);
 void unibi_del_ext_str(unibi_term *, size_t);
 
 
+#if !defined UNIBI_DEPRECATED && defined __GNUC__ && !defined __has_extension
+ #if __GNUC__ >= 5 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
+  #define UNIBI_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+ #elif __GNUC__ > 3 || (__GNUC__ == 3 &&  __GNUC_MINOR__ >= 1)
+  #define UNIBI_DEPRECATED(MSG) __attribute__((deprecated))
+ #endif
+#endif
+
+#if !defined UNIBI_DEPRECATED && defined __has_extension
+ #if __has_extension(attribute_deprecated_with_message)
+  #define UNIBI_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
+ #endif
+#endif
+
+#if !defined UNIBI_DEPRECATED && defined __has_attribute
+ #if __has_attribute(deprecated)
+  #define UNIBI_DEPRECATED(MSG) __attribute__((deprecated))
+ #endif
+#endif
+
+#if !defined UNIBI_DEPRECATED
+ #define UNIBI_DEPRECATED(MSG)
+#endif
+
 typedef union {
-    int i;
-    char *p;
+    int i   UNIBI_DEPRECATED("use unibi_var_from_num or unibi_num_from_var instead");
+    char *p UNIBI_DEPRECATED("use unibi_var_from_str or unibi_str_from_var instead");
 } unibi_var_t;
+
+#undef UNIBI_DEPRECATED
 
 unibi_var_t unibi_var_from_num(int);
 unibi_var_t unibi_var_from_str(char *);

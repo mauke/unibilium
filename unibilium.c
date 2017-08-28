@@ -19,6 +19,7 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#define UNIBI_DEPRECATED(MSG)  /* We're the implementation. Bypass deprecations. */
 #include "unibilium.h"
 
 #include <errno.h>

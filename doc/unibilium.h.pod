@@ -29,8 +29,8 @@ this structure.
 
 A type that represents the values in format string operations, which are either
 integers or strings. It is currently implemented as a union of two members,
-C<int i> and C<char *p>, but direct use of these is discouraged as the
-representation may change in the future.
+C<int i> and C<char *p>, but direct use of these is deprecated as the
+representation will change in the future.
 
 See L<unibi_var_from_num(3)>, L<unibi_var_from_str(3)>,
 L<unibi_num_from_var(3)>, L<unibi_str_from_var(3)> instead.
