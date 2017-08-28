@@ -35,6 +35,8 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 #error "internal error: TERMINFO_DIRS is not defined"
 #endif
 
+extern unibi_term *unibi_builtin_from_term(const char *term);
+
 enum {MAX_BUF = 4096};
 
 const char *const unibi_terminfo_dirs = TERMINFO_DIRS;
@@ -194,10 +196,18 @@ unibi_term *unibi_from_term(const char *term) {
     }
 
     if ((env = getenv("TERMINFO_DIRS"))) {
-        return from_dirs(env, term);
+        ut = from_dirs(env, term);
+        if (ut) {
+            return ut;
+        }
+    } else {
+        ut = from_dirs(unibi_terminfo_dirs, term);
+        if (ut) {
+            return ut;
+        }
     }
 
-    return from_dirs(unibi_terminfo_dirs, term);
+    return unibi_builtin_from_term(term);
 }
 
 unibi_term *unibi_from_env(void) {

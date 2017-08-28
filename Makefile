@@ -48,7 +48,7 @@ ifeq ($(DEBUG),1)
   CFLAGS_DEBUG=-ggdb -DDEBUG
 endif
 
-OBJECTS=unibilium.lo uninames.lo uniutil.lo
+OBJECTS=unibilium.lo uninames.lo uniutil.lo unibuiltins.lo
 LIBRARY=libunibilium.la
 
 PODS=$(wildcard doc/*.pod)

@@ -13,6 +13,8 @@ unibi_from_term - read a terminfo entry for a named terminal
 =head1 DESCRIPTION
 
 This function locates the terminfo file for I<name>, then calls C<unibi_from_file>.
+If it fails, it looks up I<name> in a small compiled-in terminfo database, calling
+C<unibi_from_mem>.
 
 It looks in the following places:
 
@@ -38,6 +40,22 @@ If C<TERMINFO_DIRS> is not set, a compiled-in fallback (C<unibi_terminfo_dirs>)
 is used instead.
 
 =back
+
+The compiled-in terminfo database uses loose matching where anything following
+a minus sign in I<name> is ignored, and the following names are matched:
+C<xterm>,
+C<screen>,
+C<tmux>,
+C<rxvt>,
+C<putty>,
+C<linux>,
+C<interix>,
+C<iterm>,
+C<iTerm.app>,
+C<st>,
+C<vte>,
+C<gnome>, and
+C<ansi>.
 
 =head1 RETURN VALUE
 
