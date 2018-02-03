@@ -108,9 +108,9 @@ int main(int argc, char **argv) {
 
     printf("Numeric capabilities:\n");
     for (enum unibi_numeric i = unibi_numeric_begin_ + 1; i < unibi_numeric_end_; i++) {
-        short n = unibi_get_num(ut, i);
+        int n = unibi_get_num(ut, i);
         if (n != -1) {
-            printf("  %-25s / %-10s = %hd\n", unibi_name_num(i), unibi_short_name_num(i), n);
+            printf("  %-25s / %-10s = %d\n", unibi_name_num(i), unibi_short_name_num(i), n);
         }
     }
     printf("\n");
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
     if (unibi_count_ext_num(ut)) {
         printf("Extended numeric capabilities:\n");
         for (size_t i = 0; i < unibi_count_ext_num(ut); i++) {
-            printf("  %-25s = %hd\n", unibi_get_ext_num_name(ut, i), unibi_get_ext_num(ut, i));
+            printf("  %-25s = %d\n", unibi_get_ext_num_name(ut, i), unibi_get_ext_num(ut, i));
         }
         printf("\n");
     }

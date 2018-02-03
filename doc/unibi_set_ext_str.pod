@@ -9,11 +9,11 @@ unibi_get_ext_bool, unibi_set_ext_bool, unibi_get_ext_num, unibi_set_ext_num, un
  #include <unibilium.h>
 
  int unibi_get_ext_bool(const unibi_term *ut, size_t i);
- short unibi_get_ext_num(const unibi_term *ut, size_t i);
+ int unibi_get_ext_num(const unibi_term *ut, size_t i);
  const char *unibi_get_ext_str(const unibi_term *ut, size_t i);
  
  void unibi_set_ext_bool(unibi_term *ut, size_t i, int b);
- void unibi_set_ext_num(unibi_term *ut, size_t i, short v);
+ void unibi_set_ext_num(unibi_term *ut, size_t i, int v);
  void unibi_set_ext_str(unibi_term *ut, size_t i, const char *s);
 
 =head1 DESCRIPTION

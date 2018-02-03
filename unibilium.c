@@ -43,6 +43,11 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 #define SIZE_ERR ((size_t)-1)
 
 #define MAX15BITS 0x7fff
+#define MAX31BITS 0x7fffffff
+
+#if INT_MAX < MAX31BITS
+#error "int must be at least 32 bits wide"
+#endif
 
 #define DYNARR(W, X) DynArr_ ## W ## _ ## X
 #define DYNARR_T(W) DYNARR(W, t)
@@ -81,18 +86,21 @@ static size_t next_alloc(size_t n) {
 }
 
 DEFDYNARRAY(unsigned char, bool);
-DEFDYNARRAY(short, num);
+DEFDYNARRAY(int, num);
 DEFDYNARRAY(const char *, str);
 
 
-enum {MAGIC = 0432};
+enum {
+    MAGIC_16BIT = 00432,
+    MAGIC_32BIT = 01036
+};
 
 struct unibi_term {
     const char *name;
     const char **aliases;
 
     unsigned char bools[NCONTAINERS(unibi_boolean_end_ - unibi_boolean_begin_ - 1, CHAR_BIT)];
-    short nums[unibi_numeric_end_ - unibi_numeric_begin_ - 1];
+    int nums[unibi_numeric_end_ - unibi_numeric_begin_ - 1];
     const char *strs[unibi_string_end_ - unibi_string_begin_ - 1];
     char *alloc;
 
@@ -106,17 +114,27 @@ struct unibi_term {
 #define ASSERT_EXT_NAMES(X) assert((X)->ext_names.used == (X)->ext_bools.used + (X)->ext_nums.used + (X)->ext_strs.used)
 
 
-static unsigned short get_ushort(const char *p) {
+static unsigned short get_ushort16(const char *p) {
     const unsigned char *q = (const unsigned char *)p;
     return q[0] + q[1] * 256;
 }
 
-static short get_short(const char *p) {
-    unsigned short n = get_ushort(p);
+static short get_short16(const char *p) {
+    unsigned short n = get_ushort16(p);
     return n <= MAX15BITS ? n : -1;
 }
 
-static void fill_1(short *p, size_t n) {
+static unsigned int get_uint32(const char *p) {
+    const unsigned char *q = (const unsigned char *)p;
+    return q[0] + q[1] * 256u + q[2] * 256u * 256u + q[3] * 256u * 256u * 256u;
+}
+
+static int get_int32(const char *p) {
+    unsigned int n = get_uint32(p);
+    return n <= MAX31BITS ? (int)n : -1;
+}
+
+static void fill_1(int *p, size_t n) {
     while (n--) {
         *p++ = -1;
     }
@@ -181,6 +199,7 @@ static size_t size_max(size_t a, size_t b) {
 
 unibi_term *unibi_from_mem(const char *p, size_t n) {
     unibi_term *t = NULL;
+    size_t numsize;
     unsigned short magic, namlen, boollen, numlen, strslen, tablsz;
     char *strp, *namp;
     size_t namco;
@@ -188,14 +207,15 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
 
     FAIL_IF(n < 12, EFAULT);
 
-    magic   = get_ushort(p + 0);
-    FAIL_IF(magic != MAGIC, EINVAL);
+    magic   = get_ushort16(p + 0);
+    FAIL_IF(magic != MAGIC_16BIT && magic != MAGIC_32BIT, EINVAL);
+    numsize = magic == MAGIC_16BIT ? 2 : 4;
 
-    namlen  = get_ushort(p + 2);
-    boollen = get_ushort(p + 4);
-    numlen  = get_ushort(p + 6);
-    strslen = get_ushort(p + 8);
-    tablsz  = get_ushort(p + 10);
+    namlen  = get_ushort16(p + 2);
+    boollen = get_ushort16(p + 4);
+    numlen  = get_ushort16(p + 6);
+    strslen = get_ushort16(p + 8);
+    tablsz  = get_ushort16(p + 10);
     p += 12;
     n -= 12;
 
@@ -255,17 +275,21 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
         n -= 1;
     }
 
-    DEL_FAIL_IF(n < numlen * 2u, EFAULT, t);
+    DEL_FAIL_IF(n < numlen * numsize, EFAULT, t);
     for (i = 0; i < numlen && i < COUNTOF(t->nums); i++) {
-        t->nums[i] = get_short(p + i * 2);
+        if (numsize == 2) {
+            t->nums[i] = get_short16(p + i * 2);
+        } else {
+            t->nums[i] = get_int32(p + i * 4);
+        }
     }
     fill_1(t->nums + i, COUNTOF(t->nums) - i);
-    p += numlen * 2;
-    n -= numlen * 2;
+    p += numlen * numsize;
+    n -= numlen * numsize;
 
     DEL_FAIL_IF(n < strslen * 2u, EFAULT, t);
     for (i = 0; i < strslen && i < COUNTOF(t->strs); i++) {
-        t->strs[i] = off_of(strp, tablsz, get_short(p + i * 2));
+        t->strs[i] = off_of(strp, tablsz, get_short16(p + i * 2));
     }
     fill_null(t->strs + i, COUNTOF(t->strs) - i);
     p += strslen * 2;
@@ -288,11 +312,11 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
         unsigned short extboollen, extnumlen, extstrslen, extofflen, exttablsz;
         size_t extalllen;
 
-        extboollen = get_ushort(p + 0);
-        extnumlen  = get_ushort(p + 2);
-        extstrslen = get_ushort(p + 4);
-        extofflen  = get_ushort(p + 6);
-        exttablsz  = get_ushort(p + 8);
+        extboollen = get_ushort16(p + 0);
+        extnumlen  = get_ushort16(p + 2);
+        extstrslen = get_ushort16(p + 4);
+        extofflen  = get_ushort16(p + 6);
+        exttablsz  = get_ushort16(p + 8);
 
         if (
             extboollen <= MAX15BITS &&
@@ -315,7 +339,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
                 n <
                 extboollen +
                 extboollen % 2 +
-                extnumlen * 2 +
+                extnumlen * numsize +
                 extstrslen * 2 +
                 extalllen * 2 +
                 exttablsz,
@@ -346,11 +370,15 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
             }
 
             for (i = 0; i < extnumlen; i++) {
-                t->ext_nums.data[i] = get_short(p + i * 2);
+                if (numsize == 2) {
+                    t->ext_nums.data[i] = get_short16(p + i * 2);
+                } else {
+                    t->ext_nums.data[i] = get_int32(p + i * 4);
+                }
             }
             t->ext_nums.used = extnumlen;
-            p += extnumlen * 2;
-            n -= extnumlen * 2;
+            p += extnumlen * numsize;
+            n -= extnumlen * numsize;
 
             {
                 char *ext_alloc2;
@@ -359,7 +387,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
                 size_t s_max = 0, s_sum = 0;
 
                 for (i = 0; i < extstrslen; i++) {
-                    const short v = get_short(p + i * 2);
+                    const short v = get_short16(p + i * 2);
                     if (v < 0 || (unsigned short)v >= exttablsz) {
                         t->ext_strs.data[i] = NULL;
                     } else {
@@ -385,7 +413,7 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
                 tblsz2 = exttablsz - s_sum;
 
                 for (i = 0; i < extalllen; i++) {
-                    const short v = get_short(p + i * 2);
+                    const short v = get_short16(p + i * 2);
                     DEL_FAIL_IF(v < 0 || (unsigned short)v >= tblsz2, EINVAL, t);
                     t->ext_names.data[i] = ext_alloc2 + v;
                 }
@@ -429,14 +457,17 @@ void unibi_destroy(unibi_term *t) {
     free(t);
 }
 
-static void put_ushort(char *p, unsigned short n) {
+static void put_ushort16(char *p, unsigned short n) {
     unsigned char *q = (unsigned char *)p;
     q[0] = n % 256;
     q[1] = n / 256 % 256;
 }
 
-static void put_short(char *p, short n) {
-    put_ushort(
+static void put_short16(char *p, short n) {
+#if MAX15BITS < SHRT_MAX
+    assert(n <= MAX15BITS);
+#endif
+    put_ushort16(
         p,
         n < 0
 #if MAX15BITS < SHRT_MAX
@@ -444,6 +475,29 @@ static void put_short(char *p, short n) {
 #endif
         ? 0xffffU
         : (unsigned short)n
+    );
+}
+
+static void put_uint32(char *p, unsigned int n) {
+    unsigned char *q = (unsigned char *)p;
+    q[0] = n % 256u;
+    q[1] = n / 256u % 256u;
+    q[2] = n / (256u * 256u) % 256u;
+    q[3] = n / (256u * 256u * 256u) % 256u;
+}
+
+static void put_int32(char *p, int n) {
+#if MAX31BITS < INT_MAX
+    assert(n <= MAX31BITS);
+#endif
+    put_uint32(
+        p,
+        n < 0
+#if MAX31BITS < INT_MAX
+        || n > MAX31BITS
+#endif
+        ? 0xffffffffU
+        : (unsigned int)n
     );
 }
 
@@ -480,6 +534,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
         req += 1;
     }
 
+    size_t numsize = 2;
     for (i = COUNTOF(t->nums); i--; ) {
         if (t->nums[i] >= 0) {
             break;
@@ -487,7 +542,13 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
     }
     i++;
     numlen = i;
-    req += numlen * 2;
+    while (i--) {
+        if (t->nums[i] > MAX15BITS) {
+            FAIL_INVAL_IF(t->nums[i] > MAX31BITS);
+            numsize = 4;
+        }
+    }
+    req += numlen * numsize;
 
     for (i = COUNTOF(t->strs); i--; ) {
         if (t->strs[i]) {
@@ -529,7 +590,18 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
             req += 1;
         }
 
-        req += t->ext_nums.used * 2;
+        if (numsize == 2) {
+            for (i = 0; i < t->ext_nums.used; i++) {
+                if (t->ext_nums.data[i] > MAX15BITS) {
+                    FAIL_INVAL_IF(t->ext_nums.data[i] > MAX31BITS);
+                    numsize = 4;
+                }
+            }
+            if (numsize == 4) {
+                req += numlen * 2;
+            }
+        }
+        req += t->ext_nums.used * numsize;
 
         req += t->ext_strs.used * 2;
 
@@ -557,12 +629,12 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
         return req;
     }
 
-    put_ushort(p + 0, MAGIC);
-    put_ushort(p + 2, namlen);
-    put_ushort(p + 4, boollen);
-    put_ushort(p + 6, numlen);
-    put_ushort(p + 8, strslen);
-    put_ushort(p + 10, tablsz);
+    put_ushort16(p + 0, numsize == 2 ? MAGIC_16BIT : MAGIC_32BIT);
+    put_ushort16(p + 2, namlen);
+    put_ushort16(p + 4, boollen);
+    put_ushort16(p + 6, numlen);
+    put_ushort16(p + 8, strslen);
+    put_ushort16(p + 10, tablsz);
     p += 12;
 
     for (i = 0; t->aliases[i]; i++) {
@@ -586,8 +658,13 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
     }
 
     for (i = 0; i < numlen; i++) {
-        put_short(p, t->nums[i]);
-        p += 2;
+        if (numsize == 2) {
+            put_short16(p, t->nums[i]);
+            p += 2;
+        } else {
+            put_int32(p, t->nums[i]);
+            p += 4;
+        }
     }
 
     {
@@ -596,12 +673,12 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
 
         for (i = 0; i < strslen; i++) {
             if (!t->strs[i]) {
-                put_short(p, -1);
+                put_short16(p, -1);
                 p += 2;
             } else {
                 size_t k = strlen(t->strs[i]) + 1;
                 assert(off < MAX15BITS);
-                put_short(p, (short)off);
+                put_short16(p, (short)off);
                 p += 2;
                 memcpy(tbl + off, t->strs[i], k);
                 off += k;
@@ -619,11 +696,11 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
             *p++ = '\0';
         }
 
-        put_ushort(p + 0, t->ext_bools.used);
-        put_ushort(p + 2, t->ext_nums.used);
-        put_ushort(p + 4, t->ext_strs.used);
-        put_ushort(p + 6, t->ext_strs.used + ext_count);
-        put_ushort(p + 8, ext_tablsz1 + ext_tablsz2);
+        put_ushort16(p + 0, t->ext_bools.used);
+        put_ushort16(p + 2, t->ext_nums.used);
+        put_ushort16(p + 4, t->ext_strs.used);
+        put_ushort16(p + 6, t->ext_strs.used + ext_count);
+        put_ushort16(p + 8, ext_tablsz1 + ext_tablsz2);
         p += 10;
 
         if (t->ext_bools.used) {
@@ -636,8 +713,13 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
         }
 
         for (i = 0; i < t->ext_nums.used; i++) {
-            put_short(p, t->ext_nums.data[i]);
-            p += 2;
+            if (numsize == 2) {
+                put_short16(p, t->ext_nums.data[i]);
+                p += 2;
+            } else {
+                put_int32(p, t->ext_nums.data[i]);
+                p += 4;
+            }
         }
 
         {
@@ -648,11 +730,11 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
             for (i = 0; i < t->ext_strs.used; i++) {
                 const char *const s = t->ext_strs.data[i];
                 if (!s) {
-                    put_short(p, -1);
+                    put_short16(p, -1);
                 } else {
                     const size_t k = strlen(s) + 1;
                     assert(off < MAX15BITS);
-                    put_ushort(p, off);
+                    put_ushort16(p, off);
                     memcpy(tbl1 + off, s, k);
                     off += k;
                 }
@@ -667,7 +749,7 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
                 const char *const s = t->ext_names.data[i];
                 const size_t k = strlen(s) + 1;
                 assert(off < MAX15BITS);
-                put_ushort(p, off);
+                put_ushort16(p, off);
                 p += 2;
                 memcpy(tbl2 + off, s, k);
                 off += k;
@@ -718,14 +800,14 @@ void unibi_set_bool(unibi_term *t, enum unibi_boolean v, int x) {
     }
 }
 
-short unibi_get_num(const unibi_term *t, enum unibi_numeric v) {
+int unibi_get_num(const unibi_term *t, enum unibi_numeric v) {
     size_t i;
     ASSERT_RETURN(v > unibi_numeric_begin_ && v < unibi_numeric_end_, -2);
     i = v - unibi_numeric_begin_ - 1;
     return t->nums[i];
 }
 
-void unibi_set_num(unibi_term *t, enum unibi_numeric v, short x) {
+void unibi_set_num(unibi_term *t, enum unibi_numeric v, int x) {
     size_t i;
     ASSERT_RETURN_(v > unibi_numeric_begin_ && v < unibi_numeric_end_);
     i = v - unibi_numeric_begin_ - 1;
@@ -770,7 +852,7 @@ const char *unibi_get_ext_bool_name(const unibi_term *t, size_t i) {
     return t->ext_names.data[i];
 }
 
-short unibi_get_ext_num(const unibi_term *t, size_t i) {
+int unibi_get_ext_num(const unibi_term *t, size_t i) {
     ASSERT_RETURN(i < t->ext_nums.used, -2);
     return t->ext_nums.data[i];
 }
@@ -803,7 +885,7 @@ void unibi_set_ext_bool_name(unibi_term *t, size_t i, const char *c) {
     t->ext_names.data[i] = c;
 }
 
-void unibi_set_ext_num(unibi_term *t, size_t i, short v) {
+void unibi_set_ext_num(unibi_term *t, size_t i, int v) {
     ASSERT_RETURN_(i < t->ext_nums.used);
     t->ext_nums.data[i] = v;
 }
@@ -845,7 +927,7 @@ size_t unibi_add_ext_bool(unibi_term *t, const char *c, int v) {
     return r;
 }
 
-size_t unibi_add_ext_num(unibi_term *t, const char *c, short v) {
+size_t unibi_add_ext_num(unibi_term *t, const char *c, int v) {
     size_t r;
     ASSERT_EXT_NAMES(t);
     if (
@@ -899,7 +981,7 @@ void unibi_del_ext_num(unibi_term *t, size_t i) {
     ASSERT_EXT_NAMES(t);
     ASSERT_RETURN_(i < t->ext_nums.used);
     {
-        short *const p = t->ext_nums.data + i;
+        int *const p = t->ext_nums.data + i;
         memmove(p, p + 1, (t->ext_nums.used - i - 1) * sizeof *t->ext_nums.data);
         t->ext_nums.used--;
     }

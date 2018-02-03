@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
             strcmp(argv[1], unibi_name_num(i)) == 0 ||
             strcmp(argv[1], unibi_short_name_num(i)) == 0
         ) {
-            printf("%hd\n", unibi_get_num(t, i));
+            printf("%d\n", unibi_get_num(t, i));
             return 0;
         }
     }

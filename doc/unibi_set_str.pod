@@ -12,8 +12,8 @@ unibi_set_str - access the capabilities of a terminal object
  int unibi_get_bool(const unibi_term *ut, enum unibi_boolean b);
  void unibi_set_bool(unibi_term *ut, enum unibi_boolean b, int x);
  
- short unibi_get_num(const unibi_term *ut, enum unibi_numeric n);
- void unibi_set_num(unibi_term *ut, enum unibi_numeric n, short x);
+ int unibi_get_num(const unibi_term *ut, enum unibi_numeric n);
+ void unibi_set_num(unibi_term *ut, enum unibi_numeric n, int x);
  
  const char *unibi_get_str(const unibi_term *ut, enum unibi_string s);
  void unibi_set_str(unibi_term *ut, enum unibi_string s, const char *x);

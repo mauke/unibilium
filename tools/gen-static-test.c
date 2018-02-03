@@ -171,12 +171,12 @@ int main(int argc, char **argv) {
     say("");
     say("    note(\"numeric capabilities\");");
     for (enum unibi_numeric i = unibi_numeric_begin_ + 1; i < unibi_numeric_end_; i++) {
-        short v = unibi_get_num(ut, i);
+        int v = unibi_get_num(ut, i);
         const char *c = unibi_name_num(i);
-        printf("    ok(unibi_get_num(ut, unibi_%s) == %hd, \"%s = %hd\");\n", c, v, c, v);
+        printf("    ok(unibi_get_num(ut, unibi_%s) == %d, \"%s = %d\");\n", c, v, c, v);
         test_counter++;
         if (v >= 0) {
-            printf("    unibi_set_num(dt, unibi_%s, %hd);\n", c, v);
+            printf("    unibi_set_num(dt, unibi_%s, %d);\n", c, v);
         }
     }
     say("");
@@ -236,9 +236,9 @@ int main(int argc, char **argv) {
         test_counter++;
 
         for (size_t i = 0; i < n_ext; i++) {
-            short v = unibi_get_ext_num(ut, i);
+            int v = unibi_get_ext_num(ut, i);
             const char *c = unibi_get_ext_num_name(ut, i);
-            printf("        ok(%zu < n_ext && unibi_get_ext_num(ut, %zu) == %hd, \"ext_num[%zu].value = %hd\");\n", i, i, v, i, v);
+            printf("        ok(%zu < n_ext && unibi_get_ext_num(ut, %zu) == %d, \"ext_num[%zu].value = %d\");\n", i, i, v, i, v);
             test_counter++;
             printf("        ok(%zu < n_ext && strcmp(unibi_get_ext_num_name(ut, %zu), \"", i, i);
             test_counter++;
@@ -248,7 +248,7 @@ int main(int argc, char **argv) {
             printf("\");\n");
             printf("        unibi_add_ext_num(dt, \"");
             print_str_esc(c, 0);
-            printf("\", %hd);\n", v);
+            printf("\", %d);\n", v);
         }
         say("    }");
     }
