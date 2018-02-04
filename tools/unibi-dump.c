@@ -30,6 +30,9 @@ THE SOFTWARE.
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 static void print_str_esc(const char *s) {
     if (!s) {
@@ -58,10 +61,26 @@ static void print_str_esc(const char *s) {
     }
 }
 
-int main(void) {
-    unibi_term *const ut = unibi_from_env();
+static unibi_term *get_term(const char *s) {
+    unibi_term *ut;
+    if (s) {
+        ut = unibi_from_file(s);
+        if (!ut) {
+            fprintf(stderr, "unibi_from_file(): %s: %s\n", s, strerror(errno));
+        }
+    } else {
+        ut = unibi_from_env();
+        if (!ut) {
+            const char *name = getenv("TERM");
+            fprintf(stderr, "unibi_from_env(): %s: %s\n", name ? name : "(null)", strerror(errno));
+        }
+    }
+    return ut;
+}
+
+int main(int argc, char **argv) {
+    unibi_term *const ut = get_term(argc > 1 ? argv[1] : NULL);
     if (!ut) {
-        perror("unibi_from_env");
         return 1;
     }
 
