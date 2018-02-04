@@ -123,6 +123,6 @@ man/%.3.gz: doc/%.pod
 
 .PHONY: regenerate-tests
 regenerate-tests: tools/gen-static-test
-	for t in screen-256color screen tmux xterm; do \
+	for t in screen-256color screen tmux xterm-256color xterm; do \
 	    $< $$t > t/static_$$t.c; \
 	done

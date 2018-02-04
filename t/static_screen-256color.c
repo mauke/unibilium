@@ -4,102 +4,106 @@
 #include "test-simple.c.inc"
 
 static const char terminfo[] = {
-    26, 1, 43, 0, 43, 0, 15, 0, 105, 1, -27, 2, 115, 99, 114, 101, 101, 110, 45, 50,
+    30, 2, 43, 0, 43, 0, 15, 0, 105, 1, 4, 3, 115, 99, 114, 101, 101, 110, 45, 50,
     53, 54, 99, 111, 108, 111, 114, 124, 71, 78, 85, 32, 83, 99, 114, 101, 101, 110, 32, 119,
     105, 116, 104, 32, 50, 53, 54, 32, 99, 111, 108, 111, 114, 115, 0, 0, 1, 0, 0, 1,
     0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 80, 0,
-    8, 0, 24, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, 0, 1, -1, 127, 0, 0, 4, 0, 6, 0, 8, 0, 25, 0, 30, 0,
-    37, 0, 41, 0, -1, -1, -1, -1, 45, 0, 62, 0, 64, 0, 68, 0, 75, 0, -1, -1,
-    77, 0, 89, 0, -1, -1, 93, 0, 96, 0, 102, 0, 106, 0, -1, -1, -1, -1, 110, 0,
-    112, 0, 117, 0, 122, 0, -1, -1, -125, 0, -120, 0, -1, -1, -1, -1, -115, 0, -110, 0,
-    -105, 0, -1, -1, -100, 0, -98, 0, -93, 0, -1, -1, -84, 0, -79, 0, -73, 0, -67, 0,
-    -1, -1, -1, -1, -1, -1, -64, 0, -1, -1, -1, -1, -1, -1, -60, 0, -1, -1, -56, 0,
-    -1, -1, -1, -1, -1, -1, -54, 0, -1, -1, -49, 0, -1, -1, -1, -1, -1, -1, -1, -1,
-    -45, 0, -41, 0, -35, 0, -31, 0, -27, 0, -23, 0, -17, 0, -11, 0, -5, 0, 1, 1,
-    7, 1, 12, 1, -1, -1, 17, 1, -1, -1, 21, 1, 26, 1, 31, 1, -1, -1, -1, -1,
-    -1, -1, 35, 1, 39, 1, 47, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 55, 1, -1, -1, 58, 1,
-    67, 1, 76, 1, 85, 1, -1, -1, 94, 1, 103, 1, 112, 1, -1, -1, 121, 1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -126, 1, -1, -1, -1, -1,
-    -109, 1, -1, -1, -106, 1, -103, 1, -101, 1, -98, 1, -14, 1, -1, -1, -11, 1, -1, -1,
+    0, 0, 8, 0, 0, 0, 24, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -9, 1, -1, -1, 56, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, 2,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 67, 2, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0,
+    4, 0, 6, 0, 8, 0, 25, 0, 30, 0, 37, 0, 41, 0, 45, 0, -1, -1, 56, 0,
+    73, 0, 75, 0, 79, 0, 86, 0, -1, -1, 88, 0, 100, 0, -1, -1, 104, 0, 107, 0,
+    113, 0, 117, 0, -1, -1, -1, -1, 121, 0, 123, 0, -128, 0, -123, 0, -1, -1, -114, 0,
+    -109, 0, -1, -1, -1, -1, -104, 0, -99, 0, -94, 0, -1, -1, -89, 0, -87, 0, -82, 0,
+    -1, -1, -73, 0, -68, 0, -62, 0, -56, 0, -1, -1, -1, -1, -1, -1, -53, 0, -1, -1,
+    -1, -1, -1, -1, -49, 0, -1, -1, -45, 0, -1, -1, -1, -1, -1, -1, -43, 0, -1, -1,
+    -38, 0, -1, -1, -1, -1, -1, -1, -1, -1, -34, 0, -30, 0, -24, 0, -20, 0, -16, 0,
+    -12, 0, -6, 0, 0, 1, 6, 1, 12, 1, 18, 1, 23, 1, -1, -1, 28, 1, -1, -1,
+    32, 1, 37, 1, 42, 1, -1, -1, -1, -1, -1, -1, 46, 1, 50, 1, 58, 1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    72, 2, 78, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, 66, 1, -1, -1, 69, 1, 78, 1, 87, 1, 96, 1, 105, 1, 114, 1,
+    123, 1, -124, 1, -1, -1, -115, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -106, 1, -1, -1, -1, -1, -89, 1, -86, 1, -75, 1, -72, 1, -70, 1,
+    -67, 1, 17, 2, -1, -1, 20, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 22, 2, -1, -1, 87, 2, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, 91, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, 98, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, 84, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, 89, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 103, 2, 109, 2, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 98, 2,
-    -1, -1, -1, -1, -1, -1, 102, 2, -91, 2, 27, 91, 90, 0, 7, 0, 13, 0, 27, 91,
-    37, 105, 37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 114, 0, 27, 91, 51, 103, 0,
-    27, 91, 72, 27, 91, 74, 0, 27, 91, 75, 0, 27, 91, 74, 0, 27, 91, 37, 105, 37,
-    112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 72, 0, 10, 0, 27, 91, 72, 0, 27, 91,
-    63, 50, 53, 108, 0, 8, 0, 27, 91, 51, 52, 104, 27, 91, 63, 50, 53, 104, 0, 27,
-    91, 67, 0, 27, 77, 0, 27, 91, 51, 52, 108, 0, 27, 91, 80, 0, 27, 91, 77, 0,
-    14, 0, 27, 91, 53, 109, 0, 27, 91, 49, 109, 0, 27, 91, 63, 49, 48, 52, 57, 104,
-    0, 27, 91, 50, 109, 0, 27, 91, 52, 104, 0, 27, 91, 55, 109, 0, 27, 91, 51, 109,
-    0, 27, 91, 52, 109, 0, 15, 0, 27, 91, 109, 15, 0, 27, 91, 63, 49, 48, 52, 57,
-    108, 0, 27, 91, 52, 108, 0, 27, 91, 50, 51, 109, 0, 27, 91, 50, 52, 109, 0, 27,
-    103, 0, 27, 41, 48, 0, 27, 91, 76, 0, 8, 0, 27, 91, 51, 126, 0, 27, 79, 66,
-    0, 27, 79, 80, 0, 27, 91, 50, 49, 126, 0, 27, 79, 81, 0, 27, 79, 82, 0, 27,
-    79, 83, 0, 27, 91, 49, 53, 126, 0, 27, 91, 49, 55, 126, 0, 27, 91, 49, 56, 126,
-    0, 27, 91, 49, 57, 126, 0, 27, 91, 50, 48, 126, 0, 27, 91, 49, 126, 0, 27, 91,
-    50, 126, 0, 27, 79, 68, 0, 27, 91, 54, 126, 0, 27, 91, 53, 126, 0, 27, 79, 67,
-    0, 27, 79, 65, 0, 27, 91, 63, 49, 108, 27, 62, 0, 27, 91, 63, 49, 104, 27, 61,
-    0, 27, 69, 0, 27, 91, 37, 112, 49, 37, 100, 80, 0, 27, 91, 37, 112, 49, 37, 100,
-    77, 0, 27, 91, 37, 112, 49, 37, 100, 66, 0, 27, 91, 37, 112, 49, 37, 100, 64, 0,
-    27, 91, 37, 112, 49, 37, 100, 76, 0, 27, 91, 37, 112, 49, 37, 100, 68, 0, 27, 91,
-    37, 112, 49, 37, 100, 67, 0, 27, 91, 37, 112, 49, 37, 100, 65, 0, 27, 99, 27, 91,
-    63, 49, 48, 48, 48, 108, 27, 91, 63, 50, 53, 104, 0, 27, 56, 0, 27, 55, 0, 10,
-    0, 27, 77, 0, 27, 91, 48, 37, 63, 37, 112, 54, 37, 116, 59, 49, 37, 59, 37, 63,
-    37, 112, 49, 37, 116, 59, 51, 37, 59, 37, 63, 37, 112, 50, 37, 116, 59, 52, 37, 59,
-    37, 63, 37, 112, 51, 37, 116, 59, 55, 37, 59, 37, 63, 37, 112, 52, 37, 116, 59, 53,
-    37, 59, 37, 63, 37, 112, 53, 37, 116, 59, 50, 37, 59, 109, 37, 63, 37, 112, 57, 37,
-    116, 14, 37, 101, 15, 37, 59, 0, 27, 72, 0, 9, 0, 43, 43, 44, 44, 45, 45, 46,
-    46, 48, 48, 96, 96, 97, 97, 102, 102, 103, 103, 104, 104, 105, 105, 106, 106, 107, 107, 108,
-    108, 109, 109, 110, 110, 111, 111, 112, 112, 113, 113, 114, 114, 115, 115, 116, 116, 117, 117, 118,
-    118, 119, 119, 120, 120, 121, 121, 122, 122, 123, 123, 124, 124, 125, 125, 126, 126, 0, 27, 91,
-    90, 0, 27, 40, 66, 27, 41, 48, 0, 27, 91, 52, 126, 0, 27, 91, 50, 51, 126, 0,
-    27, 91, 50, 52, 126, 0, 27, 91, 49, 75, 0, 27, 91, 51, 57, 59, 52, 57, 109, 0,
-    27, 91, 77, 0, 27, 91, 37, 63, 37, 112, 49, 37, 123, 56, 125, 37, 60, 37, 116, 51,
-    37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123, 49, 54, 125, 37, 60, 37, 116, 57,
-    37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100, 37, 101, 51, 56, 59, 53, 59, 37, 112,
-    49, 37, 100, 37, 59, 109, 0, 27, 91, 37, 63, 37, 112, 49, 37, 123, 56, 125, 37, 60,
-    37, 116, 52, 37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123, 49, 54, 125, 37, 60,
-    37, 116, 49, 48, 37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100, 37, 101, 52, 56, 59,
-    53, 59, 37, 112, 49, 37, 100, 37, 59, 109, 0, 0, 3, 0, 1, 0, 30, 0, 64, 0,
-    -80, 0, 1, 1, 0, 0, 1, 0, 0, 0, 4, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 115, 2, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 3, 0, 6, 0, 9, 0, 12, 0, 15, 0,
-    18, 0, 23, 0, 28, 0, 33, 0, 38, 0, 43, 0, 47, 0, 52, 0, 57, 0, 62, 0,
-    67, 0, 72, 0, 78, 0, 84, 0, 90, 0, 96, 0, 102, 0, 108, 0, 114, 0, 120, 0,
-    126, 0, -124, 0, -118, 0, -112, 0, -108, 0, -104, 0, -100, 0, -96, 0, 27, 40, 66, 0,
-    27, 40, 37, 112, 49, 37, 99, 0, 65, 88, 0, 71, 48, 0, 88, 84, 0, 85, 56, 0,
-    69, 48, 0, 83, 48, 0, 107, 68, 67, 51, 0, 107, 68, 67, 52, 0, 107, 68, 67, 53,
-    0, 107, 68, 67, 54, 0, 107, 68, 67, 55, 0, 107, 68, 78, 0, 107, 68, 78, 51, 0,
-    107, 68, 78, 52, 0, 107, 68, 78, 53, 0, 107, 68, 78, 54, 0, 107, 68, 78, 55, 0,
-    107, 69, 78, 68, 53, 0, 107, 72, 79, 77, 53, 0, 107, 76, 70, 84, 51, 0, 107, 76,
-    70, 84, 52, 0, 107, 76, 70, 84, 53, 0, 107, 76, 70, 84, 54, 0, 107, 76, 70, 84,
-    55, 0, 107, 82, 73, 84, 51, 0, 107, 82, 73, 84, 52, 0, 107, 82, 73, 84, 53, 0,
-    107, 82, 73, 84, 54, 0, 107, 82, 73, 84, 55, 0, 107, 85, 80, 0, 107, 97, 50, 0,
-    107, 98, 49, 0, 107, 98, 51, 0, 107, 99, 50, 0
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 120, 2, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -127, 2, -1, -1, -1, -1, -1, -1, -123, 2, -60, 2,
+    27, 91, 90, 0, 7, 0, 13, 0, 27, 91, 37, 105, 37, 112, 49, 37, 100, 59, 37, 112,
+    50, 37, 100, 114, 0, 27, 91, 51, 103, 0, 27, 91, 72, 27, 91, 74, 0, 27, 91, 75,
+    0, 27, 91, 74, 0, 27, 91, 37, 105, 37, 112, 49, 37, 100, 71, 0, 27, 91, 37, 105,
+    37, 112, 49, 37, 100, 59, 37, 112, 50, 37, 100, 72, 0, 10, 0, 27, 91, 72, 0, 27,
+    91, 63, 50, 53, 108, 0, 8, 0, 27, 91, 51, 52, 104, 27, 91, 63, 50, 53, 104, 0,
+    27, 91, 67, 0, 27, 77, 0, 27, 91, 51, 52, 108, 0, 27, 91, 80, 0, 27, 91, 77,
+    0, 14, 0, 27, 91, 53, 109, 0, 27, 91, 49, 109, 0, 27, 91, 63, 49, 48, 52, 57,
+    104, 0, 27, 91, 50, 109, 0, 27, 91, 52, 104, 0, 27, 91, 55, 109, 0, 27, 91, 51,
+    109, 0, 27, 91, 52, 109, 0, 15, 0, 27, 91, 109, 15, 0, 27, 91, 63, 49, 48, 52,
+    57, 108, 0, 27, 91, 52, 108, 0, 27, 91, 50, 51, 109, 0, 27, 91, 50, 52, 109, 0,
+    27, 103, 0, 27, 41, 48, 0, 27, 91, 76, 0, 8, 0, 27, 91, 51, 126, 0, 27, 79,
+    66, 0, 27, 79, 80, 0, 27, 91, 50, 49, 126, 0, 27, 79, 81, 0, 27, 79, 82, 0,
+    27, 79, 83, 0, 27, 91, 49, 53, 126, 0, 27, 91, 49, 55, 126, 0, 27, 91, 49, 56,
+    126, 0, 27, 91, 49, 57, 126, 0, 27, 91, 50, 48, 126, 0, 27, 91, 49, 126, 0, 27,
+    91, 50, 126, 0, 27, 79, 68, 0, 27, 91, 54, 126, 0, 27, 91, 53, 126, 0, 27, 79,
+    67, 0, 27, 79, 65, 0, 27, 91, 63, 49, 108, 27, 62, 0, 27, 91, 63, 49, 104, 27,
+    61, 0, 27, 69, 0, 27, 91, 37, 112, 49, 37, 100, 80, 0, 27, 91, 37, 112, 49, 37,
+    100, 77, 0, 27, 91, 37, 112, 49, 37, 100, 66, 0, 27, 91, 37, 112, 49, 37, 100, 64,
+    0, 27, 91, 37, 112, 49, 37, 100, 83, 0, 27, 91, 37, 112, 49, 37, 100, 76, 0, 27,
+    91, 37, 112, 49, 37, 100, 68, 0, 27, 91, 37, 112, 49, 37, 100, 67, 0, 27, 91, 37,
+    112, 49, 37, 100, 65, 0, 27, 99, 27, 91, 63, 49, 48, 48, 48, 108, 27, 91, 63, 50,
+    53, 104, 0, 27, 56, 0, 27, 91, 37, 105, 37, 112, 49, 37, 100, 100, 0, 27, 55, 0,
+    10, 0, 27, 77, 0, 27, 91, 48, 37, 63, 37, 112, 54, 37, 116, 59, 49, 37, 59, 37,
+    63, 37, 112, 49, 37, 116, 59, 51, 37, 59, 37, 63, 37, 112, 50, 37, 116, 59, 52, 37,
+    59, 37, 63, 37, 112, 51, 37, 116, 59, 55, 37, 59, 37, 63, 37, 112, 52, 37, 116, 59,
+    53, 37, 59, 37, 63, 37, 112, 53, 37, 116, 59, 50, 37, 59, 109, 37, 63, 37, 112, 57,
+    37, 116, 14, 37, 101, 15, 37, 59, 0, 27, 72, 0, 9, 0, 43, 43, 44, 44, 45, 45,
+    46, 46, 48, 48, 96, 96, 97, 97, 102, 102, 103, 103, 104, 104, 105, 105, 106, 106, 107, 107,
+    108, 108, 109, 109, 110, 110, 111, 111, 112, 112, 113, 113, 114, 114, 115, 115, 116, 116, 117, 117,
+    118, 118, 119, 119, 120, 120, 121, 121, 122, 122, 123, 123, 124, 124, 125, 125, 126, 126, 0, 27,
+    91, 90, 0, 27, 40, 66, 27, 41, 48, 0, 27, 91, 52, 126, 0, 27, 91, 50, 51, 126,
+    0, 27, 91, 50, 52, 126, 0, 27, 91, 49, 75, 0, 27, 91, 51, 57, 59, 52, 57, 109,
+    0, 27, 91, 77, 0, 27, 91, 37, 63, 37, 112, 49, 37, 123, 56, 125, 37, 60, 37, 116,
+    51, 37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123, 49, 54, 125, 37, 60, 37, 116,
+    57, 37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100, 37, 101, 51, 56, 59, 53, 59, 37,
+    112, 49, 37, 100, 37, 59, 109, 0, 27, 91, 37, 63, 37, 112, 49, 37, 123, 56, 125, 37,
+    60, 37, 116, 52, 37, 112, 49, 37, 100, 37, 101, 37, 112, 49, 37, 123, 49, 54, 125, 37,
+    60, 37, 116, 49, 48, 37, 112, 49, 37, 123, 56, 125, 37, 45, 37, 100, 37, 101, 52, 56,
+    59, 53, 59, 37, 112, 49, 37, 100, 37, 59, 109, 0, 3, 0, 1, 0, 32, 0, 68, 0,
+    -74, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 4, 0, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 3, 0, 6, 0,
+    9, 0, 12, 0, 15, 0, 18, 0, 21, 0, 26, 0, 31, 0, 36, 0, 41, 0, 46, 0,
+    50, 0, 55, 0, 60, 0, 65, 0, 70, 0, 75, 0, 81, 0, 87, 0, 93, 0, 99, 0,
+    105, 0, 111, 0, 117, 0, 123, 0, -127, 0, -121, 0, -115, 0, -109, 0, -105, 0, -101, 0,
+    -97, 0, -93, 0, -89, 0, 27, 40, 66, 0, 27, 40, 37, 112, 49, 37, 99, 0, 65, 88,
+    0, 71, 48, 0, 88, 84, 0, 85, 56, 0, 69, 48, 0, 83, 48, 0, 88, 77, 0, 107,
+    68, 67, 51, 0, 107, 68, 67, 52, 0, 107, 68, 67, 53, 0, 107, 68, 67, 54, 0, 107,
+    68, 67, 55, 0, 107, 68, 78, 0, 107, 68, 78, 51, 0, 107, 68, 78, 52, 0, 107, 68,
+    78, 53, 0, 107, 68, 78, 54, 0, 107, 68, 78, 55, 0, 107, 69, 78, 68, 53, 0, 107,
+    72, 79, 77, 53, 0, 107, 76, 70, 84, 51, 0, 107, 76, 70, 84, 52, 0, 107, 76, 70,
+    84, 53, 0, 107, 76, 70, 84, 54, 0, 107, 76, 70, 84, 55, 0, 107, 82, 73, 84, 51,
+    0, 107, 82, 73, 84, 52, 0, 107, 82, 73, 84, 53, 0, 107, 82, 73, 84, 54, 0, 107,
+    82, 73, 84, 55, 0, 107, 85, 80, 0, 107, 97, 50, 0, 107, 98, 49, 0, 107, 98, 51,
+    0, 107, 99, 50, 0, 120, 109, 0
 };
 
 static void setup(void);
@@ -206,8 +210,8 @@ int main(void) {
     ok(unibi_get_num(ut, unibi_maximum_windows) == -1, "maximum_windows = -1");
     ok(unibi_get_num(ut, unibi_max_colors) == 256, "max_colors = 256");
     unibi_set_num(dt, unibi_max_colors, 256);
-    ok(unibi_get_num(ut, unibi_max_pairs) == 32767, "max_pairs = 32767");
-    unibi_set_num(dt, unibi_max_pairs, 32767);
+    ok(unibi_get_num(ut, unibi_max_pairs) == 65536, "max_pairs = 65536");
+    unibi_set_num(dt, unibi_max_pairs, 65536);
     ok(unibi_get_num(ut, unibi_no_color_video) == -1, "no_color_video = -1");
     ok(unibi_get_num(ut, unibi_buffer_capacity) == -1, "buffer_capacity = -1");
     ok(unibi_get_num(ut, unibi_dot_vert_spacing) == -1, "dot_vert_spacing = -1");
@@ -250,7 +254,8 @@ int main(void) {
     unibi_set_str(dt, unibi_clr_eol, "\033[K");
     ok(strcmp(unibi_get_str(ut, unibi_clr_eos), "\033[J") == 0, "clr_eos = \"%s\"", "\\033[J");
     unibi_set_str(dt, unibi_clr_eos, "\033[J");
-    ok(unibi_get_str(ut, unibi_column_address) == NULL, "column_address = null");
+    ok(strcmp(unibi_get_str(ut, unibi_column_address), "\033[%i%p1%dG") == 0, "column_address = \"%s\"", "\\033[%i%p1%dG");
+    unibi_set_str(dt, unibi_column_address, "\033[%i%p1%dG");
     ok(unibi_get_str(ut, unibi_command_character) == NULL, "command_character = null");
     ok(strcmp(unibi_get_str(ut, unibi_cursor_address), "\033[%i%p1%d;%p2%dH") == 0, "cursor_address = \"%s\"", "\\033[%i%p1%d;%p2%dH");
     unibi_set_str(dt, unibi_cursor_address, "\033[%i%p1%d;%p2%dH");
@@ -407,7 +412,8 @@ int main(void) {
     unibi_set_str(dt, unibi_parm_down_cursor, "\033[%p1%dB");
     ok(strcmp(unibi_get_str(ut, unibi_parm_ich), "\033[%p1%d@") == 0, "parm_ich = \"%s\"", "\\033[%p1%d@");
     unibi_set_str(dt, unibi_parm_ich, "\033[%p1%d@");
-    ok(unibi_get_str(ut, unibi_parm_index) == NULL, "parm_index = null");
+    ok(strcmp(unibi_get_str(ut, unibi_parm_index), "\033[%p1%dS") == 0, "parm_index = \"%s\"", "\\033[%p1%dS");
+    unibi_set_str(dt, unibi_parm_index, "\033[%p1%dS");
     ok(strcmp(unibi_get_str(ut, unibi_parm_insert_line), "\033[%p1%dL") == 0, "parm_insert_line = \"%s\"", "\\033[%p1%dL");
     unibi_set_str(dt, unibi_parm_insert_line, "\033[%p1%dL");
     ok(strcmp(unibi_get_str(ut, unibi_parm_left_cursor), "\033[%p1%dD") == 0, "parm_left_cursor = \"%s\"", "\\033[%p1%dD");
@@ -431,7 +437,8 @@ int main(void) {
     ok(unibi_get_str(ut, unibi_reset_file) == NULL, "reset_file = null");
     ok(strcmp(unibi_get_str(ut, unibi_restore_cursor), "\0338") == 0, "restore_cursor = \"%s\"", "\\0338");
     unibi_set_str(dt, unibi_restore_cursor, "\0338");
-    ok(unibi_get_str(ut, unibi_row_address) == NULL, "row_address = null");
+    ok(strcmp(unibi_get_str(ut, unibi_row_address), "\033[%i%p1%dd") == 0, "row_address = \"%s\"", "\\033[%i%p1%dd");
+    unibi_set_str(dt, unibi_row_address, "\033[%i%p1%dd");
     ok(strcmp(unibi_get_str(ut, unibi_save_cursor), "\0337") == 0, "save_cursor = \"%s\"", "\\0337");
     unibi_set_str(dt, unibi_save_cursor, "\0337");
     ok(strcmp(unibi_get_str(ut, unibi_scroll_forward), "\012") == 0, "scroll_forward = \"%s\"", "\\012");
@@ -763,7 +770,7 @@ int main(void) {
     note("extended string capabilities");
     {
         const size_t n_ext = unibi_count_ext_str(ut);
-        ok(n_ext == 30, "#ext_str = 30");
+        ok(n_ext == 32, "#ext_str = 32");
         ok(0 < n_ext && strcmp(unibi_get_ext_str(ut, 0), "\033(B") == 0, "ext_str[0].value = \"%s\"", "\\033(B");
         unibi_add_ext_str(dt, "E0", "\033(B");
         ok(0 < n_ext && strcmp(unibi_get_ext_str_name(ut, 0), "E0") == 0, "ext_str[0].name = \"%s\"", "E0");
@@ -771,89 +778,95 @@ int main(void) {
         unibi_add_ext_str(dt, "S0", "\033(%p1%c");
         ok(1 < n_ext && strcmp(unibi_get_ext_str_name(ut, 1), "S0") == 0, "ext_str[1].name = \"%s\"", "S0");
         ok(2 < n_ext && unibi_get_ext_str(ut, 2) == NULL, "ext_str[2].value = null");
-        unibi_add_ext_str(dt, "kDC3", NULL);
-        ok(2 < n_ext && strcmp(unibi_get_ext_str_name(ut, 2), "kDC3") == 0, "ext_str[2].name = \"%s\"", "kDC3");
+        unibi_add_ext_str(dt, "XM", NULL);
+        ok(2 < n_ext && strcmp(unibi_get_ext_str_name(ut, 2), "XM") == 0, "ext_str[2].name = \"%s\"", "XM");
         ok(3 < n_ext && unibi_get_ext_str(ut, 3) == NULL, "ext_str[3].value = null");
-        unibi_add_ext_str(dt, "kDC4", NULL);
-        ok(3 < n_ext && strcmp(unibi_get_ext_str_name(ut, 3), "kDC4") == 0, "ext_str[3].name = \"%s\"", "kDC4");
+        unibi_add_ext_str(dt, "kDC3", NULL);
+        ok(3 < n_ext && strcmp(unibi_get_ext_str_name(ut, 3), "kDC3") == 0, "ext_str[3].name = \"%s\"", "kDC3");
         ok(4 < n_ext && unibi_get_ext_str(ut, 4) == NULL, "ext_str[4].value = null");
-        unibi_add_ext_str(dt, "kDC5", NULL);
-        ok(4 < n_ext && strcmp(unibi_get_ext_str_name(ut, 4), "kDC5") == 0, "ext_str[4].name = \"%s\"", "kDC5");
+        unibi_add_ext_str(dt, "kDC4", NULL);
+        ok(4 < n_ext && strcmp(unibi_get_ext_str_name(ut, 4), "kDC4") == 0, "ext_str[4].name = \"%s\"", "kDC4");
         ok(5 < n_ext && unibi_get_ext_str(ut, 5) == NULL, "ext_str[5].value = null");
-        unibi_add_ext_str(dt, "kDC6", NULL);
-        ok(5 < n_ext && strcmp(unibi_get_ext_str_name(ut, 5), "kDC6") == 0, "ext_str[5].name = \"%s\"", "kDC6");
+        unibi_add_ext_str(dt, "kDC5", NULL);
+        ok(5 < n_ext && strcmp(unibi_get_ext_str_name(ut, 5), "kDC5") == 0, "ext_str[5].name = \"%s\"", "kDC5");
         ok(6 < n_ext && unibi_get_ext_str(ut, 6) == NULL, "ext_str[6].value = null");
-        unibi_add_ext_str(dt, "kDC7", NULL);
-        ok(6 < n_ext && strcmp(unibi_get_ext_str_name(ut, 6), "kDC7") == 0, "ext_str[6].name = \"%s\"", "kDC7");
+        unibi_add_ext_str(dt, "kDC6", NULL);
+        ok(6 < n_ext && strcmp(unibi_get_ext_str_name(ut, 6), "kDC6") == 0, "ext_str[6].name = \"%s\"", "kDC6");
         ok(7 < n_ext && unibi_get_ext_str(ut, 7) == NULL, "ext_str[7].value = null");
-        unibi_add_ext_str(dt, "kDN", NULL);
-        ok(7 < n_ext && strcmp(unibi_get_ext_str_name(ut, 7), "kDN") == 0, "ext_str[7].name = \"%s\"", "kDN");
+        unibi_add_ext_str(dt, "kDC7", NULL);
+        ok(7 < n_ext && strcmp(unibi_get_ext_str_name(ut, 7), "kDC7") == 0, "ext_str[7].name = \"%s\"", "kDC7");
         ok(8 < n_ext && unibi_get_ext_str(ut, 8) == NULL, "ext_str[8].value = null");
-        unibi_add_ext_str(dt, "kDN3", NULL);
-        ok(8 < n_ext && strcmp(unibi_get_ext_str_name(ut, 8), "kDN3") == 0, "ext_str[8].name = \"%s\"", "kDN3");
+        unibi_add_ext_str(dt, "kDN", NULL);
+        ok(8 < n_ext && strcmp(unibi_get_ext_str_name(ut, 8), "kDN") == 0, "ext_str[8].name = \"%s\"", "kDN");
         ok(9 < n_ext && unibi_get_ext_str(ut, 9) == NULL, "ext_str[9].value = null");
-        unibi_add_ext_str(dt, "kDN4", NULL);
-        ok(9 < n_ext && strcmp(unibi_get_ext_str_name(ut, 9), "kDN4") == 0, "ext_str[9].name = \"%s\"", "kDN4");
+        unibi_add_ext_str(dt, "kDN3", NULL);
+        ok(9 < n_ext && strcmp(unibi_get_ext_str_name(ut, 9), "kDN3") == 0, "ext_str[9].name = \"%s\"", "kDN3");
         ok(10 < n_ext && unibi_get_ext_str(ut, 10) == NULL, "ext_str[10].value = null");
-        unibi_add_ext_str(dt, "kDN5", NULL);
-        ok(10 < n_ext && strcmp(unibi_get_ext_str_name(ut, 10), "kDN5") == 0, "ext_str[10].name = \"%s\"", "kDN5");
+        unibi_add_ext_str(dt, "kDN4", NULL);
+        ok(10 < n_ext && strcmp(unibi_get_ext_str_name(ut, 10), "kDN4") == 0, "ext_str[10].name = \"%s\"", "kDN4");
         ok(11 < n_ext && unibi_get_ext_str(ut, 11) == NULL, "ext_str[11].value = null");
-        unibi_add_ext_str(dt, "kDN6", NULL);
-        ok(11 < n_ext && strcmp(unibi_get_ext_str_name(ut, 11), "kDN6") == 0, "ext_str[11].name = \"%s\"", "kDN6");
+        unibi_add_ext_str(dt, "kDN5", NULL);
+        ok(11 < n_ext && strcmp(unibi_get_ext_str_name(ut, 11), "kDN5") == 0, "ext_str[11].name = \"%s\"", "kDN5");
         ok(12 < n_ext && unibi_get_ext_str(ut, 12) == NULL, "ext_str[12].value = null");
-        unibi_add_ext_str(dt, "kDN7", NULL);
-        ok(12 < n_ext && strcmp(unibi_get_ext_str_name(ut, 12), "kDN7") == 0, "ext_str[12].name = \"%s\"", "kDN7");
+        unibi_add_ext_str(dt, "kDN6", NULL);
+        ok(12 < n_ext && strcmp(unibi_get_ext_str_name(ut, 12), "kDN6") == 0, "ext_str[12].name = \"%s\"", "kDN6");
         ok(13 < n_ext && unibi_get_ext_str(ut, 13) == NULL, "ext_str[13].value = null");
-        unibi_add_ext_str(dt, "kEND5", NULL);
-        ok(13 < n_ext && strcmp(unibi_get_ext_str_name(ut, 13), "kEND5") == 0, "ext_str[13].name = \"%s\"", "kEND5");
+        unibi_add_ext_str(dt, "kDN7", NULL);
+        ok(13 < n_ext && strcmp(unibi_get_ext_str_name(ut, 13), "kDN7") == 0, "ext_str[13].name = \"%s\"", "kDN7");
         ok(14 < n_ext && unibi_get_ext_str(ut, 14) == NULL, "ext_str[14].value = null");
-        unibi_add_ext_str(dt, "kHOM5", NULL);
-        ok(14 < n_ext && strcmp(unibi_get_ext_str_name(ut, 14), "kHOM5") == 0, "ext_str[14].name = \"%s\"", "kHOM5");
+        unibi_add_ext_str(dt, "kEND5", NULL);
+        ok(14 < n_ext && strcmp(unibi_get_ext_str_name(ut, 14), "kEND5") == 0, "ext_str[14].name = \"%s\"", "kEND5");
         ok(15 < n_ext && unibi_get_ext_str(ut, 15) == NULL, "ext_str[15].value = null");
-        unibi_add_ext_str(dt, "kLFT3", NULL);
-        ok(15 < n_ext && strcmp(unibi_get_ext_str_name(ut, 15), "kLFT3") == 0, "ext_str[15].name = \"%s\"", "kLFT3");
+        unibi_add_ext_str(dt, "kHOM5", NULL);
+        ok(15 < n_ext && strcmp(unibi_get_ext_str_name(ut, 15), "kHOM5") == 0, "ext_str[15].name = \"%s\"", "kHOM5");
         ok(16 < n_ext && unibi_get_ext_str(ut, 16) == NULL, "ext_str[16].value = null");
-        unibi_add_ext_str(dt, "kLFT4", NULL);
-        ok(16 < n_ext && strcmp(unibi_get_ext_str_name(ut, 16), "kLFT4") == 0, "ext_str[16].name = \"%s\"", "kLFT4");
+        unibi_add_ext_str(dt, "kLFT3", NULL);
+        ok(16 < n_ext && strcmp(unibi_get_ext_str_name(ut, 16), "kLFT3") == 0, "ext_str[16].name = \"%s\"", "kLFT3");
         ok(17 < n_ext && unibi_get_ext_str(ut, 17) == NULL, "ext_str[17].value = null");
-        unibi_add_ext_str(dt, "kLFT5", NULL);
-        ok(17 < n_ext && strcmp(unibi_get_ext_str_name(ut, 17), "kLFT5") == 0, "ext_str[17].name = \"%s\"", "kLFT5");
+        unibi_add_ext_str(dt, "kLFT4", NULL);
+        ok(17 < n_ext && strcmp(unibi_get_ext_str_name(ut, 17), "kLFT4") == 0, "ext_str[17].name = \"%s\"", "kLFT4");
         ok(18 < n_ext && unibi_get_ext_str(ut, 18) == NULL, "ext_str[18].value = null");
-        unibi_add_ext_str(dt, "kLFT6", NULL);
-        ok(18 < n_ext && strcmp(unibi_get_ext_str_name(ut, 18), "kLFT6") == 0, "ext_str[18].name = \"%s\"", "kLFT6");
+        unibi_add_ext_str(dt, "kLFT5", NULL);
+        ok(18 < n_ext && strcmp(unibi_get_ext_str_name(ut, 18), "kLFT5") == 0, "ext_str[18].name = \"%s\"", "kLFT5");
         ok(19 < n_ext && unibi_get_ext_str(ut, 19) == NULL, "ext_str[19].value = null");
-        unibi_add_ext_str(dt, "kLFT7", NULL);
-        ok(19 < n_ext && strcmp(unibi_get_ext_str_name(ut, 19), "kLFT7") == 0, "ext_str[19].name = \"%s\"", "kLFT7");
+        unibi_add_ext_str(dt, "kLFT6", NULL);
+        ok(19 < n_ext && strcmp(unibi_get_ext_str_name(ut, 19), "kLFT6") == 0, "ext_str[19].name = \"%s\"", "kLFT6");
         ok(20 < n_ext && unibi_get_ext_str(ut, 20) == NULL, "ext_str[20].value = null");
-        unibi_add_ext_str(dt, "kRIT3", NULL);
-        ok(20 < n_ext && strcmp(unibi_get_ext_str_name(ut, 20), "kRIT3") == 0, "ext_str[20].name = \"%s\"", "kRIT3");
+        unibi_add_ext_str(dt, "kLFT7", NULL);
+        ok(20 < n_ext && strcmp(unibi_get_ext_str_name(ut, 20), "kLFT7") == 0, "ext_str[20].name = \"%s\"", "kLFT7");
         ok(21 < n_ext && unibi_get_ext_str(ut, 21) == NULL, "ext_str[21].value = null");
-        unibi_add_ext_str(dt, "kRIT4", NULL);
-        ok(21 < n_ext && strcmp(unibi_get_ext_str_name(ut, 21), "kRIT4") == 0, "ext_str[21].name = \"%s\"", "kRIT4");
+        unibi_add_ext_str(dt, "kRIT3", NULL);
+        ok(21 < n_ext && strcmp(unibi_get_ext_str_name(ut, 21), "kRIT3") == 0, "ext_str[21].name = \"%s\"", "kRIT3");
         ok(22 < n_ext && unibi_get_ext_str(ut, 22) == NULL, "ext_str[22].value = null");
-        unibi_add_ext_str(dt, "kRIT5", NULL);
-        ok(22 < n_ext && strcmp(unibi_get_ext_str_name(ut, 22), "kRIT5") == 0, "ext_str[22].name = \"%s\"", "kRIT5");
+        unibi_add_ext_str(dt, "kRIT4", NULL);
+        ok(22 < n_ext && strcmp(unibi_get_ext_str_name(ut, 22), "kRIT4") == 0, "ext_str[22].name = \"%s\"", "kRIT4");
         ok(23 < n_ext && unibi_get_ext_str(ut, 23) == NULL, "ext_str[23].value = null");
-        unibi_add_ext_str(dt, "kRIT6", NULL);
-        ok(23 < n_ext && strcmp(unibi_get_ext_str_name(ut, 23), "kRIT6") == 0, "ext_str[23].name = \"%s\"", "kRIT6");
+        unibi_add_ext_str(dt, "kRIT5", NULL);
+        ok(23 < n_ext && strcmp(unibi_get_ext_str_name(ut, 23), "kRIT5") == 0, "ext_str[23].name = \"%s\"", "kRIT5");
         ok(24 < n_ext && unibi_get_ext_str(ut, 24) == NULL, "ext_str[24].value = null");
-        unibi_add_ext_str(dt, "kRIT7", NULL);
-        ok(24 < n_ext && strcmp(unibi_get_ext_str_name(ut, 24), "kRIT7") == 0, "ext_str[24].name = \"%s\"", "kRIT7");
+        unibi_add_ext_str(dt, "kRIT6", NULL);
+        ok(24 < n_ext && strcmp(unibi_get_ext_str_name(ut, 24), "kRIT6") == 0, "ext_str[24].name = \"%s\"", "kRIT6");
         ok(25 < n_ext && unibi_get_ext_str(ut, 25) == NULL, "ext_str[25].value = null");
-        unibi_add_ext_str(dt, "kUP", NULL);
-        ok(25 < n_ext && strcmp(unibi_get_ext_str_name(ut, 25), "kUP") == 0, "ext_str[25].name = \"%s\"", "kUP");
+        unibi_add_ext_str(dt, "kRIT7", NULL);
+        ok(25 < n_ext && strcmp(unibi_get_ext_str_name(ut, 25), "kRIT7") == 0, "ext_str[25].name = \"%s\"", "kRIT7");
         ok(26 < n_ext && unibi_get_ext_str(ut, 26) == NULL, "ext_str[26].value = null");
-        unibi_add_ext_str(dt, "ka2", NULL);
-        ok(26 < n_ext && strcmp(unibi_get_ext_str_name(ut, 26), "ka2") == 0, "ext_str[26].name = \"%s\"", "ka2");
+        unibi_add_ext_str(dt, "kUP", NULL);
+        ok(26 < n_ext && strcmp(unibi_get_ext_str_name(ut, 26), "kUP") == 0, "ext_str[26].name = \"%s\"", "kUP");
         ok(27 < n_ext && unibi_get_ext_str(ut, 27) == NULL, "ext_str[27].value = null");
-        unibi_add_ext_str(dt, "kb1", NULL);
-        ok(27 < n_ext && strcmp(unibi_get_ext_str_name(ut, 27), "kb1") == 0, "ext_str[27].name = \"%s\"", "kb1");
+        unibi_add_ext_str(dt, "ka2", NULL);
+        ok(27 < n_ext && strcmp(unibi_get_ext_str_name(ut, 27), "ka2") == 0, "ext_str[27].name = \"%s\"", "ka2");
         ok(28 < n_ext && unibi_get_ext_str(ut, 28) == NULL, "ext_str[28].value = null");
-        unibi_add_ext_str(dt, "kb3", NULL);
-        ok(28 < n_ext && strcmp(unibi_get_ext_str_name(ut, 28), "kb3") == 0, "ext_str[28].name = \"%s\"", "kb3");
+        unibi_add_ext_str(dt, "kb1", NULL);
+        ok(28 < n_ext && strcmp(unibi_get_ext_str_name(ut, 28), "kb1") == 0, "ext_str[28].name = \"%s\"", "kb1");
         ok(29 < n_ext && unibi_get_ext_str(ut, 29) == NULL, "ext_str[29].value = null");
+        unibi_add_ext_str(dt, "kb3", NULL);
+        ok(29 < n_ext && strcmp(unibi_get_ext_str_name(ut, 29), "kb3") == 0, "ext_str[29].name = \"%s\"", "kb3");
+        ok(30 < n_ext && unibi_get_ext_str(ut, 30) == NULL, "ext_str[30].value = null");
         unibi_add_ext_str(dt, "kc2", NULL);
-        ok(29 < n_ext && strcmp(unibi_get_ext_str_name(ut, 29), "kc2") == 0, "ext_str[29].name = \"%s\"", "kc2");
+        ok(30 < n_ext && strcmp(unibi_get_ext_str_name(ut, 30), "kc2") == 0, "ext_str[30].name = \"%s\"", "kc2");
+        ok(31 < n_ext && unibi_get_ext_str(ut, 31) == NULL, "ext_str[31].value = null");
+        unibi_add_ext_str(dt, "xm", NULL);
+        ok(31 < n_ext && strcmp(unibi_get_ext_str_name(ut, 31), "xm") == 0, "ext_str[31].name = \"%s\"", "xm");
     }
 
     {
@@ -880,5 +893,5 @@ int main(void) {
 }
 
 static void setup(void) {
-    plan(579);
+    plan(583);
 }
