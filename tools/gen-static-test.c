@@ -41,7 +41,7 @@ static void say_(const char *s) {
 
 static void print_str_esc(const char *s, int twice) {
     for (unsigned char c; (c = *s); s++) {
-        if (isprint(c)) {
+        if (isprint(c) && c != '\\') {
             putchar(c);
         } else {
             printf("%s\\%03o", twice ? "\\" : "", (unsigned)c);

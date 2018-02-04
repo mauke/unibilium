@@ -50,6 +50,7 @@ static void print_str_esc(const char *s) {
             case '\t': printf("\\t"); break;
             case '\v': printf("\\v"); break;
             case '\033': printf("\\e"); break;
+            case '\\': printf("\\\\"); break;
             default:
                 if (isprint(c)) {
                     printf("%c", c);
