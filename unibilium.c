@@ -626,8 +626,10 @@ size_t unibi_dump(const unibi_term *t, char *ptr, size_t n) {
         put_ushort(p + 8, ext_tablsz1 + ext_tablsz2);
         p += 10;
 
-        memcpy(p, t->ext_bools.data, t->ext_bools.used);
-        p += t->ext_bools.used;
+        if (t->ext_bools.used) {
+            memcpy(p, t->ext_bools.data, t->ext_bools.used);
+            p += t->ext_bools.used;
+        }
 
         if (t->ext_bools.used % 2) {
             *p++ = '\0';
