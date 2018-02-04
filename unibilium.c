@@ -152,15 +152,17 @@ static const char *off_of(const char *p, size_t n, short i) {
 
 unibi_term *unibi_dummy(void) {
     unibi_term *t;
+    void *mem;
 
     if (!(t = malloc(sizeof *t))) {
         return NULL;
     }
-    if (!(t->alloc = malloc(2 * sizeof *t->aliases))) {
+    if (!(mem = malloc(2 * sizeof *t->aliases))) {
         free(t);
         return NULL;
     }
-    t->aliases = (const char **)t->alloc;
+    t->alloc = mem;
+    t->aliases = mem;
     t->name = "unibilium dummy terminal";
     t->aliases[0] = "null";
     t->aliases[1] = NULL;
@@ -226,11 +228,15 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
     if (!(t = malloc(sizeof *t))) {
         return NULL;
     }
-    if (!(t->alloc = malloc(namco * sizeof *t->aliases + tablsz + namlen + 1))) {
-        free(t);
-        return NULL;
+    {
+        void *mem;
+        if (!(mem = malloc(namco * sizeof *t->aliases + tablsz + namlen + 1))) {
+            free(t);
+            return NULL;
+        }
+        t->alloc = mem;
+        t->aliases = mem;
     }
-    t->aliases = (const char **)t->alloc;
     strp = t->alloc + namco * sizeof *t->aliases;
     namp = strp + tablsz;
     memcpy(namp, p, namlen);
