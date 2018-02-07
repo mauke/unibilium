@@ -15,6 +15,11 @@ unibi_dump - convert a terminal object to compiled terminfo data
 This function creates a compiled terminfo entry from I<ut>. The output is
 written to I<p>, which must have room for at least I<n> bytes.
 
+If all numeric properties in I<ut> have values that fit in 15 bits, the
+traditional ncurses terminfo format is used (starting with the bytes C<1A 01>),
+otherwise the newer "wide integer" format (starting with the bytes C<1E 02>) is
+used.
+
 =head1 RETURN VALUE
 
 C<unibi_dump> returns the number of bytes required to store the terminfo data.

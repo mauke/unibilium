@@ -13,8 +13,12 @@ unibi_from_mem - construct a terminal object from a compiled terminfo entry
 =head1 DESCRIPTION
 
 This function parses a compiled terminfo entry that starts at I<p> and is I<n>
-bytes long and constructs a C<unibi_term> object from it. When you're done with
-it, you should call C<unibi_destroy> to free it.
+bytes long, and constructs a C<unibi_term> object from it. When you're done
+with this object, you should call C<unibi_destroy> to free it.
+
+C<unibi_from_mem> parses both the traditional ncurses terminfo format (starting
+with the bytes C<1A 01>) and the newer "wide integer" format (starting with the
+bytes C<1E 02>).
 
 =head1 RETURN VALUE
 
@@ -27,7 +31,7 @@ C<errno> is set.
 
 =item C<EINVAL>
 
-The passed bytes don't look like a valid terminfo entry.
+The bytes I<p> points at don't look like a valid terminfo entry.
 
 =item C<EFAULT>
 

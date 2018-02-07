@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-unibilium.h - terminfo parser and utility functions
+unibilium.h - ncurses terminfo parser and utility functions
 
 =head1 SYNOPSIS
 
@@ -11,8 +11,9 @@ unibilium.h - terminfo parser and utility functions
 =head1 DESCRIPTION
 
 This library provides functions and types to access terminal descriptions in
-the terminfo database. It can parse compiled terminfo entries from memory or
-files, access and modify their capabilities, and generate new terminfo entries.
+the terminfo database (in the format used by ncurses). It can parse compiled
+terminfo entries from memory or files, access and modify their capabilities,
+and generate new terminfo entries.
 
 =head2 Types
 
