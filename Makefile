@@ -33,7 +33,11 @@ MANDIR=$(PREFIX)/share/man
 MAN3DIR=$(MANDIR)/man3
 
 ifneq ($(OS),Windows_NT)
-  TERMINFO_DIRS="/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo"
+  TERMINFO_DIRS="$(shell ncursesw6-config --terminfo-dirs 2>/dev/null || \
+                         ncurses6-config  --terminfo-dirs 2>/dev/null || \
+                         ncursesw5-config --terminfo-dirs 2>/dev/null || \
+                         ncurses5-config  --terminfo-dirs 2>/dev/null || \
+                         echo "/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo:/usr/local/share/terminfo:/usr/local/lib/terminfo")"
 else
   TERMINFO_DIRS=""
 endif
