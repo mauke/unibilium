@@ -102,7 +102,7 @@ install-inc:
 	mkdir -p '$(DESTDIR)$(INCDIR)'
 	install -m644 unibilium.h '$(DESTDIR)$(INCDIR)'
 	mkdir -p '$(DESTDIR)$(LIBDIR)/pkgconfig'
-	sed 's,@VERSION@,$(PKG_VERSION),;s,@LIBDIR@,$(LIBDIR),;s,@INCDIR@,$(INCDIR),' <unibilium.pc.in >'$(DESTDIR)$(LIBDIR)/pkgconfig/unibilium.pc'
+	perl -wpe 'BEGIN { @V{"VERSION", "LIBDIR", "INCDIR"} = splice @ARGV } s/\@(VERSION|LIBDIR|INCDIR)\@/$$V{$$1}/g' '$(PKG_VERSION)' '$(LIBDIR)' '$(INCDIR)' <unibilium.pc.in >'$(DESTDIR)$(LIBDIR)/pkgconfig/unibilium.pc'
 
 .PHONY: install-lib
 install-lib:
