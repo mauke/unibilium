@@ -1,3 +1,13 @@
+2.0.0   2018-02-08
+        - rewrite unibi_var_t internals (now the only official access is via
+          the helper functions)
+        - numeric capabilities are stored as ints now (used to be shorts)
+        - add support for the ncurses 6.1 "wide integer" 32-bit file format
+        - try ncursesw6-config, ncurses6-config, ncursesw5-config, and
+          ncurses5-config to get the list of terminfo directories
+          (TERMINFO_DIRS) when building
+        - improve README.md with build instructions and prerequisites
+
 1.2.1   2017-08-28
         - deprecate direct access to unibi_var_t members
         - better support for building on Windows
