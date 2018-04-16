@@ -29,7 +29,8 @@ LT_AGE=0
 PREFIX=/usr/local
 LIBDIR=$(PREFIX)/lib
 INCDIR=$(PREFIX)/include
-MANDIR=$(PREFIX)/share/man
+SHAREDIR=$(PREFIX)/share
+MANDIR=$(SHAREDIR)/man
 MAN3DIR=$(MANDIR)/man3
 
 ifneq ($(OS),Windows_NT)
