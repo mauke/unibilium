@@ -30,7 +30,7 @@ PREFIX=/usr/local
 LIBDIR=$(PREFIX)/lib
 INCDIR=$(PREFIX)/include
 SHAREDIR=$(PREFIX)/share
-MANDIR=$(SHAREDIR)man
+MANDIR=$(SHAREDIR)/man
 MAN3DIR=$(MANDIR)/man3
 
 ifneq ($(OS),Windows_NT)
