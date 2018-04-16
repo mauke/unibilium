@@ -26,11 +26,12 @@ LT_REVISION=0
 LT_CURRENT=4
 LT_AGE=0
 
-PREFIX=/usr/local
-LIBDIR=$(PREFIX)/lib
-INCDIR=$(PREFIX)/include
-MANDIR=$(PREFIX)/share/man
-MAN3DIR=$(MANDIR)/man3
+PREFIX?=/usr/local
+LIBDIR?=$(PREFIX)/lib
+INCDIR?=$(PREFIX)/include
+SHAREDIR?=$(PREFIX)/share
+MANDIR?=$(SHAREDIR)/man
+MAN3DIR?=$(MANDIR)/man3
 
 ifneq ($(OS),Windows_NT)
   TERMINFO_DIRS="$(shell ncursesw6-config --terminfo-dirs 2>/dev/null || \
