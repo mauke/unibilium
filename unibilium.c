@@ -339,8 +339,6 @@ unibi_term *unibi_from_mem(const char *p, size_t n) {
             extalllen += extnumlen;
             extalllen += extstrslen;
 
-            DEL_FAIL_IF(extofflen != extalllen + extstrslen, EINVAL, t);
-
             DEL_FAIL_IF(
                 n <
                 extboollen +
