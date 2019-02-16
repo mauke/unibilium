@@ -157,7 +157,7 @@ static unibi_term *from_dirs(const char *list, const char *term) {
         z = strchr(a, ':');
 
         ut = from_dir(a, z, NULL, term);
-        if (ut) {
+        if (ut || errno != ENOENT) {
             return ut;
         }
 
@@ -188,7 +188,7 @@ unibi_term *unibi_from_term(const char *term) {
 
     if ((env = getenv("HOME"))) {
         ut = from_dir(env, NULL, ".terminfo", term);
-        if (ut) {
+        if (ut || errno != ENOENT) {
             return ut;
         }
     }
