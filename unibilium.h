@@ -22,6 +22,11 @@ along with unibilium.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+/* C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 enum unibi_boolean {
@@ -626,5 +631,9 @@ void unibi_format(
 );
 
 size_t unibi_run(const char *, unibi_var_t [9], char *, size_t);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* GUARD_UNIBILIUM_H_ */
